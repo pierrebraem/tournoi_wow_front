@@ -13,7 +13,7 @@ function Header(){
             url: '/characters'
         },
         {
-            label: 'Gestion d\équipes',
+            label: 'Gestion d\'équipes',
             icon: 'pi pi-users',
             url: '#'
         }
