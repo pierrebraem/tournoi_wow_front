@@ -1,4 +1,4 @@
-function Home(){
+function Characters(){
     return(
         <>
             <p>Coucou</p>
@@ -6,4 +6,4 @@ function Home(){
     )
 }
 
-export default Home
+export default Characters
