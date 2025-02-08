@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import AddDialog from "./AddDialog";
+import EditDialog from "./EditDialog";
 import DetailDialog from "./DetailDialog";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
@@ -13,6 +14,7 @@ function Characters(){
     const [globalId, setGlobalId] = useState(0);
     const [visibleAdd, setVisibleAdd] = useState(false);
     const [visibleDetail, setVisibleDetail] = useState(false);
+    const [visibleEdit, setVisibleEdit] = useState(false);
 
     function loadData(){
         fetch("http://localhost:3000/characters")
@@ -23,6 +25,11 @@ function Characters(){
     function dataFromAddDialog(visible){
         loadData();
         setVisibleAdd(visible);
+    }
+
+    function dataFromEditDialog(visible){
+        loadData();
+        setVisibleEdit(visible)
     }
 
     function closeDetailModal(visible){
@@ -49,10 +56,15 @@ function Characters(){
             setVisibleDetail(true);
         }
 
+        function visibleEditIcon(id){
+            setGlobalId(id);
+            setVisibleEdit(true);
+        }
+
         return(
             <>
                 <Button icon="pi pi-book" onClick={() => visibleDetailIcon(rowData.id)}/>
-                <Button icon="pi pi-pencil" severity="warning" />
+                <Button icon="pi pi-pencil" severity="warning" onClick={() => visibleEditIcon(rowData.id)}/>
                 <Button icon="pi pi-trash" severity="danger" onClick={() => confirmDelete(rowData.id, rowData.name)}/>
             </>
         )
@@ -77,6 +89,7 @@ function Characters(){
 
             <Button label="Ajouter un personnage" onClick={() => setVisibleAdd(true)}/>
             <AddDialog visible={visibleAdd} sendDataToParent={dataFromAddDialog} />
+            <EditDialog visible={visibleEdit} sendDataToParent={dataFromEditDialog} id={globalId} />
             <DetailDialog visible={visibleDetail} sendDataToParent={closeDetailModal} id={globalId} />
             <ConfirmDialog />
         </>
