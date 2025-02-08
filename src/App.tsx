@@ -1,5 +1,6 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { PrimeReactProvider } from 'primereact/api';
-import { Button } from 'primereact/button';
+import Home from './components/Home/Home';
 
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import 'primeicons/primeicons.css';
@@ -8,7 +9,11 @@ function App() {
   return (
     <>
       <PrimeReactProvider>
-        <Button label="Submit" icon="pi pi-check" />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Home />}></Route>
+          </Routes>
+        </BrowserRouter>
       </PrimeReactProvider>
     </>
   )
