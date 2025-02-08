@@ -46,7 +46,7 @@ function AddDialog({ visible, sendDataToParent }){
         closeModal();
     }
 
-    async function getRoles(value){
+    function getRoles(value){
         setSelectedClass(value);
         fetch("http://localhost:3000/canbe/class/" + value.id)
         .then(response => response.json())
@@ -66,6 +66,7 @@ function AddDialog({ visible, sendDataToParent }){
                     <label>Nom :</label>
                     <InputText value={name} onChange={(e) => setName(e.target.value)} />
                 </div>
+                
                 <div>
                     <label>Classe :</label>
                     <Dropdown value={selectedClass} onChange={(e) => getRoles(e.value)} options={classOption} optionLabel="label" placeholder="Sélectionner une classe"/>
