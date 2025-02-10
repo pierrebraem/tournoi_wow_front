@@ -11,6 +11,7 @@ import 'primeicons/primeicons.css';
 
 function Parties(){
     const [parties, setParties] = useState([]);
+    const [charactersOption, setCharactersOption] = useState([]);
     const [globalId, setGlobalId] = useState(0);
     const [visibleAdd, setVisibleAdd] = useState(false);
     const [visibleEdit, setVisibleEdit] = useState(false);
@@ -20,16 +21,17 @@ function Parties(){
         fetch("http://localhost:3000/parties")
         .then(response => response.json())
         .then(data => setParties(data));
+
+        fetch("http://localhost:3000/characters")
+        .then(response => response.json())
+        .then(data => setCharactersOption(data))
     }
 
-    function dataFromAddDialog(visible){
+    function dataFromDialog(){
         loadData();
-        setVisibleAdd(visible);
-    }
-
-    function dataFromEditDialog(visible){
-        loadData();
-        setVisibleEdit(visible);
+        setVisibleAdd(false);
+        setVisibleDetail(false);
+        setVisibleEdit(false);
     }
 
     function confirmDelete(id, name){
@@ -46,17 +48,17 @@ function Parties(){
         })
     }
 
+    function visibleDetailIcon(id){
+        setGlobalId(id);
+        setVisibleDetail(true);
+    }
+
+    function visibleEditIcon(id){
+        setGlobalId(id);
+        setVisibleEdit(true);
+    }
+
     function bodyIcons(rowData){
-        function visibleDetailIcon(id){
-            setGlobalId(id);
-            setVisibleDetail(true);
-        }
-
-        function visibleEditIcon(id){
-            setGlobalId(id);
-            setVisibleEdit(true);
-        }
-
         return(
             <>
                 <Button icon="pi pi-book" onClick={() => visibleDetailIcon(rowData.id)} />
@@ -64,10 +66,6 @@ function Parties(){
                 <Button icon="pi pi-trash" severity="danger" onClick={() => confirmDelete(rowData.id, rowData.party_name)} />
             </>
         )
-    }
-
-    function closeDetailModal(visible){
-        setVisibleDetail(visible);
     }
 
     useEffect(() => {
@@ -82,9 +80,9 @@ function Parties(){
             </DataTable>  
 
             <Button label="Ajouter un groupe" onClick={() => setVisibleAdd(true)} />
-            <AddDialog visible={visibleAdd} sendDataToParent={dataFromAddDialog} />
-            <EditDialog visible={visibleEdit} sendDataToParent={dataFromEditDialog} id={globalId} />
-            <DetailDialog visible={visibleDetail} sendDataToParent={closeDetailModal} id={globalId} />
+            <AddDialog visible={visibleAdd} sendDataToParent={dataFromDialog} charactersOption={charactersOption} />
+            <EditDialog visible={visibleEdit} sendDataToParent={dataFromDialog} charactersOption={charactersOption} id={globalId} />
+            <DetailDialog visible={visibleDetail} sendDataToParent={dataFromDialog} id={globalId} />
             <ConfirmDialog />
         </>
     )
