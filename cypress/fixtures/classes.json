@@ -1,0 +1,54 @@
+[
+    {
+        "id": 1,
+        "label": "Guerrier"
+    },
+    {
+        "id": 2,
+        "label": "Paladin"
+    },
+    {
+        "id": 3,
+        "label": "Chasseur"
+    },
+    {
+        "id": 4,
+        "label": "Voleur"
+    },
+    {
+        "id": 5,
+        "label": "Prêtre"
+    },
+    {
+        "id": 6,
+        "label": "Chaman"
+    },
+    {
+        "id": 7,
+        "label": "Mage"
+    },
+    {
+        "id": 8,
+        "label": "Démonistre"
+    },
+    {
+        "id": 9,
+        "label": "Moine"
+    },
+    {
+        "id": 10,
+        "label": "Druide"
+    },
+    {
+        "id": 11,
+        "label": "Chasseur de démons"
+    },
+    {
+        "id": 12,
+        "label": "Chevalier de la mort"
+    },
+    {
+        "id": 13,
+        "label": "Evocateur"
+    }
+]
