@@ -1,0 +1,26 @@
+[
+    {
+        "id": 1,
+        "label": "Tank"
+    },
+    {
+        "id": 2,
+        "label": "Soigneur"
+    },
+    {
+        "id": 3,
+        "label": "Spécialiste des dégâts"
+    },
+    {
+        "id": 4,
+        "label": "TaDégâtsnk"
+    },
+    {
+        "id": 5,
+        "label": "Soins"
+    },
+    {
+        "id": 6,
+        "label": "Spécialiste des dégâts physiques de mêlée"
+    }
+]

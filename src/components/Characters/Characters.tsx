@@ -38,7 +38,7 @@ function Characters(){
 
     function confirmDelete(id, name){
         confirmDialog({
-            message: "Etes-vous sur de supprimer le personnage" + name,
+            message: "Etes-vous sur de supprimer le personnage " + name,
             header: "Suppression",
             accept: async () => {
                 await fetch("http://localhost:3000/characters/" + id, {
@@ -63,9 +63,9 @@ function Characters(){
 
         return(
             <>
-                <Button icon="pi pi-book" onClick={() => visibleDetailIcon(rowData.id)}/>
-                <Button icon="pi pi-pencil" severity="warning" onClick={() => visibleEditIcon(rowData.id)}/>
-                <Button icon="pi pi-trash" severity="danger" onClick={() => confirmDelete(rowData.id, rowData.name)}/>
+                <Button icon="pi pi-book" onClick={() => visibleDetailIcon(rowData.id)} name="Detail"/>
+                <Button icon="pi pi-pencil" severity="warning" onClick={() => visibleEditIcon(rowData.id)} name="Edit"/>
+                <Button icon="pi pi-trash" severity="danger" onClick={() => confirmDelete(rowData.id, rowData.name)} name="Delete"/>
             </>
         )
     }
@@ -87,7 +87,7 @@ function Characters(){
                 <Column header="Action" body={bodyIcons}></Column>
             </DataTable>
 
-            <Button label="Ajouter un personnage" onClick={() => setVisibleAdd(true)}/>
+            <Button label="Ajouter un personnage" onClick={() => setVisibleAdd(true)} name="Add"/>
             <AddDialog visible={visibleAdd} sendDataToParent={dataFromAddDialog} />
             <EditDialog visible={visibleEdit} sendDataToParent={dataFromEditDialog} id={globalId} />
             <DetailDialog visible={visibleDetail} sendDataToParent={closeDetailModal} id={globalId} />

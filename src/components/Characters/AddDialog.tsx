@@ -64,30 +64,30 @@ function AddDialog({ visible, sendDataToParent }){
             <Dialog header="Ajouter un personnage" visible={visible} onHide={() => closeModal()}>
                 <div>
                     <label>Nom :</label>
-                    <InputText value={name} onChange={(e) => setName(e.target.value)} />
+                    <InputText value={name} onChange={(e) => setName(e.target.value)} name="Nom" />
                 </div>
                 
                 <div>
                     <label>Classe :</label>
-                    <Dropdown value={selectedClass} onChange={(e) => getRoles(e.value)} options={classOption} optionLabel="label" placeholder="Sélectionner une classe"/>
+                    <Dropdown value={selectedClass} onChange={(e) => getRoles(e.value)} options={classOption} optionLabel="label" placeholder="Sélectionner une classe" name="Classe" />
                 </div>
 
                 <div>
                     <label>Rôle :</label>
-                    <Dropdown value={selectedRole} onChange={(e) => setSelectedRole(e.value)} options={roleOption} optionLabel="label" placeholder="Sélectionner un rôle"/>
+                    <Dropdown value={selectedRole} onChange={(e) => setSelectedRole(e.value)} options={roleOption} optionLabel="label" placeholder="Sélectionner un rôle" name="Role" />
                 </div>
 
                 <div>
                     <label>ilvl :</label>
-                    <InputNumber value={ilvl} onChange={(e) => setIlvl(e.value)} />
+                    <InputNumber value={ilvl} onChange={(e) => setIlvl(e.value)} name="ilvl" />
                 </div>
 
                 <div>
                     <label>rio :</label>
-                    <InputNumber value={rio} onChange={(e) => setRio(e.value)} />
+                    <InputNumber value={rio} onChange={(e) => setRio(e.value)} name="rio" />
                 </div>
 
-                <Button onClick={addCharacters} label="Ajouter" />
+                <Button onClick={addCharacters} label="Ajouter" name="AddButtonDialog" />
             </Dialog>
         </>
     )
