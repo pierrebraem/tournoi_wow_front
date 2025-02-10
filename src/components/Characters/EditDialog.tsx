@@ -1,53 +1,29 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { InputNumber } from 'primereact/inputnumber';
 import { Dropdown } from 'primereact/dropdown';
 
-function EditDialog({ visible, sendDataToParent, id }){
-    const [name, setName] = useState("");
-
-    const [selectedClass, setSelectedClass] = useState({});
-    const [classOption, setClassOption] = useState([]);
-
-    const [selectedRole, setSelectedRole] = useState({});
+function EditDialog({ visible, sendDataToParent, classOption, id }){
+    const [data, setData] = useState({});
+    
     const [roleOption, setRoleOption] = useState([]);
 
-    const [ilvl, setIlvl] = useState(0);
-    const [rio, setRio] = useState(0);
-
     function closeModal(){
-        setName("");
-        setSelectedClass({});
-        setSelectedRole({});
         setRoleOption([]);
-        setIlvl(0);
-        setRio(0);
 
-        sendDataToParent(false);
+        sendDataToParent();
     }
 
     function getData(){
-        function reordorerData(data){
-            setName(data.name)
-            setIlvl(data.ilvl)
-            setRio(data.rio)
-
-            const nextSelectedClass = classOption.find((option) => option.label == data.class);
-            getRoles(nextSelectedClass);
-
-            const nextSelectedRole = roleOption.find((option) => option.label == data.role);
-            setSelectedRole(nextSelectedRole);
-        }
-
         fetch("http://localhost:3000/characters/" + id)
         .then(response => response.json())
-        .then(data => reordorerData(data[0]))
+        .then(data => setData(data[0]));
     }
 
     function getRoles(value){
-        setSelectedClass(value);
+        setData((data) => ({ ...data, class: {id: value.id, label: value.label}}));
         fetch("http://localhost:3000/canbe/class/" + value.id)
         .then(response => response.json())
         .then(data => setRoleOption(data));
@@ -55,11 +31,11 @@ function EditDialog({ visible, sendDataToParent, id }){
 
     async function editCharacters(){
         const body = {
-            name: name,
-            class_id: selectedClass.id,
-            role_id: selectedRole.id,
-            ilvl: ilvl,
-            rio: rio
+            name: data.name,
+            class_id: data.class.id,
+            role_id: data.role.id,
+            ilvl: data.ilvl,
+            rio: data.rio
         };
 
         await fetch("http://localhost:3000/characters/" + id, {
@@ -71,38 +47,32 @@ function EditDialog({ visible, sendDataToParent, id }){
         closeModal();
     }
 
-    useEffect(() => {
-        fetch("http://localhost:3000/class")
-        .then(response => response.json())
-        .then(data => setClassOption(data))
-    }, [])
-
     return (
         <>
             <Dialog header="Modifier un personnage" visible={visible} onShow={() => getData()} onHide={() => closeModal()}>
                 <div>
                     <label>Nom :</label>
-                    <InputText value={name} onChange={(e) => setName(e.target.value)} />
+                    <InputText value={data.name} onChange={(e) => setData((data) => ({ ...data, name: e.target.value }))} />
                 </div>
                         
                 <div>
                     <label>Classe :</label>
-                    <Dropdown value={selectedClass} onChange={(e) => getRoles(e.value)} options={classOption} optionLabel="label" placeholder="Sélectionner une classe"/>
+                    <Dropdown value={data.class} onChange={(e) => getRoles(e.value)} options={classOption} optionLabel="label" placeholder="Sélectionner une classe"/>
                 </div>
         
                 <div>
                     <label>Rôle :</label>
-                    <Dropdown value={selectedRole} onChange={(e) => setSelectedRole(e.value)} options={roleOption} optionLabel="label" placeholder="Sélectionner un rôle"/>
+                    <Dropdown value={data.role} onChange={(e) => setData((data) => ({ ...data, role: { id: e.value.id, label: e.value.label }}))} options={roleOption} optionLabel="label" placeholder="Sélectionner un rôle"/>
                 </div>
         
                 <div>
                     <label>ilvl :</label>
-                    <InputNumber value={ilvl} onChange={(e) => setIlvl(e.value)} />
+                    <InputNumber value={data.ilvl} onChange={(e) => setData((data) => ({ ...data, ilvl: e.value }))} />
                 </div>
         
                 <div>
                     <label>rio :</label>
-                    <InputNumber value={rio} onChange={(e) => setRio(e.value)} />
+                    <InputNumber value={data.rio} onChange={(e) => setData((data) => ({ ...data, rio: e.value}))} />
                 </div>
         
                 <Button onClick={editCharacters} label="Modifier" />

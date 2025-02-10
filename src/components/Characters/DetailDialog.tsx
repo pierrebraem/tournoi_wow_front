@@ -5,7 +5,7 @@ function DetailDialog({ id, visible, sendDataToParent }){
     const [data, setData] = useState({});
 
     function closeModal(){
-        sendDataToParent(false);
+        sendDataToParent();
     }
 
     function getData(){

@@ -11,6 +11,7 @@ import 'primeicons/primeicons.css';
 
 function Characters(){
     const [characters, setCharacters] = useState([]);
+    const [classOption, setClassOption] = useState([]);
     const [globalId, setGlobalId] = useState(0);
     const [visibleAdd, setVisibleAdd] = useState(false);
     const [visibleDetail, setVisibleDetail] = useState(false);
@@ -20,20 +21,17 @@ function Characters(){
         fetch("http://localhost:3000/characters")
         .then(response => response.json())
         .then(data => setCharacters(data))
+
+        fetch("http://localhost:3000/class")
+        .then(response => response.json())
+        .then(data => setClassOption(data))
     }
 
-    function dataFromAddDialog(visible){
+    function dataFromDialog(){
         loadData();
-        setVisibleAdd(visible);
-    }
-
-    function dataFromEditDialog(visible){
-        loadData();
-        setVisibleEdit(visible)
-    }
-
-    function closeDetailModal(visible){
-        setVisibleDetail(visible)
+        setVisibleAdd(false);
+        setVisibleDetail(false);
+        setVisibleEdit(false);
     }
 
     function confirmDelete(id, name){
@@ -50,17 +48,17 @@ function Characters(){
         });
     }
 
+    function visibleDetailIcon(id){
+        setGlobalId(id);
+        setVisibleDetail(true);
+    }
+
+    function visibleEditIcon(id){
+        setGlobalId(id);
+        setVisibleEdit(true);
+    }
+
     function bodyIcons(rowData){
-        function visibleDetailIcon(id){
-            setGlobalId(id);
-            setVisibleDetail(true);
-        }
-
-        function visibleEditIcon(id){
-            setGlobalId(id);
-            setVisibleEdit(true);
-        }
-
         return(
             <>
                 <Button icon="pi pi-book" onClick={() => visibleDetailIcon(rowData.id)} name="Detail"/>
@@ -71,26 +69,24 @@ function Characters(){
     }
 
     useEffect(() => {
-        fetch("http://localhost:3000/characters")
-        .then(response => response.json())
-        .then(data => setCharacters(data));
+        loadData();
     }, []);
 
     return(
         <>
             <DataTable value={characters}>
-                <Column field="name" header="Nom"></Column>
-                <Column field="class" header="Classe"></Column>
-                <Column field="role" header="Rôle"></Column>
-                <Column field="ilvl" header="ilvl"></Column>
-                <Column field="rio" header="rio"></Column>
-                <Column header="Action" body={bodyIcons}></Column>
+                <Column field="name" header="Nom" />
+                <Column field="class" header="Classe" />
+                <Column field="role" header="Rôle" />
+                <Column field="ilvl" header="ilvl" />
+                <Column field="rio" header="rio" />
+                <Column header="Action" body={bodyIcons} />
             </DataTable>
 
             <Button label="Ajouter un personnage" onClick={() => setVisibleAdd(true)} name="Add"/>
-            <AddDialog visible={visibleAdd} sendDataToParent={dataFromAddDialog} />
-            <EditDialog visible={visibleEdit} sendDataToParent={dataFromEditDialog} id={globalId} />
-            <DetailDialog visible={visibleDetail} sendDataToParent={closeDetailModal} id={globalId} />
+            <AddDialog visible={visibleAdd} sendDataToParent={dataFromDialog} classOption={classOption} />
+            <EditDialog visible={visibleEdit} sendDataToParent={dataFromDialog} classOption={classOption} id={globalId} />
+            <DetailDialog visible={visibleDetail} sendDataToParent={dataFromDialog} id={globalId} />
             <ConfirmDialog />
         </>
     )
