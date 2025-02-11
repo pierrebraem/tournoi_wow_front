@@ -6,10 +6,13 @@ import { DataTable } from "primereact/datatable";
 import { ConfirmDialog } from "primereact/confirmdialog";
 import { confirmDialog } from "primereact/confirmdialog";
 import 'primeicons/primeicons.css';
+import ViewDialog from "./ViewDialog";
 
 function Tournaments(){
     const [tournaments, setTournaments] = useState([]);
     const [visibleAdd, setVisibleAdd] = useState(false);
+    const [visibleView, setVisibleView] = useState(false);
+    const [globalId, setGlobalId] = useState(0);
     const [dungeonsOption, setDungeonsOption] = useState([]);
     const [partiesOption, setPartiesOption] = useState([]);
 
@@ -30,6 +33,7 @@ function Tournaments(){
     function dataFromDialog(){
         loadData();
         setVisibleAdd(false);
+        setVisibleView(false);
     }
 
     function confirmDelete(id, name){
@@ -46,10 +50,15 @@ function Tournaments(){
         })
     }
 
+    function visibleViewIcon(id){
+        setGlobalId(id);
+        setVisibleView(true)
+    }
+
     function bodyIcons(rowData){
         return(
             <>
-                <Button icon="pi pi-book" />
+                <Button icon="pi pi-eye" severity="success" onClick={() => visibleViewIcon(rowData.id)} />
                 <Button icon="pi pi-pencil" severity="warning" />
                 <Button icon="pi pi-trash" severity="danger" onClick={() => confirmDelete(rowData.id, rowData.name)} />
             </>
@@ -70,6 +79,7 @@ function Tournaments(){
             </DataTable>
 
             <AddDialog visible={visibleAdd} sendDataToParent={dataFromDialog} dungeonsOption={dungeonsOption} partiesOption={partiesOption} />
+            <ViewDialog visible={visibleView} sendDataToParent={dataFromDialog} id={globalId} partiesOption={partiesOption} />
             <Button label="Ajouter un tournoi" onClick={() => setVisibleAdd(true)} />
             <ConfirmDialog />
         </>
