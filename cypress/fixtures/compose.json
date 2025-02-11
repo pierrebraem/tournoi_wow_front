@@ -1,0 +1,20 @@
+[
+    {
+        "id": 2,
+        "name": "Personnage 1",
+        "classe": "Chasseur",
+        "role": "Soigneur"
+    },
+    {
+        "id": 5,
+        "name": "Personnage 2",
+        "classe": "Druide",
+        "role": "Tank"
+    },
+    {
+        "id": 8,
+        "name": "Personnage 3",
+        "classe": "Prêtre",
+        "role": "Soins"
+    }
+]

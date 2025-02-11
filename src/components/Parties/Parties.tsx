@@ -61,9 +61,9 @@ function Parties(){
     function bodyIcons(rowData){
         return(
             <>
-                <Button icon="pi pi-book" onClick={() => visibleDetailIcon(rowData.id)} />
-                <Button icon="pi pi-pencil" severity="warning" onClick={() => visibleEditIcon(rowData.id)}/>
-                <Button icon="pi pi-trash" severity="danger" onClick={() => confirmDelete(rowData.id, rowData.party_name)} />
+                <Button icon="pi pi-book" onClick={() => visibleDetailIcon(rowData.id)} name="Detail"/>
+                <Button icon="pi pi-pencil" severity="warning" onClick={() => visibleEditIcon(rowData.id)} name="Edit"/>
+                <Button icon="pi pi-trash" severity="danger" onClick={() => confirmDelete(rowData.id, rowData.party_name)} name="Delete" />
             </>
         )
     }

@@ -51,10 +51,10 @@ function AddDialog({ visible, sendDataToParent, charactersOption }){
                 <div>
                     <label>Selection des personnages :</label>
                     <MultiSelect value={data.characters} onChange={(e) => setData((data) => ({ ...data, characters: e.value}))} options={charactersOption} optionLabel="name" display="chip"
-                        maxSelectedLabels={5} />
+                        maxSelectedLabels={5} name="Personnages"/>
                 </div>
 
-                <Button onClick={addParty} label="Ajouter" />
+                <Button onClick={addParty} label="Ajouter" name="AddButtonDialog" />
             </Dialog>
             <Error status={dataError.status} message={dataError.message} visible={visibleError} sendDataToParent={() => setVisibleError(false)}/>
         </>
