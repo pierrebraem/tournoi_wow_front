@@ -16,6 +16,10 @@ function Header(){
             label: 'Gestion d\'équipes',
             icon: 'pi pi-users',
             url: '/parties'
+        },
+        {
+            label: 'Gestion des tournois',
+            url: '/tournaments'
         }
     ]
 
