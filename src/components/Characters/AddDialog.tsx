@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Error from '../Error/Error';
 import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
@@ -7,6 +8,8 @@ import { Dropdown } from 'primereact/dropdown';
 
 function AddDialog({ visible, sendDataToParent, classOption }){
     const [data, setData] = useState({});
+    const [dataError, setDataError] = useState({});
+    const [visibleError, setVisibleError] = useState(false);
     const [roleOption, setRoleOption] = useState([]);
 
     function closeModal(){
@@ -25,11 +28,21 @@ function AddDialog({ visible, sendDataToParent, classOption }){
             rio: data.rio
         };
 
-        await fetch("http://localhost:3000/characters", {
+        const res = await fetch("http://localhost:3000/characters", {
             method: "post",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(body)
         });
+
+        if(res.status != 201){
+            const json = await res.json();
+            setVisibleError(true);
+            setDataError({
+                status: res.status,
+                message: json.message,
+            });
+            return;
+        }
         
         closeModal();
     }
@@ -71,6 +84,7 @@ function AddDialog({ visible, sendDataToParent, classOption }){
 
                 <Button onClick={addCharacters} label="Ajouter" name="AddButtonDialog" />
             </Dialog>
+            <Error status={dataError.status} message={dataError.message} visible={visibleError} sendDataToParent={() => setVisibleError(false)}/>
         </>
     )
 }

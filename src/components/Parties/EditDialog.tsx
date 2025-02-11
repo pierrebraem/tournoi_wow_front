@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Error from "../Error/Error";
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { MultiSelect } from 'primereact/multiselect';
@@ -6,6 +7,8 @@ import { Button } from 'primereact/button';
 
 function EditDialog({ visible, sendDataToParent, charactersOption, id }){
     const [data, setData] = useState({});
+    const [dataError, setDataError] = useState({});
+    const [visibleError, setVisibleError] = useState(false);
 
     function closeModal(){
         sendDataToParent(false);
@@ -17,11 +20,21 @@ function EditDialog({ visible, sendDataToParent, charactersOption, id }){
             characters: data.characters
         }
 
-        await fetch("http://localhost:3000/parties/" + id, {
+        const res = await fetch("http://localhost:3000/parties/" + id, {
             method: "put",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(body)
         });
+
+        if(res.status != 200){
+            const json = await res.json();
+            setVisibleError(true);
+            setDataError({
+                status: res.status,
+                message: json.message
+            });
+            return;
+        }
 
         closeModal();
     }
@@ -52,6 +65,7 @@ function EditDialog({ visible, sendDataToParent, charactersOption, id }){
 
                 <Button onClick={editParty} label="Modifier" />
             </Dialog>
+            <Error status={dataError.status} message={dataError.message} visible={visibleError} sendDataToParent={() => setVisibleError(false)}/>
         </>
     )
 }
