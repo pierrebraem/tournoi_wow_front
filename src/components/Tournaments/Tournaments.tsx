@@ -3,6 +3,9 @@ import { Button } from "primereact/button";
 import AddDialog from "./AddDialog";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
+import { ConfirmDialog } from "primereact/confirmdialog";
+import { confirmDialog } from "primereact/confirmdialog";
+import 'primeicons/primeicons.css';
 
 function Tournaments(){
     const [tournaments, setTournaments] = useState([]);
@@ -29,12 +32,26 @@ function Tournaments(){
         setVisibleAdd(false);
     }
 
+    function confirmDelete(id, name){
+        confirmDialog({
+            message: "Etes-vous sûr de supprimer le tournoi " + name + " ?",
+            header: "Suppression",
+            accept: async () => {
+                await fetch("http://localhost:3000/tournaments/" + id, {
+                    method: "delete"
+                });
+
+                loadData();
+            }
+        })
+    }
+
     function bodyIcons(rowData){
         return(
             <>
                 <Button icon="pi pi-book" />
                 <Button icon="pi pi-pencil" severity="warning" />
-                <Button icon="pi pi-trash" severity="danger" />
+                <Button icon="pi pi-trash" severity="danger" onClick={() => confirmDelete(rowData.id, rowData.name)} />
             </>
         )
     }
@@ -54,6 +71,7 @@ function Tournaments(){
 
             <AddDialog visible={visibleAdd} sendDataToParent={dataFromDialog} dungeonsOption={dungeonsOption} partiesOption={partiesOption} />
             <Button label="Ajouter un tournoi" onClick={() => setVisibleAdd(true)} />
+            <ConfirmDialog />
         </>
     )
 }
