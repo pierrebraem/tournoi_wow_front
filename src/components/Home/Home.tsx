@@ -1,7 +1,7 @@
 function Home(){
     return(
         <>
-            <p>Hello World!</p>
+            <p className="underline">Hello World!</p>
         </>
     )
 }

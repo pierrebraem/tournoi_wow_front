@@ -60,11 +60,11 @@ function Parties(){
 
     function bodyIcons(rowData){
         return(
-            <>
+            <div className="spacing-between-buttons">
                 <Button icon="pi pi-book" onClick={() => visibleDetailIcon(rowData.id)} name="Detail"/>
                 <Button icon="pi pi-pencil" severity="warning" onClick={() => visibleEditIcon(rowData.id)} name="Edit"/>
                 <Button icon="pi pi-trash" severity="danger" onClick={() => confirmDelete(rowData.id, rowData.party_name)} name="Delete" />
-            </>
+            </div>
         )
     }
 
@@ -74,7 +74,7 @@ function Parties(){
 
     return(
         <>
-            <DataTable value={parties}>
+            <DataTable value={parties} className="pb-4">
                 <Column field="party_name" header="Nom" />
                 <Column header="Action" body={bodyIcons} />
             </DataTable>  

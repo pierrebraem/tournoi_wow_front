@@ -63,32 +63,34 @@ function EditDialog({ visible, sendDataToParent, classOption, id }){
     return (
         <>
             <Dialog header="Modifier un personnage" visible={visible} onShow={() => getData()} onHide={() => closeModal()}>
-                <div>
-                    <label>Nom :</label>
-                    <InputText value={data.name} onChange={(e) => setData((data) => ({ ...data, name: e.target.value }))} />
+                <div className="form-style">
+                    <div className="form-line-style">
+                        <label>Nom :</label>
+                        <InputText className="input-style" value={data.name} onChange={(e) => setData((data) => ({ ...data, name: e.target.value }))} />
+                    </div>
+                            
+                    <div className="form-line-style">
+                        <label>Classe :</label>
+                        <Dropdown className="input-style" value={data.class} onChange={(e) => getRoles(e.value)} options={classOption} optionLabel="label" placeholder="Sélectionner une classe"/>
+                    </div>
+            
+                    <div className="form-line-style">
+                        <label>Rôle :</label>
+                        <Dropdown className="input-style" value={data.role} onChange={(e) => setData((data) => ({ ...data, role: { id: e.value.id, label: e.value.label }}))} options={roleOption} optionLabel="label" placeholder="Sélectionner un rôle"/>
+                    </div>
+            
+                    <div className="form-line-style">
+                        <label>ilvl :</label>
+                        <InputNumber className="input-style"  value={data.ilvl} onChange={(e) => setData((data) => ({ ...data, ilvl: e.value }))} />
+                    </div>
+            
+                    <div className="form-line-style">
+                        <label>rio :</label>
+                        <InputNumber className="input-style" value={data.rio} onChange={(e) => setData((data) => ({ ...data, rio: e.value}))} />
+                    </div>
+            
+                    <Button onClick={editCharacters} label="Modifier" />
                 </div>
-                        
-                <div>
-                    <label>Classe :</label>
-                    <Dropdown value={data.class} onChange={(e) => getRoles(e.value)} options={classOption} optionLabel="label" placeholder="Sélectionner une classe"/>
-                </div>
-        
-                <div>
-                    <label>Rôle :</label>
-                    <Dropdown value={data.role} onChange={(e) => setData((data) => ({ ...data, role: { id: e.value.id, label: e.value.label }}))} options={roleOption} optionLabel="label" placeholder="Sélectionner un rôle"/>
-                </div>
-        
-                <div>
-                    <label>ilvl :</label>
-                    <InputNumber value={data.ilvl} onChange={(e) => setData((data) => ({ ...data, ilvl: e.value }))} />
-                </div>
-        
-                <div>
-                    <label>rio :</label>
-                    <InputNumber value={data.rio} onChange={(e) => setData((data) => ({ ...data, rio: e.value}))} />
-                </div>
-        
-                <Button onClick={editCharacters} label="Modifier" />
             </Dialog>
             <Error status={dataError.status} message={dataError.message} visible={visibleError} sendDataToParent={() => setVisibleError(false)}/>
         </>

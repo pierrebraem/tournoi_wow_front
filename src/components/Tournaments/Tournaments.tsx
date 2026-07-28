@@ -57,11 +57,11 @@ function Tournaments(){
 
     function bodyIcons(rowData){
         return(
-            <>
+            <div className="spacing-between-buttons">
                 <Button icon="pi pi-eye" severity="success" onClick={() => visibleViewIcon(rowData.id)} />
                 <Button icon="pi pi-pencil" severity="warning" />
                 <Button icon="pi pi-trash" severity="danger" onClick={() => confirmDelete(rowData.id, rowData.name)} />
-            </>
+            </div>
         )
     }
 
@@ -70,7 +70,7 @@ function Tournaments(){
     }, [])
     return(
         <>
-            <DataTable value={tournaments}>
+            <DataTable value={tournaments} className="pb-4">
                 <Column field="name" header="Nom" />
                 <Column field="start_date" header="Date de début" />
                 <Column field="end_date" header="Date de fin" />

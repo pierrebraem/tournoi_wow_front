@@ -19,14 +19,13 @@ function Header(){
         },
         {
             label: 'Gestion des tournois',
+            icon: 'pi pi-crown',
             url: '/tournaments'
         }
     ]
 
     return(
-        <>
-            <Menubar model={items} />
-        </>
+        <Menubar model={items} className="mb-4" />
     )
 }
 

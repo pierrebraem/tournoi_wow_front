@@ -20,22 +20,20 @@ function DetailDialog({ id, visible, sendDataToParent }){
     }
 
     return(
-        <>
-            <Dialog header={"Détail du groupe " + dataGroupe.party_name} visible={visible} onShow={() => getData()} onHide={() => closeModal()}>
-                <p>Id : {dataGroupe.id}</p>
-                <p>Nom : {dataGroupe.party_name}</p>
+        <Dialog header={"Détail du groupe " + dataGroupe.party_name} visible={visible} onShow={() => getData()} onHide={() => closeModal()}>
+            <p>Id : {dataGroupe.id}</p>
+            <p>Nom : {dataGroupe.party_name}</p>
                 
-                <p>Liste des personnages :</p>
-                {dataCharacters.map(character => (
-                    <ul key={character.id}>
-                        <li>Id : {character.id}</li>
-                        <li>Nom : {character.name}</li>
-                        <li>Classe : {character.classe}</li>
-                        <li>Rôle : {character.role}</li>
-                    </ul>
-                ))}
-            </Dialog>
-        </>
+            <p>Liste des personnages :</p>
+            {dataCharacters.map(character => (
+                <ul key={character.id}>
+                    <li>Id : {character.id}</li>
+                    <li>Nom : {character.name}</li>
+                    <li>Classe : {character.classe}</li>
+                    <li>Rôle : {character.role}</li>
+                </ul>
+            ))}
+        </Dialog>
     )
 }
 
