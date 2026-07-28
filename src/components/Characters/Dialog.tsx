@@ -1,62 +1,75 @@
-import { useState } from 'react';
-import Error from '../Error/Error';
+import { useState } from "react";
+import Error from "../Error/Error";
 import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
-import { InputText } from 'primereact/inputtext';
-import { InputNumber } from 'primereact/inputnumber';
-import { Dropdown } from 'primereact/dropdown';
+import { InputText } from "primereact/inputtext";
+import { InputNumber } from "primereact/inputnumber";
+import { Dropdown } from "primereact/dropdown";
 
-function AddDialog({ visible, sendDataToParent, classOption }){
-    const [data, setData] = useState({});
-    const [dataError, setDataError] = useState({});
-    const [visibleError, setVisibleError] = useState(false);
-    const [roleOption, setRoleOption] = useState([]);
+function CharacterDialog({ visible, sendDataToParent, classOption, id }){
+    const [data, setData] = useState({})
+    const [dataError, setDataError] = useState({})
+    const [visibleError, setVisibleError] = useState(false)
+    const [roleOption, setRoleOption] = useState([])
 
     function closeModal(){
-        setRoleOption([]);
-        setData({});
+        setRoleOption([])
+        setData({})
 
-        sendDataToParent();
+        sendDataToParent()
     }
 
-    async function addCharacters(){
+    function getRoles(value){
+        setData((data) => ({ ...data, class: {id: value.id, label: value.label}}))
+        fetch("http://localhost:3000/canbe/class/" + value.id)
+        .then(response => response.json())
+        .then(data => setRoleOption(data))
+    }
+
+    function getData(){
+        if (id == null) return;
+
+        fetch("http://localhost:3000/characters/" + id)
+        .then(response => response.json())
+        .then(data => setData(data[0]))
+    }
+
+    async function submit(){
+        const method = id == null ? 'post' : 'put'
+        const baseUrl = "http://localhost:3000/characters/"
+        const url = id == null ? baseUrl : baseUrl + id
+        const successStatusCode = id == null ? 201 : 200
+
         const body = {
             name: data.name,
             class_id: data.class.id,
             role_id: data.role.id,
             ilvl: data.ilvl,
             rio: data.rio
-        };
+        }
 
-        const res = await fetch("http://localhost:3000/characters", {
-            method: "post",
+        const res = await fetch(url, {
+            method: method,
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(body)
-        });
+        })
 
-        if(res.status != 201){
-            const json = await res.json();
+        if(res.status != successStatusCode){
+            const json = await res.json()
             setVisibleError(true);
             setDataError({
                 status: res.status,
                 message: json.message,
-            });
-            return;
+            })
+            return
         }
-        
-        closeModal();
-    }
 
-    function getRoles(value){
-        setData((data) => ({ ...data, class: {id: value.id, label: value.label}}));
-        fetch("http://localhost:3000/canbe/class/" + value.id)
-        .then(response => response.json())
-        .then(data => setRoleOption(data));
+        closeModal()
     }
 
     return(
         <>
-            <Dialog header="Ajouter un personnage" visible={visible} onHide={() => closeModal()}>
+            <Dialog header={id == null ? "Ajouter un personnage" : "Modifier un personnage"} visible={visible} onShow={() => getData()} onHide={() => closeModal()}>
                 <div className="form-style">
                     <div className="form-line-style">
                         <label>Nom :</label>
@@ -83,7 +96,7 @@ function AddDialog({ visible, sendDataToParent, classOption }){
                         <InputNumber className="input-style" value={data.rio} onChange={(e) => setData((data) => ({ ...data, rio: e.value}))} name="rio" />
                     </div>
 
-                    <Button onClick={addCharacters} label="Ajouter" name="AddButtonDialog" />
+                    <Button onClick={submit} label={id == null ? "Ajouter" : "Modifier"} name="ButtonDialog" />
                 </div>
             </Dialog>
             <Error status={dataError.status} message={dataError.message} visible={visibleError} sendDataToParent={() => setVisibleError(false)}/>
@@ -91,4 +104,4 @@ function AddDialog({ visible, sendDataToParent, classOption }){
     )
 }
 
-export default AddDialog;
+export default CharacterDialog
