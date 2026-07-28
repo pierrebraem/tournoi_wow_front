@@ -1,21 +1,18 @@
 import { useEffect, useState } from "react";
-import AddDialog from "./AddDialog";
-import EditDialog from "./EditDialog";
+import CharacterDialog from "./Dialog";
 import DetailDialog from "./DetailDialog";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
-import { ConfirmDialog } from "primereact/confirmdialog";
-import { confirmDialog } from "primereact/confirmdialog";
+import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import 'primeicons/primeicons.css';
 
 function Characters(){
     const [characters, setCharacters] = useState([]);
     const [classOption, setClassOption] = useState([]);
-    const [globalId, setGlobalId] = useState(0);
-    const [visibleAdd, setVisibleAdd] = useState(false);
+    const [globalId, setGlobalId] = useState(null);
+    const [visibleDialog, setVisibleDialog] = useState(false);
     const [visibleDetail, setVisibleDetail] = useState(false);
-    const [visibleEdit, setVisibleEdit] = useState(false);
 
     function loadData(){
         fetch("http://localhost:3000/characters")
@@ -29,9 +26,9 @@ function Characters(){
 
     function dataFromDialog(){
         loadData();
-        setVisibleAdd(false);
+        setVisibleDialog(false);
         setVisibleDetail(false);
-        setVisibleEdit(false);
+        setGlobalId(null);
     }
 
     function confirmDelete(id, name){
@@ -53,16 +50,16 @@ function Characters(){
         setVisibleDetail(true);
     }
 
-    function visibleEditIcon(id){
-        setGlobalId(id);
-        setVisibleEdit(true);
+    function visibleDialogIcon(id, type){
+        if (type == 'edit') setGlobalId(id)
+        setVisibleDialog(true)
     }
 
     function bodyIcons(rowData){
         return(
             <div className="spacing-between-buttons">
                 <Button icon="pi pi-book" onClick={() => visibleDetailIcon(rowData.id)} name="Detail"/>
-                <Button icon="pi pi-pencil" severity="warning" onClick={() => visibleEditIcon(rowData.id)} name="Edit"/>
+                <Button icon="pi pi-pencil" severity="warning" onClick={() => visibleDialogIcon(rowData.id, 'edit')} name="Edit"/>
                 <Button icon="pi pi-trash" severity="danger" onClick={() => confirmDelete(rowData.id, rowData.name)} name="Delete"/>
             </div>
         )
@@ -83,9 +80,8 @@ function Characters(){
                 <Column header="Action" body={bodyIcons} />
             </DataTable>
 
-            <Button label="Ajouter un personnage" onClick={() => setVisibleAdd(true)} name="Add"/>
-            <AddDialog visible={visibleAdd} sendDataToParent={dataFromDialog} classOption={classOption} />
-            <EditDialog visible={visibleEdit} sendDataToParent={dataFromDialog} classOption={classOption} id={globalId} />
+            <Button label="Ajouter un personnage" onClick={() => visibleDialogIcon(null, 'add')} name="Add"/>
+            <CharacterDialog visible={visibleDialog} sendDataToParent={dataFromDialog} classOption={classOption} id={globalId} />
             <DetailDialog visible={visibleDetail} sendDataToParent={dataFromDialog} id={globalId} />
             <ConfirmDialog />
         </>

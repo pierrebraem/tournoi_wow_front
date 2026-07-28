@@ -1,20 +1,17 @@
 import { useState, useEffect } from "react";
-import AddDialog from "./AddDialog";
-import EditDialog from "./EditDialog";
+import PartyDialog from "./Dialog";
 import DetailDialog from "./DetailDialog";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
-import { ConfirmDialog } from "primereact/confirmdialog";
-import { confirmDialog } from "primereact/confirmdialog";
+import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import 'primeicons/primeicons.css';
 
 function Parties(){
     const [parties, setParties] = useState([]);
     const [charactersOption, setCharactersOption] = useState([]);
-    const [globalId, setGlobalId] = useState(0);
-    const [visibleAdd, setVisibleAdd] = useState(false);
-    const [visibleEdit, setVisibleEdit] = useState(false);
+    const [globalId, setGlobalId] = useState(null);
+    const [visibleDialog, setVisibleDialog] = useState(false);
     const [visibleDetail, setVisibleDetail] = useState(false);
 
     function loadData(){
@@ -29,9 +26,9 @@ function Parties(){
 
     function dataFromDialog(){
         loadData();
-        setVisibleAdd(false);
+        setGlobalId(null);
+        setVisibleDialog(false);
         setVisibleDetail(false);
-        setVisibleEdit(false);
     }
 
     function confirmDelete(id, name){
@@ -53,16 +50,16 @@ function Parties(){
         setVisibleDetail(true);
     }
 
-    function visibleEditIcon(id){
-        setGlobalId(id);
-        setVisibleEdit(true);
+    function visibleDialogIcon(id, type){
+        if (type == 'edit') setGlobalId(id)
+        setVisibleDialog(true)
     }
 
     function bodyIcons(rowData){
         return(
             <div className="spacing-between-buttons">
                 <Button icon="pi pi-book" onClick={() => visibleDetailIcon(rowData.id)} name="Detail"/>
-                <Button icon="pi pi-pencil" severity="warning" onClick={() => visibleEditIcon(rowData.id)} name="Edit"/>
+                <Button icon="pi pi-pencil" severity="warning" onClick={() => visibleDialogIcon(rowData.id, 'edit')} name="Edit"/>
                 <Button icon="pi pi-trash" severity="danger" onClick={() => confirmDelete(rowData.id, rowData.party_name)} name="Delete" />
             </div>
         )
@@ -79,9 +76,8 @@ function Parties(){
                 <Column header="Action" body={bodyIcons} />
             </DataTable>  
 
-            <Button label="Ajouter un groupe" onClick={() => setVisibleAdd(true)} />
-            <AddDialog visible={visibleAdd} sendDataToParent={dataFromDialog} charactersOption={charactersOption} />
-            <EditDialog visible={visibleEdit} sendDataToParent={dataFromDialog} charactersOption={charactersOption} id={globalId} />
+            <Button label="Ajouter un groupe" onClick={() => visibleDialogIcon(null, 'add')} />
+            <PartyDialog visible={visibleDialog} sendDataToParent={dataFromDialog} charactersOption={charactersOption} id={globalId} />
             <DetailDialog visible={visibleDetail} sendDataToParent={dataFromDialog} id={globalId} />
             <ConfirmDialog />
         </>

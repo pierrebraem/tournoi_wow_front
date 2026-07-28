@@ -5,29 +5,46 @@ import { InputText } from 'primereact/inputtext';
 import { MultiSelect } from 'primereact/multiselect';
 import { Button } from 'primereact/button';
 
-function AddDialog({ visible, sendDataToParent, charactersOption }){
-    const [data, setData] = useState({});
-    const [dataError, setDataError] = useState({});
-    const [visibleError, setVisibleError] = useState(false);
+function PartyDialog({ visible, sendDataToParent, charactersOption, id }) {
+    const [data, setData] = useState({})
+    const [dataError, setDataError] = useState({})
+    const [visibleError, setVisibleError] = useState(false)
 
-    function closeModal(){
-        setData({});
-        sendDataToParent(false);
+    function closeModal() {
+        setData({})
+        sendDataToParent(false)
     }
 
-    async function addParty(){
+    function getData(){
+        if(id == null) return;
+
+        fetch("http://localhost:3000/parties/" + id)
+        .then(response => response.json())
+        .then(data => setData({name: data[0].party_name}));
+
+        fetch("http://localhost:3000/compose/" + id)
+        .then(response => response.json())
+        .then(data => setData((data2) => ({ ...data2, characters: data})));
+    }
+
+    async function submit() {
+        const method = id == null ? 'post' : 'put'
+        const baseUrl = "http://localhost:3000/parties/"
+        const url = id == null ? baseUrl : baseUrl + id
+        const successStatusCode = id == null ? 201 : 200
+
         const body = {
             name: data.name,
             characters: data.characters
-        };
+        }
 
-        const res = await fetch("http://localhost:3000/parties", {
-            method: "post",
+        const res = await fetch(url, {
+            method: method,
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(body)
-        });
+        })
 
-        if(res.status != 201){
+        if(res.status != successStatusCode) {
             const json = await res.json();
             setVisibleError(true);
             setDataError({
@@ -37,12 +54,12 @@ function AddDialog({ visible, sendDataToParent, charactersOption }){
             return;
         }
 
-        closeModal();
+        closeModal()
     }
 
     return (
         <>
-            <Dialog header="Ajouter un groupe" visible={visible} onHide={() => closeModal()}>
+            <Dialog header={id == null ? "Ajouter un groupe" : "Modifier un groupe"} visible={visible} onShow={() => getData()} onHide={() => closeModal()}>
                 <div className="form-style">
                     <div className="form-line-style">
                         <label>Nom :</label>
@@ -55,7 +72,7 @@ function AddDialog({ visible, sendDataToParent, charactersOption }){
                             maxSelectedLabels={5} name="Personnages"/>
                     </div>
 
-                    <Button onClick={addParty} label="Ajouter" name="AddButtonDialog" />
+                    <Button onClick={submit} label={id == null ? "Ajouter" : "Modifier"} name="ButtonDialog" />
                 </div>
             </Dialog>
             <Error status={dataError.status} message={dataError.message} visible={visibleError} sendDataToParent={() => setVisibleError(false)}/>
@@ -63,4 +80,4 @@ function AddDialog({ visible, sendDataToParent, charactersOption }){
     )
 }
 
-export default AddDialog;
+export default PartyDialog
