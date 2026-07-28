@@ -52,18 +52,20 @@ function EditDialog({ visible, sendDataToParent, charactersOption, id }){
     return (
         <>
             <Dialog header="Modifier un groupe" visible={visible} onShow={() => getData()} onHide={() => closeModal()}>
-                <div>
-                    <label>Nom :</label>
-                    <InputText value={data.name} onChange={(e) => setData((data) => ({ ...data, name: e.target.value}))} />
-                </div>
+                <div className="form-style">
+                    <div className="form-line-style">
+                        <label>Nom :</label>
+                        <InputText className="input-style" value={data.name} onChange={(e) => setData((data) => ({ ...data, name: e.target.value}))} />
+                    </div>
 
-                <div>
-                    <label>Selection des personnages :</label>
-                    <MultiSelect value={data.characters} onChange={(e) => setData((data) => ({ ...data, characters: e.value}))} options={charactersOption} optionLabel="name" display="chip"
-                        maxSelectedLabels={5} />
-                </div>
+                    <div className="form-line-style">
+                        <label>Selection des personnages :</label>
+                        <MultiSelect className="input-style" value={data.characters} onChange={(e) => setData((data) => ({ ...data, characters: e.value}))} options={charactersOption} optionLabel="name" display="chip"
+                            maxSelectedLabels={5} />
+                    </div>
 
-                <Button onClick={editParty} label="Modifier" />
+                    <Button onClick={editParty} label="Modifier" />
+                </div>
             </Dialog>
             <Error status={dataError.status} message={dataError.message} visible={visibleError} sendDataToParent={() => setVisibleError(false)}/>
         </>

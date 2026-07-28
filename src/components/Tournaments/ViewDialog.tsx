@@ -53,31 +53,29 @@ function ViewDialog({ visible, sendDataToParent, id, partiesOption }){
     }
     
     return(
-        <>
-            <Dialog header="Vue d'un tournoi" visible={visible} onShow={() => getData()} onHide={() => closeModal()}>
-                <div>
-                    <p>Gestion des équipes</p>
-                    <ul>
-                        {dataParties.map(party => (
-                            <li>{party.id} {party.party_name}</li>
-                        ))}
-                    </ul>
+        <Dialog header="Vue d'un tournoi" visible={visible} onShow={() => getData()} onHide={() => closeModal()}>
+            <div>
+                <p>Gestion des équipes</p>
+                <ul>
+                    {dataParties.map(party => (
+                        <li>{party.id} {party.party_name}</li>
+                    ))}
+                </ul>
 
-                    <label>Ajouter une équipe</label>
-                    <Dropdown value={party} onChange={(e) => setParty(e.value)} options={partiesOption} optionLabel="party_name" />
-                    <Button label="Ajouter équipe" onClick={addParty}/>
-                </div>
+                <label>Ajouter une équipe</label>
+                <Dropdown className="input-style" value={party} onChange={(e) => setParty(e.value)} options={partiesOption} optionLabel="party_name" />
+                <Button label="Ajouter équipe" onClick={addParty}/>
+            </div>
 
-                <div>
-                    <p>Réalisation d'un donjon</p>
-                    <ul>
-                        {dataChallenges.map(challenge => (
-                            <li>{challenge.name} {challenge.party_name} {challenge.done ? "Fait ": "Non fait "} {challenge.done ? <Button label="Non terminé" onClick={() => undone(challenge.challenge_id, challenge.dungeos_id, challenge.party_id)}/>: <Button label="Terminé" onClick={() => done(challenge.challenge_id, challenge.dungeos_id, challenge.party_id)} />}</li>
-                        ))}
-                    </ul>
-                </div>
-            </Dialog>
-        </>
+            <div>
+                <p>Réalisation d'un donjon</p>
+                <ul>
+                    {dataChallenges.map(challenge => (
+                        <li>{challenge.name} {challenge.party_name} {challenge.done ? "Fait ": "Non fait "} {challenge.done ? <Button label="Non terminé" onClick={() => undone(challenge.challenge_id, challenge.dungeos_id, challenge.party_id)}/>: <Button label="Terminé" onClick={() => done(challenge.challenge_id, challenge.dungeos_id, challenge.party_id)} />}</li>
+                    ))}
+                </ul>
+            </div>
+        </Dialog>
     )
 }
 

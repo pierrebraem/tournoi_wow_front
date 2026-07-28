@@ -1,3 +1,19 @@
 @import "tailwindcss";
 @import "primereact/resources/themes/lara-light-cyan/theme.css";
 @import "primeicons/primeicons.css";
+
+.form-style {
+    @apply flex flex-col gap-2;
+}
+
+.form-line-style {
+    @apply flex gap-2 items-center;
+}
+
+.input-style {
+    @apply h-8
+}
+
+.spacing-between-buttons {
+    @apply flex gap-2
+}

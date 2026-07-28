@@ -43,18 +43,20 @@ function AddDialog({ visible, sendDataToParent, charactersOption }){
     return (
         <>
             <Dialog header="Ajouter un groupe" visible={visible} onHide={() => closeModal()}>
-                <div>
-                    <label>Nom :</label>
-                    <InputText value={data.name} onChange={(e) => setData((data) => ({ ...data, name: e.target.value}))} name="Nom" />
-                </div>
+                <div className="form-style">
+                    <div className="form-line-style">
+                        <label>Nom :</label>
+                        <InputText className="input-style" value={data.name} onChange={(e) => setData((data) => ({ ...data, name: e.target.value}))} name="Nom" />
+                    </div>
 
-                <div>
-                    <label>Selection des personnages :</label>
-                    <MultiSelect value={data.characters} onChange={(e) => setData((data) => ({ ...data, characters: e.value}))} options={charactersOption} optionLabel="name" display="chip"
-                        maxSelectedLabels={5} name="Personnages"/>
-                </div>
+                    <div className="form-line-style">
+                        <label>Selection des personnages :</label>
+                        <MultiSelect className="input-style" value={data.characters} onChange={(e) => setData((data) => ({ ...data, characters: e.value}))} options={charactersOption} optionLabel="name" display="chip"
+                            maxSelectedLabels={5} name="Personnages"/>
+                    </div>
 
-                <Button onClick={addParty} label="Ajouter" name="AddButtonDialog" />
+                    <Button onClick={addParty} label="Ajouter" name="AddButtonDialog" />
+                </div>
             </Dialog>
             <Error status={dataError.status} message={dataError.message} visible={visibleError} sendDataToParent={() => setVisibleError(false)}/>
         </>

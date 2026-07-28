@@ -35,46 +35,46 @@ function AddDialog({ visible, sendDataToParent, dungeonsOption, partiesOption}){
     }
 
     return(
-        <>
-            <Dialog header="Ajouter un tournoi" visible={visible} onHide={() => closeModal()}>
-                <div>
+        <Dialog header="Ajouter un tournoi" visible={visible} onHide={() => closeModal()}>
+            <div className="form-style">
+                <div className="form-line-style">
                     <label>Nom :</label>
-                    <InputText value={data.name} onChange={(e) => setData((data) => ({ ...data, name: e.target.value}))} name="Nom" />
+                    <InputText className="input-style" value={data.name} onChange={(e) => setData((data) => ({ ...data, name: e.target.value}))} name="Nom" />
                 </div>
 
-                <div>
+                <div className="form-line-style">
                     <label>Date de début :</label>
-                    <Calendar value={data.start_date} onChange={(e) => setData((data) => ({ ...data, start_date: e.value}))} name="DateDebut" />
+                    <Calendar className="input-style" value={data.start_date} onChange={(e) => setData((data) => ({ ...data, start_date: e.value}))} name="DateDebut" />
                 </div>
 
-                <div>
+                <div className="form-line-style">
                     <label>Date de fin :</label>
-                    <Calendar value={data.end_date} onChange={(e) => setData((data) => ({ ...data, end_date: e.value}))} name="DateFin" />
+                    <Calendar className="input-style" value={data.end_date} onChange={(e) => setData((data) => ({ ...data, end_date: e.value}))} name="DateFin" />
                 </div>
 
-                <div>
+                <div className="form-line-style">
                     <label>Droit de participation :</label>
-                    <InputNumber value={data.participation_right} onChange={(e) => setData((data) => ({ ...data, participation_right: e.value}))} name="DroitParticipation" />
+                    <InputNumber className="input-style" value={data.participation_right} onChange={(e) => setData((data) => ({ ...data, participation_right: e.value}))} name="DroitParticipation" />
                 </div>
 
-                <div>
+                <div className="form-line-style">
                     <label>Description :</label>
-                    <InputText value={data.description} onChange={(e) => setData((data) => ({ ...data, description: e.target.value}))} name="Description" />
+                    <InputText className="input-style" value={data.description} onChange={(e) => setData((data) => ({ ...data, description: e.target.value}))} name="Description" />
                 </div>
 
-                <div>
+                <div className="form-line-style">
                     <label>Sélection des donjons :</label>
-                    <MultiSelect value={data.dungeons} onChange={(e) => setData((data) => ({ ...data, dungeons: e.value}))} options={dungeonsOption} optionLabel="name" display="chip" />
+                    <MultiSelect className="input-style" value={data.dungeons} onChange={(e) => setData((data) => ({ ...data, dungeons: e.value}))} options={dungeonsOption} optionLabel="name" display="chip" />
                 </div>
 
-                <div>
+                <div className="form-line-style">
                     <label>Sélection des équipes :</label>
-                    <MultiSelect value={data.parties} onChange={(e) => setData((data) => ({ ...data, parties: e.value}))} options={partiesOption} optionLabel="party_name" display="chip" />
+                    <MultiSelect className="input-style" value={data.parties} onChange={(e) => setData((data) => ({ ...data, parties: e.value}))} options={partiesOption} optionLabel="party_name" display="chip" />
                 </div>
 
                 <Button onClick={addTournament} label="Ajouter" />
-            </Dialog>
-        </>
+            </div>
+        </Dialog>
     )
 }
 

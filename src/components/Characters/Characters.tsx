@@ -60,11 +60,11 @@ function Characters(){
 
     function bodyIcons(rowData){
         return(
-            <>
+            <div className="spacing-between-buttons">
                 <Button icon="pi pi-book" onClick={() => visibleDetailIcon(rowData.id)} name="Detail"/>
                 <Button icon="pi pi-pencil" severity="warning" onClick={() => visibleEditIcon(rowData.id)} name="Edit"/>
                 <Button icon="pi pi-trash" severity="danger" onClick={() => confirmDelete(rowData.id, rowData.name)} name="Delete"/>
-            </>
+            </div>
         )
     }
 
@@ -74,7 +74,7 @@ function Characters(){
 
     return(
         <>
-            <DataTable value={characters}>
+            <DataTable value={characters} className="pb-4">
                 <Column field="name" header="Nom" />
                 <Column field="class" header="Classe" />
                 <Column field="role" header="Rôle" />
