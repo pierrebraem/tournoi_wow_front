@@ -5,14 +5,16 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
+import { Character } from "../../types/characters";
+import { Class } from "../../types/classes";
 import 'primeicons/primeicons.css';
 
 function Characters(){
-    const [characters, setCharacters] = useState([]);
-    const [classOption, setClassOption] = useState([]);
-    const [globalId, setGlobalId] = useState(null);
-    const [visibleDialog, setVisibleDialog] = useState(false);
-    const [visibleDetail, setVisibleDetail] = useState(false);
+    const [characters, setCharacters] = useState<Character[]>([]);
+    const [classOption, setClassOption] = useState<Class[]>([]);
+    const [globalId, setGlobalId] = useState<number | null>(null);
+    const [visibleDialog, setVisibleDialog] = useState<boolean>(false);
+    const [visibleDetail, setVisibleDetail] = useState<boolean>(false);
 
     function loadData(){
         fetch("http://localhost:3000/characters")
@@ -31,7 +33,7 @@ function Characters(){
         setGlobalId(null);
     }
 
-    function confirmDelete(id, name){
+    function confirmDelete(id: number, name: string){
         confirmDialog({
             message: "Etes-vous sur de supprimer le personnage " + name,
             header: "Suppression",
@@ -45,17 +47,17 @@ function Characters(){
         });
     }
 
-    function visibleDetailIcon(id){
+    function visibleDetailIcon(id: number | null){
         setGlobalId(id);
         setVisibleDetail(true);
     }
 
-    function visibleDialogIcon(id, type){
+    function visibleDialogIcon(id: number | null, type: 'add' | 'edit'){
         if (type == 'edit') setGlobalId(id)
         setVisibleDialog(true)
     }
 
-    function bodyIcons(rowData){
+    function bodyIcons(rowData: Character){
         return(
             <div className="spacing-between-buttons">
                 <Button icon="pi pi-book" onClick={() => visibleDetailIcon(rowData.id)} name="Detail"/>

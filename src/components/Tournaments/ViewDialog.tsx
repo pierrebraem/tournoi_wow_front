@@ -2,11 +2,14 @@ import { Dialog } from "primereact/dialog"
 import { useState } from "react";
 import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
+import { Party } from "../../types/parties";
+import { Challenge } from "../../types/challenges";
+import { TDialogView } from "../../types/tournaments";
 
-function ViewDialog({ visible, sendDataToParent, id, partiesOption }){
-    const [dataParties, setDataParties] = useState([]);
-    const [dataChallenges, setDataChallenges] = useState([]);
-    const [party, setParty] = useState({});
+function ViewDialog({ visible, sendDataToParent, id, partiesOption }: Readonly<TDialogView>){
+    const [dataParties, setDataParties] = useState<Party[]>([]);
+    const [dataChallenges, setDataChallenges] = useState<Challenge[]>([]);
+    const [party, setParty] = useState<Party | null>(null);
 
     function closeModal(){
         sendDataToParent();
@@ -24,8 +27,8 @@ function ViewDialog({ visible, sendDataToParent, id, partiesOption }){
 
     async function addParty(){
         const body = {
-            id: party.id,
-            party_name: party.party_name
+            id: party?.id,
+            party_name: party?.party_name
         };
 
         await fetch("http://localhost:3000/registered/" + id, {
@@ -37,7 +40,7 @@ function ViewDialog({ visible, sendDataToParent, id, partiesOption }){
         getData();
     }
 
-    async function done(challenge_id, dungeos_id, party_id){
+    async function done(challenge_id: number, dungeos_id: number, party_id: number){
         const body = {
             challenge_id: challenge_id,
             dungeos_id: dungeos_id,

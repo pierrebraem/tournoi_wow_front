@@ -4,14 +4,21 @@ import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { MultiSelect } from 'primereact/multiselect';
 import { Button } from 'primereact/button';
+import { PDetail, PartyInput } from '../../types/parties';
+import { ErrorType } from '../../types/errors';
 
-function PartyDialog({ visible, sendDataToParent, charactersOption, id }) {
-    const [data, setData] = useState({})
-    const [dataError, setDataError] = useState({})
-    const [visibleError, setVisibleError] = useState(false)
+const EMPTY_PARTY: PartyInput = {
+    name: "",
+    characters: []
+}
+
+function PartyDialog({ visible, sendDataToParent, charactersOption, id }: Readonly<PDetail>) {
+    const [data, setData] = useState<PartyInput>(EMPTY_PARTY)
+    const [dataError, setDataError] = useState<ErrorType | null>(null)
+    const [visibleError, setVisibleError] = useState<boolean>(false)
 
     function closeModal() {
-        setData({})
+        setData(EMPTY_PARTY)
         sendDataToParent(false)
     }
 
@@ -20,11 +27,11 @@ function PartyDialog({ visible, sendDataToParent, charactersOption, id }) {
 
         fetch("http://localhost:3000/parties/" + id)
         .then(response => response.json())
-        .then(data => setData({name: data[0].party_name}));
+        .then(data => setData((prevData) => ({ ...prevData, name: data[0].party_name } )));
 
         fetch("http://localhost:3000/compose/" + id)
         .then(response => response.json())
-        .then(data => setData((data2) => ({ ...data2, characters: data})));
+        .then(data => setData((prevData) => ({ ...prevData, characters: data})));
     }
 
     async function submit() {
@@ -34,8 +41,8 @@ function PartyDialog({ visible, sendDataToParent, charactersOption, id }) {
         const successStatusCode = id == null ? 201 : 200
 
         const body = {
-            name: data.name,
-            characters: data.characters
+            name: data?.name,
+            characters: data?.characters
         }
 
         const res = await fetch(url, {
@@ -62,20 +69,20 @@ function PartyDialog({ visible, sendDataToParent, charactersOption, id }) {
             <Dialog header={id == null ? "Ajouter un groupe" : "Modifier un groupe"} visible={visible} onShow={() => getData()} onHide={() => closeModal()}>
                 <div className="form-style">
                     <div className="form-line-style">
-                        <label>Nom :</label>
-                        <InputText className="input-style" value={data.name} onChange={(e) => setData((data) => ({ ...data, name: e.target.value}))} name="Nom" />
+                        <label htmlFor="party-name">Nom :</label>
+                        <InputText id="party-name" className="input-style" value={data?.name} onChange={(e) => setData((prevData) => ({ ...prevData, name: e.target.value}))} name="Nom" />
                     </div>
 
                     <div className="form-line-style">
-                        <label>Selection des personnages :</label>
-                        <MultiSelect className="input-style" value={data.characters} onChange={(e) => setData((data) => ({ ...data, characters: e.value}))} options={charactersOption} optionLabel="name" display="chip"
+                        <label htmlFor="party-characters">Selection des personnages :</label>
+                        <MultiSelect id="party-characters" className="input-style" value={data?.characters} onChange={(e) => setData((prevData) => ({ ...prevData, characters: e.value}))} options={charactersOption} optionLabel="name" display="chip"
                             maxSelectedLabels={5} name="Personnages"/>
                     </div>
 
                     <Button onClick={submit} label={id == null ? "Ajouter" : "Modifier"} name="ButtonDialog" />
                 </div>
             </Dialog>
-            <Error status={dataError.status} message={dataError.message} visible={visibleError} sendDataToParent={() => setVisibleError(false)}/>
+            <Error status={dataError?.status ?? null} message={dataError?.message ?? null} visible={visibleError} sendDataToParent={() => setVisibleError(false)}/>
         </>
     )
 }

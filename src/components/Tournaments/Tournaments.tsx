@@ -3,18 +3,20 @@ import { Button } from "primereact/button";
 import AddDialog from "./AddDialog";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
-import { ConfirmDialog } from "primereact/confirmdialog";
-import { confirmDialog } from "primereact/confirmdialog";
+import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import 'primeicons/primeicons.css';
 import ViewDialog from "./ViewDialog";
+import { Tournament } from "../../types/tournaments";
+import { Dungeon } from "../../types/dungeons";
+import { Party } from "../../types/parties";
 
 function Tournaments(){
-    const [tournaments, setTournaments] = useState([]);
-    const [visibleAdd, setVisibleAdd] = useState(false);
-    const [visibleView, setVisibleView] = useState(false);
-    const [globalId, setGlobalId] = useState(0);
-    const [dungeonsOption, setDungeonsOption] = useState([]);
-    const [partiesOption, setPartiesOption] = useState([]);
+    const [tournaments, setTournaments] = useState<Tournament[]>([]);
+    const [visibleAdd, setVisibleAdd] = useState<boolean>(false);
+    const [visibleView, setVisibleView] = useState<boolean>(false);
+    const [globalId, setGlobalId] = useState<number | null>(null);
+    const [dungeonsOption, setDungeonsOption] = useState<Dungeon[]>([]);
+    const [partiesOption, setPartiesOption] = useState<Party[]>([]);
 
     function loadData(){
         fetch("http://localhost:3000/tournaments")
@@ -36,7 +38,7 @@ function Tournaments(){
         setVisibleView(false);
     }
 
-    function confirmDelete(id, name){
+    function confirmDelete(id: number, name: string){
         confirmDialog({
             message: "Etes-vous sûr de supprimer le tournoi " + name + " ?",
             header: "Suppression",
@@ -50,12 +52,12 @@ function Tournaments(){
         })
     }
 
-    function visibleViewIcon(id){
+    function visibleViewIcon(id: number){
         setGlobalId(id);
         setVisibleView(true)
     }
 
-    function bodyIcons(rowData){
+    function bodyIcons(rowData: Tournament){
         return(
             <div className="spacing-between-buttons">
                 <Button icon="pi pi-eye" severity="success" onClick={() => visibleViewIcon(rowData.id)} />

@@ -1,7 +1,8 @@
 import { Dialog } from "primereact/dialog";
+import { ErrorInterface } from "../../types/errors";
 
 
-function Error({ status, message, visible, sendDataToParent }){
+function Error({ status, message, visible, sendDataToParent }: Readonly<ErrorInterface>){
     function closeModal(){
         sendDataToParent();
     }

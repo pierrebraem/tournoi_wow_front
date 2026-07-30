@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { Dialog } from 'primereact/dialog';
+import { Character } from '../../types/characters';
+import { Party, PDetailDialog } from '../../types/parties';
 
-function DetailDialog({ id, visible, sendDataToParent }){
-    const [dataCharacters, setDataCharacters] = useState([]);
-    const [dataGroupe, setDataGroupe] = useState({});
+function DetailDialog({ id, visible, sendDataToParent }: Readonly<PDetailDialog>){
+    const [dataCharacters, setDataCharacters] = useState<Character[]>([]);
+    const [dataGroupe, setDataGroupe] = useState<Party | null>(null);
 
     function closeModal(){
         sendDataToParent(false);
@@ -20,9 +22,9 @@ function DetailDialog({ id, visible, sendDataToParent }){
     }
 
     return(
-        <Dialog header={"Détail du groupe " + dataGroupe.party_name} visible={visible} onShow={() => getData()} onHide={() => closeModal()}>
-            <p>Id : {dataGroupe.id}</p>
-            <p>Nom : {dataGroupe.party_name}</p>
+        <Dialog header={"Détail du groupe " + dataGroupe?.party_name} visible={visible} onShow={() => getData()} onHide={() => closeModal()}>
+            <p>Id : {dataGroupe?.id}</p>
+            <p>Nom : {dataGroupe?.party_name}</p>
                 
             <p>Liste des personnages :</p>
             {dataCharacters.map(character => (
