@@ -1,8 +1,6 @@
 function Home(){
     return(
-        <>
-            <p className="underline">Hello World!</p>
-        </>
+        <p className="underline">Hello World!</p>
     )
 }
 
