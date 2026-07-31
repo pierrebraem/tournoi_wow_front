@@ -33,7 +33,9 @@ function Characters(){
         setGlobalId(null);
     }
 
-    function confirmDelete(id: number, name: string){
+    function confirmDelete(id: number |null, name: string){
+        if(id == null) return;
+
         confirmDialog({
             message: "Etes-vous sur de supprimer le personnage " + name,
             header: "Suppression",
@@ -60,9 +62,9 @@ function Characters(){
     function bodyIcons(rowData: Character){
         return(
             <div className="spacing-between-buttons">
-                <Button icon="pi pi-book" onClick={() => visibleDetailIcon(rowData.id)} name="Detail"/>
-                <Button icon="pi pi-pencil" severity="warning" onClick={() => visibleDialogIcon(rowData.id, 'edit')} name="Edit"/>
-                <Button icon="pi pi-trash" severity="danger" onClick={() => confirmDelete(rowData.id, rowData.name)} name="Delete"/>
+                <Button icon="pi pi-book" onClick={() => visibleDetailIcon(rowData.id ?? null)} name="Detail"/>
+                <Button icon="pi pi-pencil" severity="warning" onClick={() => visibleDialogIcon(rowData.id ?? null, 'edit')} name="Edit"/>
+                <Button icon="pi pi-trash" severity="danger" onClick={() => confirmDelete(rowData.id ?? null, rowData.name)} name="Delete"/>
             </div>
         )
     }

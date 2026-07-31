@@ -2,20 +2,12 @@ import { Class } from "./classes"
 import { Role } from "./roles"
 
 export interface Character{
-    id: number,
-    name: string,
-    class: string,
-    role: string,
-    ilvl: number,
-    rio: number,
-}
-
-export interface CharacterInput{
+    id?: number,
     name: string,
     class: Class,
     role: Role,
     ilvl: number,
-    rio: number
+    rio: number,
 }
 
 export interface CDetailDialog{

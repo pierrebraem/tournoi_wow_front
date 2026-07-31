@@ -5,11 +5,11 @@ import { Button } from 'primereact/button';
 import { InputText } from "primereact/inputtext";
 import { InputNumber } from "primereact/inputnumber";
 import { Dropdown } from "primereact/dropdown";
-import { CharacterInput, CDialog } from "../../types/characters";
+import { Character, CDialog } from "../../types/characters";
 import { Role } from "../../types/roles";
 import { ErrorType } from "../../types/errors";
 
-const EMPTY_CHARACTER: CharacterInput = {
+const EMPTY_CHARACTER: Character = {
     name: "",
     class: { id: 0, label: "" },
     role: { id: 0, label: "" },
@@ -18,7 +18,7 @@ const EMPTY_CHARACTER: CharacterInput = {
 };
 
 function CharacterDialog({ visible, sendDataToParent, classOption, id }: Readonly<CDialog>){
-    const [data, setData] = useState<CharacterInput>(EMPTY_CHARACTER)
+    const [data, setData] = useState<Character>(EMPTY_CHARACTER)
     const [dataError, setDataError] = useState<ErrorType | null>(null)
     const [visibleError, setVisibleError] = useState<boolean>(false)
     const [roleOption, setRoleOption] = useState<Role[]>([])
@@ -37,12 +37,20 @@ function CharacterDialog({ visible, sendDataToParent, classOption, id }: Readonl
         .then(data => setRoleOption(data))
     }
 
-    function getData(){
+    async function getData(){
         if (id == null) return;
 
-        fetch("http://localhost:3000/characters/" + id)
-        .then(response => response.json())
-        .then(data => setData(data[0]))
+        try {
+            const characterResponse = await fetch("http://localhost:3000/characters/" + id)
+            const character = await characterResponse.json()
+            setData(character)
+
+            const rolesResponse = await fetch("http://localhost:3000/canbe/class/" + character?.class?.id)
+            const roles = await rolesResponse.json()
+            setRoleOption(roles)
+        } catch (error) {
+            console.error(error)
+        }
     }
 
     async function submit(){
