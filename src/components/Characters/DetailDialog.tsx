@@ -12,15 +12,15 @@ function DetailDialog({ id, visible, sendDataToParent }: Readonly<CDetailDialog>
     function getData(){
         fetch("http://localhost:3000/characters/" + id)
         .then(response => response.json())
-        .then(data => setData(data[0]));
+        .then(data => setData(data));
     }
 
     return(
         <Dialog header={"Détail du personnage " + data?.name} visible={visible} onShow={() => getData()} onHide={() => closeModal()}>
             <div>
                 <p>Nom : {data?.name}</p>
-                <p>Classe : {data?.class}</p>
-                <p>Rôle : {data?.role}</p>
+                <p>Classe : {data?.class.label}</p>
+                <p>Rôle : {data?.role.label}</p>
                 <p>ilvl : {data?.ilvl}</p>
                 <p>rio : {data?.rio}</p>
             </div>

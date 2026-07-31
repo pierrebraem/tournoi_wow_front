@@ -31,8 +31,8 @@ function DetailDialog({ id, visible, sendDataToParent }: Readonly<PDetailDialog>
                 <ul key={character.id}>
                     <li>Id : {character.id}</li>
                     <li>Nom : {character.name}</li>
-                    <li>Classe : {character.classe}</li>
-                    <li>Rôle : {character.role}</li>
+                    <li>Classe : {character.class.label}</li>
+                    <li>Rôle : {character.role.label}</li>
                 </ul>
             ))}
         </Dialog>
