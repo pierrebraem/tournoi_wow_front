@@ -2,19 +2,25 @@
 Projet de gestion de tournois WOW côté front.\
 Vous trouverez le côté back [ici](https://github.com/pierrebraem/tournoi_wow_back)
 
-# Installation du projet en local
-Tout d'abord, vous devez cloner le projet avec cette commande :
+# Installation
+## Télécharger Docker
+Pour pouvoir faire l'installation du front, vous devez avoir Docker installer sur votre ordinateur.\
+Vous pouvez le télécharger [à cette adresse](https://www.docker.com/)
+
+## Cloner le projet
+Une fois fait, clonez le projet :
 ```
 git clone https://github.com/pierrebraem/tournoi_wow_front.git
 ```
-Ensuite, allez à la racine du projet et tapez la commande suivante :
+
+## Création des containers
+Allez à la racine du projet et exécutez la commande suivante pour créer le container front :
 ```
-npm install
+docker compose up -d
 ```
-Pour lancer le projet, tapez la commande :
-```
-npm run dev
-```
+L'opération peu prendre un certains temps.
+
+Si tous s'est bien passé, les containeurs devraient être opérationnels.
 
 # Exécution des tests
 Pour exécuter les tests, vous devez ouvrir Cypress avec la commande :
