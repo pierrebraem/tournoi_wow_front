@@ -13,6 +13,10 @@ Une fois fait, clonez le projet :
 git clone https://github.com/pierrebraem/tournoi_wow_front.git
 ```
 
+## Créer un fichier .env
+Afin de faire fonctionner le projet, vous devez avoir un fichier `.env` à la racine du projet.\
+Vous pouvez soit renommez le fichier `.env.example` en `.env` ou créez un fichier `.env` en prenant comme modèle le fichier `.env.example`.
+
 ## Création des containers
 Allez à la racine du projet et exécutez la commande suivante pour créer le container front :
 ```
