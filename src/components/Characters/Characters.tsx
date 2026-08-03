@@ -9,6 +9,8 @@ import { Character } from "../../types/characters";
 import { Class } from "../../types/classes";
 import 'primeicons/primeicons.css';
 
+const expressUrl = import.meta.env.VITE_EXPRESS_URL;
+
 function Characters(){
     const [characters, setCharacters] = useState<Character[]>([]);
     const [classOption, setClassOption] = useState<Class[]>([]);
@@ -17,11 +19,11 @@ function Characters(){
     const [visibleDetail, setVisibleDetail] = useState<boolean>(false);
 
     function loadData(){
-        fetch("http://localhost:3000/characters")
+        fetch(`${expressUrl}/characters`)
         .then(response => response.json())
         .then(data => setCharacters(data))
 
-        fetch("http://localhost:3000/class")
+        fetch(`${expressUrl}/class`)
         .then(response => response.json())
         .then(data => setClassOption(data))
     }
@@ -40,7 +42,7 @@ function Characters(){
             message: "Etes-vous sur de supprimer le personnage " + name,
             header: "Suppression",
             accept: async () => {
-                await fetch("http://localhost:3000/characters/" + id, {
+                await fetch(`${expressUrl}/characters/` + id, {
                     method: "delete"
                 });
 

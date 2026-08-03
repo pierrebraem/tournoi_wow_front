@@ -9,6 +9,8 @@ import { Character } from "../../types/characters";
 import { Party } from "../../types/parties";
 import 'primeicons/primeicons.css';
 
+const expressUrl = import.meta.env.VITE_EXPRESS_URL;
+
 function Parties(){
     const [parties, setParties] = useState<Party[]>([]);
     const [charactersOption, setCharactersOption] = useState<Character[]>([]);
@@ -17,11 +19,11 @@ function Parties(){
     const [visibleDetail, setVisibleDetail] = useState<boolean>(false);
 
     function loadData(){
-        fetch("http://localhost:3000/parties")
+        fetch(`${expressUrl}/parties`)
         .then(response => response.json())
         .then(data => setParties(data));
 
-        fetch("http://localhost:3000/characters")
+        fetch(`${expressUrl}/characters`)
         .then(response => response.json())
         .then(data => setCharactersOption(data))
     }
@@ -38,7 +40,7 @@ function Parties(){
             message: "Etes-vous sûr de supprimer le groupe " + name + " ?",
             header: "Suppression",
             accept: async () => {
-                await fetch("http://localhost:3000/parties/" + id, {
+                await fetch(`${expressUrl}/parties/` + id, {
                     method: "delete"
                 });
 

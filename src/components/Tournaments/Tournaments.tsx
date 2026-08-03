@@ -10,6 +10,8 @@ import { Tournament } from "../../types/tournaments";
 import { Dungeon } from "../../types/dungeons";
 import { Party } from "../../types/parties";
 
+const expressUrl = import.meta.env.VITE_EXPRESS_URL;
+
 function Tournaments(){
     const [tournaments, setTournaments] = useState<Tournament[]>([]);
     const [visibleAdd, setVisibleAdd] = useState<boolean>(false);
@@ -19,15 +21,15 @@ function Tournaments(){
     const [partiesOption, setPartiesOption] = useState<Party[]>([]);
 
     function loadData(){
-        fetch("http://localhost:3000/tournaments")
+        fetch(`${expressUrl}/tournaments`)
         .then(response => response.json())
         .then(data => setTournaments(data));
 
-        fetch("http://localhost:3000/dungeos")
+        fetch(`${expressUrl}/dungeos`)
         .then(response => response.json())
         .then(data => setDungeonsOption(data));
 
-        fetch("http://localhost:3000/parties")
+        fetch(`${expressUrl}/parties`)
         .then(response => response.json())
         .then (data => setPartiesOption(data));
     }
@@ -43,7 +45,7 @@ function Tournaments(){
             message: "Etes-vous sûr de supprimer le tournoi " + name + " ?",
             header: "Suppression",
             accept: async () => {
-                await fetch("http://localhost:3000/tournaments/" + id, {
+                await fetch(`${expressUrl}/tournaments/` + id, {
                     method: "delete"
                 });
 

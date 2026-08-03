@@ -9,6 +9,8 @@ import { Character, CDialog } from "../../types/characters";
 import { Role } from "../../types/roles";
 import { ErrorType } from "../../types/errors";
 
+const expressUrl = import.meta.env.VITE_EXPRESS_URL;
+
 const EMPTY_CHARACTER: Character = {
     name: "",
     class: { id: 0, label: "" },
@@ -32,7 +34,7 @@ function CharacterDialog({ visible, sendDataToParent, classOption, id }: Readonl
 
     function getRoles(value: Role){
         setData((prevData) => ({ ...prevData, class: { id: value.id, label: value.label } }))
-        fetch("http://localhost:3000/canbe/class/" + value.id)
+        fetch(`${expressUrl}/canbe/class/` + value.id)
         .then(response => response.json())
         .then(data => setRoleOption(data))
     }
@@ -41,11 +43,11 @@ function CharacterDialog({ visible, sendDataToParent, classOption, id }: Readonl
         if (id == null) return;
 
         try {
-            const characterResponse = await fetch("http://localhost:3000/characters/" + id)
+            const characterResponse = await fetch(`${expressUrl}/characters/` + id)
             const character = await characterResponse.json()
             setData(character)
 
-            const rolesResponse = await fetch("http://localhost:3000/canbe/class/" + character?.class?.id)
+            const rolesResponse = await fetch(`${expressUrl}/canbe/class/` + character?.class?.id)
             const roles = await rolesResponse.json()
             setRoleOption(roles)
         } catch (error) {
@@ -55,7 +57,7 @@ function CharacterDialog({ visible, sendDataToParent, classOption, id }: Readonl
 
     async function submit(){
         const method = id == null ? 'post' : 'put'
-        const baseUrl = "http://localhost:3000/characters/"
+        const baseUrl = `${expressUrl}/characters/`
         const url = id == null ? baseUrl : baseUrl + id
         const successStatusCode = id == null ? 201 : 200
 

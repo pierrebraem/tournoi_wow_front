@@ -6,6 +6,8 @@ import { Party } from "../../types/parties";
 import { Challenge } from "../../types/challenges";
 import { TDialogView } from "../../types/tournaments";
 
+const expressUrl = import.meta.env.VITE_EXPRESS_URL;
+
 function ViewDialog({ visible, sendDataToParent, id, partiesOption }: Readonly<TDialogView>){
     const [dataParties, setDataParties] = useState<Party[]>([]);
     const [dataChallenges, setDataChallenges] = useState<Challenge[]>([]);
@@ -16,11 +18,11 @@ function ViewDialog({ visible, sendDataToParent, id, partiesOption }: Readonly<T
     }
 
     function getData(){
-        fetch("http://localhost:3000/registered/" + id)
+        fetch(`${expressUrl}/registered/` + id)
         .then(response => response.json())
         .then(data => setDataParties(data))
 
-        fetch("http://localhost:3000/challenge/" + id)
+        fetch(`${expressUrl}/challenge/` + id)
         .then(response => response.json())
         .then(data => setDataChallenges(data))
     }
@@ -31,7 +33,7 @@ function ViewDialog({ visible, sendDataToParent, id, partiesOption }: Readonly<T
             party_name: party?.party_name
         };
 
-        await fetch("http://localhost:3000/registered/" + id, {
+        await fetch(`${expressUrl}/registered/` + id, {
             method: "put",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(body)
@@ -46,7 +48,7 @@ function ViewDialog({ visible, sendDataToParent, id, partiesOption }: Readonly<T
             dungeos_id: dungeos_id,
             party_id: party_id
         }
-        await fetch("http://localhost:3000/registered/done", {
+        await fetch(`${expressUrl}/registered/done`, {
             method: "put",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(body)
