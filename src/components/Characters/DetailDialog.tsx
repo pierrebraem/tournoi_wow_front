@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Dialog } from 'primereact/dialog';
 import { Character, CDetailDialog } from '../../types/characters';
 
+const expressUrl = import.meta.env.VITE_EXPRESS_URL;
+
 function DetailDialog({ id, visible, sendDataToParent }: Readonly<CDetailDialog>){
     const [data, setData] = useState<Character | null>(null);
 
@@ -10,7 +12,7 @@ function DetailDialog({ id, visible, sendDataToParent }: Readonly<CDetailDialog>
     }
 
     function getData(){
-        fetch("http://localhost:3000/characters/" + id)
+        fetch(`${expressUrl}/characters/` + id)
         .then(response => response.json())
         .then(data => setData(data));
     }

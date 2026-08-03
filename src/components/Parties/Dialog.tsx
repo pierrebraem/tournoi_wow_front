@@ -7,6 +7,8 @@ import { Button } from 'primereact/button';
 import { PDetail, PartyInput } from '../../types/parties';
 import { ErrorType } from '../../types/errors';
 
+const expressUrl = import.meta.env.VITE_EXPRESS_URL;
+
 const EMPTY_PARTY: PartyInput = {
     name: "",
     characters: []
@@ -25,18 +27,18 @@ function PartyDialog({ visible, sendDataToParent, charactersOption, id }: Readon
     function getData(){
         if(id == null) return;
 
-        fetch("http://localhost:3000/parties/" + id)
+        fetch(`${expressUrl}/parties/` + id)
         .then(response => response.json())
         .then(data => setData((prevData) => ({ ...prevData, name: data[0].party_name } )));
 
-        fetch("http://localhost:3000/compose/" + id)
+        fetch(`${expressUrl}/compose/` + id)
         .then(response => response.json())
         .then(data => setData((prevData) => ({ ...prevData, characters: data})));
     }
 
     async function submit() {
         const method = id == null ? 'post' : 'put'
-        const baseUrl = "http://localhost:3000/parties/"
+        const baseUrl = `${expressUrl}/parties/`
         const url = id == null ? baseUrl : baseUrl + id
         const successStatusCode = id == null ? 201 : 200
 

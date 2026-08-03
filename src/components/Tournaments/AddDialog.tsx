@@ -7,6 +7,8 @@ import { MultiSelect } from 'primereact/multiselect';
 import { Button } from 'primereact/button';
 import { TournamentInput, TDialogDetail } from '../../types/tournaments';
 
+const expressUrl = import.meta.env.VITE_EXPRESS_URL;
+
 const EMPTY_TOURNAMENT: TournamentInput = {
     name: "",
     start_date: null,
@@ -36,7 +38,7 @@ function AddDialog({ visible, sendDataToParent, dungeonsOption, partiesOption}: 
             parties: data?.parties
         };
 
-        await fetch("http://localhost:3000/tournaments", {
+        await fetch(`${expressUrl}/tournaments`, {
             method: "post",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(body)

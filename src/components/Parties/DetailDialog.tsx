@@ -3,6 +3,8 @@ import { Dialog } from 'primereact/dialog';
 import { Character } from '../../types/characters';
 import { Party, PDetailDialog } from '../../types/parties';
 
+const expressUrl = import.meta.env.VITE_EXPRESS_URL;
+
 function DetailDialog({ id, visible, sendDataToParent }: Readonly<PDetailDialog>){
     const [dataCharacters, setDataCharacters] = useState<Character[]>([]);
     const [dataGroupe, setDataGroupe] = useState<Party | null>(null);
@@ -12,11 +14,11 @@ function DetailDialog({ id, visible, sendDataToParent }: Readonly<PDetailDialog>
     }
 
     function getData(){
-        fetch("http://localhost:3000/compose/" + id)
+        fetch(`${expressUrl}/compose/` + id)
         .then(response => response.json())
         .then(data => setDataCharacters(data));
 
-        fetch("http://localhost:3000/parties/" + id)
+        fetch(`${expressUrl}/parties/` + id)
         .then(response => response.json())
         .then(data => setDataGroupe(data[0]));
     }
