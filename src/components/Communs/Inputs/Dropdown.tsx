@@ -1,5 +1,5 @@
 import { Dropdown } from "primereact/dropdown";
-import type { DropdownType } from "../../../types/communs";
+import type { DropdownType } from "../../../types";
 
 function DropdownInput({ id, value, onChange, options, placeholder, name }: Readonly<DropdownType>){
     return(

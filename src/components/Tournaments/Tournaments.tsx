@@ -6,9 +6,7 @@ import { DataTable } from "primereact/datatable";
 import { showConfirmDelete } from "../Communs/DeleteDialog";
 import 'primeicons/primeicons.css';
 import ViewDialog from "./ViewDialog";
-import { Tournament } from "../../types/tournaments";
-import { Dungeon } from "../../types/dungeons";
-import { Party } from "../../types/parties";
+import { Tournament, Dungeon, Party } from "../../types";
 
 const expressUrl = import.meta.env.VITE_EXPRESS_URL;
 

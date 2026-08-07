@@ -1,5 +1,5 @@
 import { InputNumber } from "primereact/inputnumber";
-import type { NumberType } from "../../../types/communs";
+import type { NumberType } from "../../../types";
 
 function NumberInput({ id, value, onChange, name }: Readonly<NumberType>){
     return(

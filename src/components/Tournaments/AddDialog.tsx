@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
 import { CalendarInput, NumberInput, TextInput, MultiSelectInput } from '../Communs/Inputs';
-import { TournamentInput, TDialogDetail } from '../../types/tournaments';
+import { TournamentInput, TDialogDetail } from '../../types';
 
 const expressUrl = import.meta.env.VITE_EXPRESS_URL;
 

@@ -5,8 +5,7 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { showConfirmDelete } from "../Communs/DeleteDialog";
-import { Character } from "../../types/characters";
-import { Class } from "../../types/classes";
+import { Character, Class } from "../../types";
 import 'primeicons/primeicons.css';
 
 const expressUrl = import.meta.env.VITE_EXPRESS_URL;

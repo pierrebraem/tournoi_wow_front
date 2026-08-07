@@ -1,5 +1,5 @@
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
-import type { DialogSupprType } from "../../types/communs";
+import type { DialogSupprType } from "../../types";
 
 export function showConfirmDelete({message, header, accept}: DialogSupprType) {
     confirmDialog({

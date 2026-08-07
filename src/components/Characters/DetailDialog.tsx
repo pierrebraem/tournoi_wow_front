@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Dialog } from 'primereact/dialog';
-import { Character, CDetailDialog } from '../../types/characters';
+import { Character, CDetailDialog } from '../../types';
 
 const expressUrl = import.meta.env.VITE_EXPRESS_URL;
 
