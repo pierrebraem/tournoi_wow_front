@@ -1,10 +1,7 @@
 import { useState } from 'react';
 import { Dialog } from 'primereact/dialog';
-import { InputText } from 'primereact/inputtext';
-import { InputNumber } from 'primereact/inputnumber';
-import { Calendar } from 'primereact/calendar';
-import { MultiSelect } from 'primereact/multiselect';
 import { Button } from 'primereact/button';
+import { CalendarInput, NumberInput, TextInput, MultiSelectInput } from '../Communs/Inputs';
 import { TournamentInput, TDialogDetail } from '../../types/tournaments';
 
 const expressUrl = import.meta.env.VITE_EXPRESS_URL;
@@ -52,37 +49,37 @@ function AddDialog({ visible, sendDataToParent, dungeonsOption, partiesOption}: 
             <div className="form-style">
                 <div className="form-line-style">
                     <label htmlFor="tournament-name">Nom :</label>
-                    <InputText id="tournament-name" className="input-style" value={data?.name} onChange={(e) => setData((prevData) => ({ ...prevData, name: e.target.value}))} name="Nom" />
+                    <TextInput id="tournament-name" value={data?.name} onChange={(e) => setData((prevData) => ({ ...prevData, name: e.target.value}))} name="Nom" />
                 </div>
 
                 <div className="form-line-style">
                     <label htmlFor="tournament-start-date">Date de début :</label>
-                    <Calendar id="tournament-start-date" className="input-style" value={data?.start_date ?? null} onChange={(e) => setData((prevData) => ({ ...prevData, start_date: e.value ?? null }))} name="DateDebut" />
+                    <CalendarInput id="tournament-start-date" value={data?.start_date ?? null} onChange={(e) => setData((prevData) => ({ ...prevData, start_date: e.value ?? null }))} name="DateDebut" />
                 </div>
 
                 <div className="form-line-style">
                     <label htmlFor="tournament-end-date">Date de fin :</label>
-                    <Calendar id="tournament-end-date" className="input-style" value={data?.end_date ?? null} onChange={(e) => setData((prevData) => ({ ...prevData, end_date: e.value ?? null }))} name="DateFin" />
+                    <CalendarInput id="tournament-end-date" value={data?.end_date ?? null} onChange={(e) => setData((prevData) => ({ ...prevData, end_date: e.value ?? null }))} name="DateFin" />
                 </div>
 
                 <div className="form-line-style">
                     <label htmlFor="tournament-participation-right">Droit de participation :</label>
-                    <InputNumber id="tournament-participation-right" className="input-style" value={data?.participation_right} onChange={(e) => setData((prevData) => ({ ...prevData, participation_right: e.value}))} name="DroitParticipation" />
+                    <NumberInput id="tournament-participation-right" value={data?.participation_right} onChange={(e) => setData((prevData) => ({ ...prevData, participation_right: e.value}))} name="DroitParticipation" />
                 </div>
 
                 <div className="form-line-style">
                     <label htmlFor="tournament-description">Description :</label>
-                    <InputText id="tournament-description" className="input-style" value={data?.description} onChange={(e) => setData((prevData) => ({ ...prevData, description: e.target.value}))} name="Description" />
+                    <TextInput id="tournament-description" value={data?.description} onChange={(e) => setData((prevData) => ({ ...prevData, description: e.target.value}))} name="Description" />
                 </div>
 
                 <div className="form-line-style">
                     <label htmlFor="tournament-dungeons">Sélection des donjons :</label>
-                    <MultiSelect id="tournament-dungeons" className="input-style" value={data?.dungeons} onChange={(e) => setData((prevData) => ({ ...prevData, dungeons: e.value}))} options={dungeonsOption} optionLabel="name" display="chip" />
+                    <MultiSelectInput id="tournament-dungeons" value={data?.dungeons} onChange={(e) => setData((prevData) => ({ ...prevData, dungeons: e.value}))} options={dungeonsOption} name="Donjons" />
                 </div>
 
                 <div className="form-line-style">
                     <label htmlFor="tournament-parties">Sélection des équipes :</label>
-                    <MultiSelect id="tournament-parties" className="input-style" value={data?.parties} onChange={(e) => setData((prevData) => ({ ...prevData, parties: e.value}))} options={partiesOption} optionLabel="party_name" display="chip" />
+                    <MultiSelectInput id="tournament-parties" value={data?.parties} onChange={(e) => setData((prevData) => ({ ...prevData, parties: e.value}))} options={partiesOption} name="Equipes" />
                 </div>
 
                 <Button onClick={addTournament} label="Ajouter" />

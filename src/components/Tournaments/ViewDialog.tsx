@@ -1,7 +1,7 @@
 import { Dialog } from "primereact/dialog"
 import { useState } from "react";
-import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
+import { DropdownInput } from "../Communs/Inputs";
 import { Party } from "../../types/parties";
 import { Challenge } from "../../types/challenges";
 import { TDialogView } from "../../types/tournaments";
@@ -68,7 +68,7 @@ function ViewDialog({ visible, sendDataToParent, id, partiesOption }: Readonly<T
                 </ul>
 
                 <label>Ajouter une équipe</label>
-                <Dropdown className="input-style" value={party} onChange={(e) => setParty(e.value)} options={partiesOption} optionLabel="party_name" />
+                <DropdownInput id="changeitlater" value={party} onChange={(e) => setParty(e.value)} options={partiesOption} name="changeitlater" />
                 <Button label="Ajouter équipe" onClick={addParty}/>
             </div>
 

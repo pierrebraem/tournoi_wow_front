@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import Error from '../Error/Error';
 import { Dialog } from 'primereact/dialog';
-import { InputText } from 'primereact/inputtext';
-import { MultiSelect } from 'primereact/multiselect';
 import { Button } from 'primereact/button';
+import { TextInput, MultiSelectInput } from '../Communs/Inputs';
 import { PDetail, PartyInput } from '../../types/parties';
 import { ErrorType } from '../../types/errors';
 
@@ -72,13 +71,12 @@ function PartyDialog({ visible, sendDataToParent, charactersOption, id }: Readon
                 <div className="form-style">
                     <div className="form-line-style">
                         <label htmlFor="party-name">Nom :</label>
-                        <InputText id="party-name" className="input-style" value={data?.name} onChange={(e) => setData((prevData) => ({ ...prevData, name: e.target.value}))} name="Nom" />
+                        <TextInput id="party-name" value={data?.name} onChange={(e) => setData((prevData) => ({ ...prevData, name: e.target.value}))} name="Nom" />
                     </div>
 
                     <div className="form-line-style">
                         <label htmlFor="party-characters">Selection des personnages :</label>
-                        <MultiSelect id="party-characters" className="input-style" value={data?.characters} onChange={(e) => setData((prevData) => ({ ...prevData, characters: e.value}))} options={charactersOption} optionLabel="name" display="chip"
-                            maxSelectedLabels={5} name="Personnages"/>
+                        <MultiSelectInput id="party-characters" value={data?.characters} onChange={(e) => setData((prevData) => ({ ...prevData, characters: e.value}))} options={charactersOption} name="Personnages" />
                     </div>
 
                     <Button onClick={submit} label={id == null ? "Ajouter" : "Modifier"} name="ButtonDialog" />
