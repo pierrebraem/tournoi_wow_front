@@ -2,9 +2,7 @@ import { useState } from "react";
 import Error from "../Error/Error";
 import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
-import { InputText } from "primereact/inputtext";
-import { InputNumber } from "primereact/inputnumber";
-import { Dropdown } from "primereact/dropdown";
+import { NumberInput, TextInput, DropdownInput } from "../Communs/Inputs";
 import { Character, CDialog } from "../../types/characters";
 import { Role } from "../../types/roles";
 import { ErrorType } from "../../types/errors";
@@ -94,27 +92,27 @@ function CharacterDialog({ visible, sendDataToParent, classOption, id }: Readonl
                 <div className="form-style">
                     <div className="form-line-style">
                         <label htmlFor="character-name">Nom :</label>
-                        <InputText id="character-name" className="input-style" value={data?.name} onChange={(e) => setData((prevData) => ({ ...prevData, name: e.target.value }))} name="Nom" />
+                        <TextInput id="character-name" value={data?.name} onChange={(e) => setData((prevData) => ({ ...prevData, name: e.target.value }))} name="Nom" />
                     </div>
                     
                     <div className="form-line-style">
                         <label htmlFor="character-class">Classe :</label>
-                        <Dropdown inputId="character-class" className="input-style" value={data?.class} onChange={(e) => getRoles(e.value)} options={classOption} optionLabel="label" placeholder="Sélectionner une classe" name="Classe" />
+                        <DropdownInput id="character-class" value={data?.class} onChange={(e) => getRoles(e.value)} options={classOption} placeholder="Sélectionner une classe" name="Classe" />
                     </div>
 
                     <div className="form-line-style">
                         <label htmlFor="character-role">Rôle :</label>
-                        <Dropdown inputId="character-role" className="input-style" value={data?.role} onChange={(e) => setData((prevData) => ({ ...prevData, role: { id: e.value.id, label: e.value.label } }))} options={roleOption} optionLabel="label" placeholder="Sélectionner un rôle" name="Role" />
+                        <DropdownInput id="character-role" value={data?.role} onChange={(e) => setData((prevData) => ({ ...prevData, role: { id: e.value.id, label: e.value.label } }))} options={roleOption} placeholder="Sélectionner un rôle" name="Role" />
                     </div>
 
                     <div className="form-line-style">
                         <label htmlFor="character-ilvl">ilvl :</label>
-                        <InputNumber id="character-ilvl" className="input-style" value={data?.ilvl} onChange={(e) => setData((prevData) => ({ ...prevData, ilvl: e.value ?? 0 }))} name="ilvl" />
+                        <NumberInput id="character-ilvl" value={data?.ilvl} onChange={(e) => setData((prevData) => ({ ...prevData, ilvl: e.value ?? 0 }))} name="ilvl" />
                     </div>
 
                     <div className="form-line-style">
                         <label htmlFor="character-rio">rio :</label>
-                        <InputNumber id="character-rio" className="input-style" value={data?.rio} onChange={(e) => setData((prevData) => ({ ...prevData, rio: e.value ?? 0 }))} name="rio" />
+                        <NumberInput id="character-rio" value={data?.rio} onChange={(e) => setData((prevData) => ({ ...prevData, rio: e.value ?? 0 }))} name="rio" />
                     </div>
 
                     <Button onClick={submit} label={id == null ? "Ajouter" : "Modifier"} name="ButtonDialog" />
