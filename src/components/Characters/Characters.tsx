@@ -4,7 +4,7 @@ import DetailDialog from "./DetailDialog";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
-import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
+import { showConfirmDelete } from "../Communs/DialogSuppr";
 import { Character } from "../../types/characters";
 import { Class } from "../../types/classes";
 import 'primeicons/primeicons.css';
@@ -35,12 +35,12 @@ function Characters(){
         setGlobalId(null);
     }
 
-    function confirmDelete(id: number |null, name: string){
-        if(id == null) return;
+    function confirmDelete(id: number | null, name: string){
+        if (id == null) return;
 
-        confirmDialog({
-            message: "Etes-vous sur de supprimer le personnage " + name,
-            header: "Suppression",
+        showConfirmDelete({
+            message: "Etes-vous sûr de supprimer le personnage " + name + " ?",
+            header: "Suppression du personnage " + name,
             accept: async () => {
                 await fetch(`${expressUrl}/characters/` + id, {
                     method: "delete"
@@ -89,7 +89,6 @@ function Characters(){
             <Button label="Ajouter un personnage" onClick={() => visibleDialogIcon(null, 'add')} name="Add"/>
             <CharacterDialog visible={visibleDialog} sendDataToParent={dataFromDialog} classOption={classOption} id={globalId} />
             <DetailDialog visible={visibleDetail} sendDataToParent={dataFromDialog} id={globalId} />
-            <ConfirmDialog />
         </>
     )
 }

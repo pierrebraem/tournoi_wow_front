@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { InputNumber } from 'primereact/inputnumber';
-import { Calendar } from 'primereact/calendar';
 import { MultiSelect } from 'primereact/multiselect';
 import { Button } from 'primereact/button';
 import { TournamentInput, TDialogDetail } from '../../types/tournaments';
+import Calendrier from '../Communs/Calendrier';
 
 const expressUrl = import.meta.env.VITE_EXPRESS_URL;
 
@@ -57,12 +57,12 @@ function AddDialog({ visible, sendDataToParent, dungeonsOption, partiesOption}: 
 
                 <div className="form-line-style">
                     <label htmlFor="tournament-start-date">Date de début :</label>
-                    <Calendar id="tournament-start-date" className="input-style" value={data?.start_date ?? null} onChange={(e) => setData((prevData) => ({ ...prevData, start_date: e.value ?? null }))} name="DateDebut" />
+                    <Calendrier id="tournament-start-date" value={data?.start_date ?? null} onChange={(e) => setData((prevData) => ({ ...prevData, start_date: e.value ?? null }))} name="DateDebut" />
                 </div>
 
                 <div className="form-line-style">
                     <label htmlFor="tournament-end-date">Date de fin :</label>
-                    <Calendar id="tournament-end-date" className="input-style" value={data?.end_date ?? null} onChange={(e) => setData((prevData) => ({ ...prevData, end_date: e.value ?? null }))} name="DateFin" />
+                    <Calendrier id="tournament-end-date" value={data?.end_date ?? null} onChange={(e) => setData((prevData) => ({ ...prevData, end_date: e.value ?? null }))} name="DateFin" />
                 </div>
 
                 <div className="form-line-style">

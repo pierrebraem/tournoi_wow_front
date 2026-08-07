@@ -4,7 +4,7 @@ import DetailDialog from "./DetailDialog";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
-import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
+import { showConfirmDelete } from "../Communs/DialogSuppr";
 import { Character } from "../../types/characters";
 import { Party } from "../../types/parties";
 import 'primeicons/primeicons.css';
@@ -36,9 +36,9 @@ function Parties(){
     }
 
     function confirmDelete(id: number, name: string){
-        confirmDialog({
+        showConfirmDelete({
             message: "Etes-vous sûr de supprimer le groupe " + name + " ?",
-            header: "Suppression",
+            header: "Suppression de l'équipe " + name,
             accept: async () => {
                 await fetch(`${expressUrl}/parties/` + id, {
                     method: "delete"
@@ -46,7 +46,7 @@ function Parties(){
 
                 loadData();
             }
-        })
+        });
     }
 
     function visibleDetailIcon(id: number){
@@ -83,7 +83,6 @@ function Parties(){
             <Button label="Ajouter un groupe" onClick={() => visibleDialogIcon(null, 'add')} />
             <PartyDialog visible={visibleDialog} sendDataToParent={dataFromDialog} charactersOption={charactersOption} id={globalId} />
             <DetailDialog visible={visibleDetail} sendDataToParent={dataFromDialog} id={globalId} />
-            <ConfirmDialog />
         </>
     )
 }
