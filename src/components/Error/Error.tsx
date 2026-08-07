@@ -1,5 +1,5 @@
 import { Dialog } from "primereact/dialog";
-import { ErrorInterface } from "../../types/errors";
+import { ErrorInterface } from "../../types";
 
 
 function Error({ status, message, visible, sendDataToParent }: Readonly<ErrorInterface>){

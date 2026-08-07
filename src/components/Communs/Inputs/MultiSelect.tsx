@@ -1,5 +1,5 @@
 import { MultiSelect } from "primereact/multiselect";
-import type { MultiSelectType } from "../../../types/communs";
+import type { MultiSelectType } from "../../../types";
 
 function MultiSelectInput({ id, value, onChange, options, name }: Readonly<MultiSelectType>) {
     return(

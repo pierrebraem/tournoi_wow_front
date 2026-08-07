@@ -1,5 +1,5 @@
 import { Calendar } from 'primereact/calendar';
-import type { CalendarType } from '../../../types/communs';
+import type { CalendarType } from '../../../types';
 
 function CalendarInput({ id, value, onChange, name }: Readonly<CalendarType>){
     return(

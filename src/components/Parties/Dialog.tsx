@@ -3,8 +3,7 @@ import Error from '../Error/Error';
 import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
 import { TextInput, MultiSelectInput } from '../Communs/Inputs';
-import { PDetail, PartyInput } from '../../types/parties';
-import { ErrorType } from '../../types/errors';
+import { PDetail, PartyInput, ErrorType } from '../../types';
 
 const expressUrl = import.meta.env.VITE_EXPRESS_URL;
 

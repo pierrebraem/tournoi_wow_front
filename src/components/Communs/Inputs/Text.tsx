@@ -1,5 +1,5 @@
 import { InputText } from "primereact/inputtext";
-import type { TextType } from "../../../types/communs";
+import type { TextType } from "../../../types";
 
 function TextInput({ id, value, onChange, name}: Readonly<TextType>) {
     return(

@@ -2,9 +2,7 @@ import { Dialog } from "primereact/dialog"
 import { useState } from "react";
 import { Button } from "primereact/button";
 import { DropdownInput } from "../Communs/Inputs";
-import { Party } from "../../types/parties";
-import { Challenge } from "../../types/challenges";
-import { TDialogView } from "../../types/tournaments";
+import { Party, Challenge, TDialogView } from "../../types";
 
 const expressUrl = import.meta.env.VITE_EXPRESS_URL;
 
