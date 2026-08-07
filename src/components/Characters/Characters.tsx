@@ -4,7 +4,7 @@ import DetailDialog from "./DetailDialog";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
-import { showConfirmDelete } from "../Communs/DialogSuppr";
+import { showConfirmDelete } from "../Communs/DeleteDialog";
 import { Character } from "../../types/characters";
 import { Class } from "../../types/classes";
 import 'primeicons/primeicons.css';
