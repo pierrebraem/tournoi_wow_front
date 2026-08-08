@@ -2,7 +2,7 @@ import { Character } from "./characters";
 
 export interface Party{
     id: number,
-    party_name: string,
+    name: string,
 }
 
 export interface PartyInput{
