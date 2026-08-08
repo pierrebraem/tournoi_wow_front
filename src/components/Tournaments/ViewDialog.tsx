@@ -33,7 +33,7 @@ function ViewDialog({ visible, sendDataToParent, id, partiesOption }: Readonly<T
     async function addParty(){
         const body = {
             id: party?.id,
-            party_name: party?.party_name
+            name: party?.name
         };
 
         await fetch(`${expressUrl}/registered/` + id, {
@@ -66,7 +66,7 @@ function ViewDialog({ visible, sendDataToParent, id, partiesOption }: Readonly<T
                 <p>Gestion des équipes</p>
                 <ul>
                     {dataParties.map(party => (
-                        <li>{party.id} {party.party_name}</li>
+                        <li>{party.id} {party.name}</li>
                     ))}
                 </ul>
 
@@ -79,7 +79,7 @@ function ViewDialog({ visible, sendDataToParent, id, partiesOption }: Readonly<T
                 <p>Réalisation d'un donjon</p>
                 <ul>
                     {dataChallenges.map(challenge => (
-                        <li>{challenge.name} {challenge.party_name} {challenge.done ? "Fait ": "Non fait "} {challenge.done ? <Button label="Non terminé" onClick={() => undone(challenge.challenge_id, challenge.dungeos_id, challenge.party_id)}/>: <Button label="Terminé" onClick={() => done(challenge.challenge_id, challenge.dungeos_id, challenge.party_id)} />}</li>
+                        <li>{challenge.name} {challenge.name} {challenge.done ? "Fait ": "Non fait "} {challenge.done ? <Button label="Non terminé" onClick={() => undone(challenge.challenge_id, challenge.dungeos_id, challenge.party_id)}/>: <Button label="Terminé" onClick={() => done(challenge.challenge_id, challenge.dungeos_id, challenge.party_id)} />}</li>
                     ))}
                 </ul>
             </div>

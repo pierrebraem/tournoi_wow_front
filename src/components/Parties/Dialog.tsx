@@ -28,7 +28,7 @@ function PartyDialog({ visible, sendDataToParent, charactersOption, id }: Readon
         try{
             const partyResponse = await fetch(`${expressUrl}/parties/` + id)
             const party = await partyResponse.json()
-            setData((prevData) => ({ ...prevData, name: party.party_name } ))
+            setData((prevData) => ({ ...prevData, name: party.name } ))
 
             const charactersResponse = await fetch(`${expressUrl}/compose/` + id)
             const characters = await charactersResponse.json()

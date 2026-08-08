@@ -28,9 +28,9 @@ function DetailDialog({ id, visible, sendDataToParent }: Readonly<PDetailDialog>
     }
 
     return(
-        <Dialog header={"Détail du groupe " + dataGroupe?.party_name} visible={visible} onShow={() => getData()} onHide={() => closeModal()}>
+        <Dialog header={"Détail du groupe " + dataGroupe?.name} visible={visible} onShow={() => getData()} onHide={() => closeModal()}>
             <p>Id : {dataGroupe?.id}</p>
-            <p>Nom : {dataGroupe?.party_name}</p>
+            <p>Nom : {dataGroupe?.name}</p>
                 
             <p>Liste des personnages :</p>
             {dataCharacters.map(character => (
