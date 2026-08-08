@@ -22,16 +22,21 @@ function PartyDialog({ visible, sendDataToParent, charactersOption, id }: Readon
         sendDataToParent(false)
     }
 
-    function getData(){
+    async function getData(){
         if(id == null) return;
 
-        fetch(`${expressUrl}/parties/` + id)
-        .then(response => response.json())
-        .then(data => setData((prevData) => ({ ...prevData, name: data[0].party_name } )));
+        try{
+            const partyResponse = await fetch(`${expressUrl}/parties/` + id)
+            const party = await partyResponse.json()
+            setData((prevData) => ({ ...prevData, name: party[0].party_name } ))
 
-        fetch(`${expressUrl}/compose/` + id)
-        .then(response => response.json())
-        .then(data => setData((prevData) => ({ ...prevData, characters: data})));
+            const charactersResponse = await fetch(`${expressUrl}/compose/` + id)
+            const characters = await charactersResponse.json()
+            setData((prevData) => ({ ...prevData, characters: characters}))
+        }
+        catch(error){
+            console.error(error)
+        }
     }
 
     async function submit() {

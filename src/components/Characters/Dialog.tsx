@@ -28,17 +28,22 @@ function CharacterDialog({ visible, sendDataToParent, classOption, id }: Readonl
         sendDataToParent()
     }
 
-    function getRoles(value: Role){
-        setData((prevData) => ({ ...prevData, class: { id: value.id, label: value.label } }))
-        fetch(`${expressUrl}/canbe/class/` + value.id)
-        .then(response => response.json())
-        .then(data => setRoleOption(data))
+    async function getRoles(value: Role){
+        try{
+            setData((prevData) => ({ ...prevData, class: { id: value.id, label: value.label } }))
+            const rolesResponse = await fetch(`${expressUrl}/canbe/class/` + value.id)
+            const roles = await rolesResponse.json()
+            setRoleOption(roles)
+        }
+        catch(error){
+            console.error(error)
+        }
     }
 
     async function getData(){
         if (id == null) return;
 
-        try {
+        try{
             const characterResponse = await fetch(`${expressUrl}/characters/` + id)
             const character = await characterResponse.json()
             setData(character)
@@ -46,7 +51,8 @@ function CharacterDialog({ visible, sendDataToParent, classOption, id }: Readonl
             const rolesResponse = await fetch(`${expressUrl}/canbe/class/` + character?.class?.id)
             const roles = await rolesResponse.json()
             setRoleOption(roles)
-        } catch (error) {
+        }
+        catch(error){
             console.error(error)
         }
     }

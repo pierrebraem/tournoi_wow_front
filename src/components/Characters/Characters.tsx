@@ -16,14 +16,19 @@ function Characters(){
     const [visibleDialog, setVisibleDialog] = useState<boolean>(false);
     const [visibleDetail, setVisibleDetail] = useState<boolean>(false);
 
-    function loadData(){
-        fetch(`${expressUrl}/characters`)
-        .then(response => response.json())
-        .then(data => setCharacters(data))
+    async function loadData(){
+        try{
+            const charactersResponse = await fetch(`${expressUrl}/characters`)
+            const characters = await charactersResponse.json()
+            setCharacters(characters)
 
-        fetch(`${expressUrl}/class`)
-        .then(response => response.json())
-        .then(data => setClassOption(data))
+            const classesResponse = await fetch(`${expressUrl}/class`)
+            const classes = await classesResponse.json()
+            setClassOption(classes)
+        }
+        catch(error){
+            console.error(error)
+        }
     }
 
     function dataFromDialog(){

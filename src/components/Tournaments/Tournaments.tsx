@@ -17,18 +17,23 @@ function Tournaments(){
     const [dungeonsOption, setDungeonsOption] = useState<Dungeon[]>([]);
     const [partiesOption, setPartiesOption] = useState<Party[]>([]);
 
-    function loadData(){
-        fetch(`${expressUrl}/tournaments`)
-        .then(response => response.json())
-        .then(data => setTournaments(data));
+    async function loadData(){
+        try{
+            const tournamentsResponse = await fetch(`${expressUrl}/tournaments`)
+            const tournaments = await tournamentsResponse.json()
+            setTournaments(tournaments)
 
-        fetch(`${expressUrl}/dungeos`)
-        .then(response => response.json())
-        .then(data => setDungeonsOption(data));
+            const dungeosResponse = await fetch(`${expressUrl}/dungeos`)
+            const dungeos = await dungeosResponse.json()
+            setDungeonsOption(dungeos)
 
-        fetch(`${expressUrl}/parties`)
-        .then(response => response.json())
-        .then (data => setPartiesOption(data));
+            const partiesResponse = await fetch(`${expressUrl}/parties`)
+            const parties = await partiesResponse.json()
+            setPartiesOption(parties)
+        }
+        catch(error){
+            console.error(error)
+        }
     }
 
     function dataFromDialog(){
