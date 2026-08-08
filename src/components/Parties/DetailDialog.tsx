@@ -20,7 +20,7 @@ function DetailDialog({ id, visible, sendDataToParent }: Readonly<PDetailDialog>
 
             const partyResponse = await fetch(`${expressUrl}/parties/` + id)
             const party = await partyResponse.json()
-            setDataGroupe(party[0])
+            setDataGroupe(party)
         }
         catch(error){
             console.error(error)
