@@ -33,7 +33,7 @@ function CharacterDialog({ visible, sendDataToParent, classOption, id }: Readonl
             setData((prevData) => ({ ...prevData, class: { id: value.id, label: value.label } }))
             const rolesResponse = await fetch(`${expressUrl}/canbe/class/` + value.id)
             const roles = await rolesResponse.json()
-            setData(roles)
+            setRoleOption(roles)
         }
         catch(error){
             console.error(error)
