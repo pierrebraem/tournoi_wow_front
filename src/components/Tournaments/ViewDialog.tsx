@@ -15,14 +15,19 @@ function ViewDialog({ visible, sendDataToParent, id, partiesOption }: Readonly<T
         sendDataToParent();
     }
 
-    function getData(){
-        fetch(`${expressUrl}/registered/` + id)
-        .then(response => response.json())
-        .then(data => setDataParties(data))
+    async function getData(){
+        try{
+            const partiesResponse = await fetch(`${expressUrl}/registered/` + id)
+            const parties = await partiesResponse.json()
+            setDataParties(parties)
 
-        fetch(`${expressUrl}/challenge/` + id)
-        .then(response => response.json())
-        .then(data => setDataChallenges(data))
+            const challengesResponse = await fetch(`${expressUrl}/challenge/` + id)
+            const challenges = await challengesResponse.json()
+            setDataChallenges(challenges)
+        }
+        catch(error){
+            console.error(error)
+        }
     }
 
     async function addParty(){

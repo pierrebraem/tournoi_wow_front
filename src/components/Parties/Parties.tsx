@@ -16,14 +16,19 @@ function Parties(){
     const [visibleDialog, setVisibleDialog] = useState<boolean>(false);
     const [visibleDetail, setVisibleDetail] = useState<boolean>(false);
 
-    function loadData(){
-        fetch(`${expressUrl}/parties`)
-        .then(response => response.json())
-        .then(data => setParties(data));
+    async function loadData(){
+        try{
+            const partiesResponse = await fetch(`${expressUrl}/parties`)
+            const parties = await partiesResponse.json()
+            setParties(parties)
 
-        fetch(`${expressUrl}/characters`)
-        .then(response => response.json())
-        .then(data => setCharactersOption(data))
+            const charactersResponse = await fetch(`${expressUrl}/characters`)
+            const characters = await charactersResponse.json()
+            setCharactersOption(characters)
+        }
+        catch(error){
+            console.error(error)
+        }
     }
 
     function dataFromDialog(){

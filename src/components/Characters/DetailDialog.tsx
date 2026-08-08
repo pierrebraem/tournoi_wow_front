@@ -11,10 +11,15 @@ function DetailDialog({ id, visible, sendDataToParent }: Readonly<CDetailDialog>
         sendDataToParent();
     }
 
-    function getData(){
-        fetch(`${expressUrl}/characters/` + id)
-        .then(response => response.json())
-        .then(data => setData(data));
+    async function getData(){
+        try{
+            const characterResponse = await fetch(`${expressUrl}/characters/` + id)
+            const character = await characterResponse.json()
+            setData(character)
+        }
+        catch(error){
+            console.error(error)
+        }
     }
 
     return(
