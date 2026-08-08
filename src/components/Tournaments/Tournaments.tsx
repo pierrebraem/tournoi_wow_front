@@ -4,7 +4,6 @@ import AddDialog from "./AddDialog";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { showConfirmDelete } from "../Communs/DeleteDialog";
-import 'primeicons/primeicons.css';
 import ViewDialog from "./ViewDialog";
 import { Tournament, Dungeon, Party } from "../../types";
 
