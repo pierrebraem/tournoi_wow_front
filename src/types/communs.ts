@@ -9,6 +9,7 @@ export interface InputsType {
     name: string,
     placeholder?: string,
     options?: Array<any>,
+    error?: string | null,
 }
 
 export interface CalendarType extends InputsType {
@@ -18,6 +19,8 @@ export interface CalendarType extends InputsType {
 
 export interface NumberType extends InputsType {
     value: number | null,
+    min?: number,
+    max?: number,
     onChange: (e: InputNumberChangeEvent) => void,
 }
 
@@ -33,6 +36,7 @@ export interface DropdownType extends InputsType {
 
 export interface MultiSelectType extends InputsType {
     value: any,
+    min?: number,
     onChange: (e: MultiSelectChangeEvent) => void,
 }
 

@@ -10,6 +10,14 @@ export interface Character{
     rio: number,
 }
 
+export interface CharacterInput{
+    name: string,
+    class_id: number,
+    role_id: number,
+    ilvl: number,
+    rio: number,
+}
+
 export interface CDetailDialog{
     id: number | null,
     visible: boolean,

@@ -11,9 +11,13 @@
 }
 
 .input-style {
-    @apply h-8
+    @apply h-8;
 }
 
 .spacing-between-buttons {
-    @apply flex gap-2
+    @apply flex gap-2;
+}
+
+.error-style {
+    @apply text-red-400;
 }
