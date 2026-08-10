@@ -19,7 +19,7 @@ function PartyDialog({ visible, sendDataToParent, charactersOption, id }: Readon
 
     function closeModal() {
         setData(EMPTY_PARTY)
-        sendDataToParent(false)
+        sendDataToParent()
     }
 
     async function getData(){

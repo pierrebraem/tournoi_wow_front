@@ -13,7 +13,7 @@ export interface PartyInput{
 export interface PDetailDialog{
     id: number  | null,
     visible: boolean,
-    sendDataToParent: (a: boolean) => void,
+    sendDataToParent: () => void,
 }
 
 export interface PDetail extends PDetailDialog{
