@@ -24,7 +24,7 @@ export interface TournamentInput{
 
 export interface TDialog{
     visible: boolean,
-    sendDataToParent: (visible: boolean) => void,
+    sendDataToParent: () => void,
     partiesOption: Party[],
 }
 

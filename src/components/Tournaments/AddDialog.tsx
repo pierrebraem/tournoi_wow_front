@@ -21,7 +21,7 @@ function AddDialog({ visible, sendDataToParent, dungeonsOption, partiesOption}: 
 
     function closeModal(){
         setData(EMPTY_TOURNAMENT);
-        sendDataToParent(false);
+        sendDataToParent();
     }
 
     async function addTournament(){
