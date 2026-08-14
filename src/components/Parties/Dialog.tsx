@@ -3,7 +3,9 @@ import Error from '../Error/Error';
 import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
 import { TextInput, MultiSelectInput } from '../Communs/Inputs';
-import { PDetail, PartyInput, ErrorType } from '../../types';
+import { PDetail, PartyInput, PartyErrors, ErrorType } from '../../types';
+import { partySchema } from '../../schemas/parties';
+import * as z from "zod";
 
 const expressUrl = import.meta.env.VITE_EXPRESS_URL;
 
@@ -14,12 +16,25 @@ const EMPTY_PARTY: PartyInput = {
 
 function PartyDialog({ visible, sendDataToParent, charactersOption, id }: Readonly<PDetail>) {
     const [data, setData] = useState<PartyInput>(EMPTY_PARTY)
-    const [dataError, setDataError] = useState<ErrorType | null>(null)
+    const [apiError, setApiError] = useState<ErrorType | null>(null)
+    const [formErrors, setFromErrors] = useState<PartyErrors | null>(null);
     const [visibleError, setVisibleError] = useState<boolean>(false)
 
     function closeModal() {
         setData(EMPTY_PARTY)
+        setFromErrors(null);
         sendDataToParent()
+    }
+
+    function checkErrors(party: PartyInput){
+        const result = partySchema.safeParse(party);
+
+        if(!result.success){
+            const formatedErrors = z.flattenError(result.error);
+            setFromErrors(formatedErrors.fieldErrors);
+        }
+
+        return result.success;
     }
 
     async function getData(){
@@ -50,6 +65,9 @@ function PartyDialog({ visible, sendDataToParent, charactersOption, id }: Readon
             characters: data?.characters
         }
 
+        const errorSuccess = checkErrors(body);
+        if(!errorSuccess) return false;
+
         const res = await fetch(url, {
             method: method,
             headers: {"Content-Type": "application/json"},
@@ -59,7 +77,7 @@ function PartyDialog({ visible, sendDataToParent, charactersOption, id }: Readon
         if(res.status != successStatusCode) {
             const json = await res.json();
             setVisibleError(true);
-            setDataError({
+            setApiError({
                 status: res.status,
                 message: json.message
             });
@@ -75,18 +93,18 @@ function PartyDialog({ visible, sendDataToParent, charactersOption, id }: Readon
                 <div className="form-style">
                     <div className="form-line-style">
                         <label htmlFor="party-name">Nom :</label>
-                        <TextInput id="party-name" value={data?.name} onChange={(e) => setData((prevData) => ({ ...prevData, name: e.target.value}))} name="Nom" />
+                        <TextInput id="party-name" value={data?.name} error={formErrors?.name} onChange={(e) => setData((prevData) => ({ ...prevData, name: e.target.value}))} name="Nom" />
                     </div>
 
                     <div className="form-line-style">
                         <label htmlFor="party-characters">Selection des personnages :</label>
-                        <MultiSelectInput id="party-characters" value={data?.characters} onChange={(e) => setData((prevData) => ({ ...prevData, characters: e.value}))} options={charactersOption} name="Personnages" />
+                        <MultiSelectInput id="party-characters" value={data?.characters} error={formErrors?.characters} onChange={(e) => setData((prevData) => ({ ...prevData, characters: e.value}))} options={charactersOption} name="Personnages" />
                     </div>
 
                     <Button onClick={submit} label={id == null ? "Ajouter" : "Modifier"} name="ButtonDialog" />
                 </div>
             </Dialog>
-            <Error status={dataError?.status ?? null} message={dataError?.message ?? null} visible={visibleError} sendDataToParent={() => setVisibleError(false)}/>
+            <Error status={apiError?.status ?? null} message={apiError?.message ?? null} visible={visibleError} sendDataToParent={() => setVisibleError(false)}/>
         </>
     )
 }

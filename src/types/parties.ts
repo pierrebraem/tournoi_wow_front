@@ -10,6 +10,11 @@ export interface PartyInput{
     characters: Character[]
 }
 
+export interface PartyErrors{
+    name?: Array<string>,
+    characters?: Array<string>,
+}
+
 export interface PDetailDialog{
     id: number  | null,
     visible: boolean,

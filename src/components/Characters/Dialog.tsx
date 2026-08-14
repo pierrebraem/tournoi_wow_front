@@ -3,7 +3,9 @@ import Error from "../Error/Error";
 import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
 import { NumberInput, TextInput, DropdownInput } from "../Communs/Inputs";
-import { Character, CDialog, Role, ErrorType } from "../../types";
+import { Character, CharacterInput, CharacterErrors, CDialog, Role, ErrorType } from "../../types";
+import { characterSchema }from "../../schemas/characters";
+import * as z from "zod";
 
 const expressUrl = import.meta.env.VITE_EXPRESS_URL;
 
@@ -17,15 +19,28 @@ const EMPTY_CHARACTER: Character = {
 
 function CharacterDialog({ visible, sendDataToParent, classOption, id }: Readonly<CDialog>){
     const [data, setData] = useState<Character>(EMPTY_CHARACTER)
-    const [dataError, setDataError] = useState<ErrorType | null>(null)
+    const [apiError, setApiError] = useState<ErrorType | null>(null)
+    const [formErrors, setFormErrors] = useState<CharacterErrors | null>(null);
     const [visibleError, setVisibleError] = useState<boolean>(false)
     const [roleOption, setRoleOption] = useState<Role[]>([])
 
     function closeModal(){
         setRoleOption([])
         setData(EMPTY_CHARACTER)
+        setFormErrors(null);
 
         sendDataToParent()
+    }
+
+    function checkErrors(character: CharacterInput){
+        const result = characterSchema.safeParse(character);
+
+        if(!result.success){
+            const formatedErrors = z.flattenError(result.error);
+            setFormErrors(formatedErrors.fieldErrors);
+        }
+
+        return result.success;
     }
 
     async function getRoles(value: Role){
@@ -71,6 +86,9 @@ function CharacterDialog({ visible, sendDataToParent, classOption, id }: Readonl
             rio: data?.rio
         }
 
+        const errorSuccess = checkErrors(body);
+        if(!errorSuccess) return false;
+
         const res = await fetch(url, {
             method: method,
             headers: {"Content-Type": "application/json"},
@@ -80,7 +98,7 @@ function CharacterDialog({ visible, sendDataToParent, classOption, id }: Readonl
         if(res.status != successStatusCode){
             const json = await res.json()
             setVisibleError(true);
-            setDataError({
+            setApiError({
                 status: res.status,
                 message: json.message,
             })
@@ -96,33 +114,33 @@ function CharacterDialog({ visible, sendDataToParent, classOption, id }: Readonl
                 <div className="form-style">
                     <div className="form-line-style">
                         <label htmlFor="character-name">Nom :</label>
-                        <TextInput id="character-name" value={data?.name} onChange={(e) => setData((prevData) => ({ ...prevData, name: e.target.value }))} name="Nom" />
+                        <TextInput id="character-name" value={data?.name} error={formErrors?.name} onChange={(e) => setData((prevData) => ({ ...prevData, name: e.target.value }))} name="Nom" />
                     </div>
                     
                     <div className="form-line-style">
                         <label htmlFor="character-class">Classe :</label>
-                        <DropdownInput id="character-class" value={data?.class} onChange={(e) => getRoles(e.value)} options={classOption} placeholder="Sélectionner une classe" name="Classe" />
+                        <DropdownInput id="character-class" value={data?.class} error={formErrors?.class_id} onChange={(e) => getRoles(e.value)} options={classOption} placeholder="Sélectionner une classe" name="Classe" />
                     </div>
 
                     <div className="form-line-style">
                         <label htmlFor="character-role">Rôle :</label>
-                        <DropdownInput id="character-role" value={data?.role} onChange={(e) => setData((prevData) => ({ ...prevData, role: { id: e.value.id, label: e.value.label } }))} options={roleOption} placeholder="Sélectionner un rôle" name="Role" />
+                        <DropdownInput id="character-role" value={data?.role} error={formErrors?.role_id} onChange={(e) => setData((prevData) => ({ ...prevData, role: { id: e.value.id, label: e.value.label } }))} options={roleOption} placeholder="Sélectionner un rôle" name="Role" />
                     </div>
 
                     <div className="form-line-style">
                         <label htmlFor="character-ilvl">ilvl :</label>
-                        <NumberInput id="character-ilvl" value={data?.ilvl} onChange={(e) => setData((prevData) => ({ ...prevData, ilvl: e.value ?? 0 }))} name="ilvl" />
+                        <NumberInput id="character-ilvl" value={data?.ilvl} error={formErrors?.ilvl} min={0} max={645} onChange={(e) => setData((prevData) => ({ ...prevData, ilvl: e.value ?? 0 }))} name="ilvl" />
                     </div>
 
                     <div className="form-line-style">
                         <label htmlFor="character-rio">rio :</label>
-                        <NumberInput id="character-rio" value={data?.rio} onChange={(e) => setData((prevData) => ({ ...prevData, rio: e.value ?? 0 }))} name="rio" />
+                        <NumberInput id="character-rio" value={data?.rio} error={formErrors?.rio} min={0} max={4500} onChange={(e) => setData((prevData) => ({ ...prevData, rio: e.value ?? 0 }))} name="rio" />
                     </div>
 
                     <Button onClick={submit} label={id == null ? "Ajouter" : "Modifier"} name="ButtonDialog" />
                 </div>
             </Dialog>
-            <Error status={dataError?.status ?? null} message={dataError?.message ?? null} visible={visibleError} sendDataToParent={() => setVisibleError(false)}/>
+            <Error status={apiError?.status ?? null} message={apiError?.message ?? null} visible={visibleError} sendDataToParent={() => setVisibleError(false)}/>
         </>
     )
 }

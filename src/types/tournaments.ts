@@ -22,6 +22,16 @@ export interface TournamentInput{
     parties: Party[],
 }
 
+export interface TournamentErrors{
+    name?: Array<string>,
+    start_date?: Array<string>,
+    end_date?: Array<string>,
+    participation_right?: Array<string>,
+    description?: Array<string>,
+    dungeons?: Array<string>,
+    parties?: Array<string>,
+}
+
 export interface TDialog{
     visible: boolean,
     sendDataToParent: () => void,
