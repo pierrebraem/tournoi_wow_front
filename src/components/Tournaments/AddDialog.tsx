@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
 import { CalendarInput, NumberInput, TextInput, MultiSelectInput } from '../Communs/Inputs';
-import { TournamentInput, TDialogDetail } from '../../types';
+import { TournamentInput, TournamentErrors, TDialogDetail } from '../../types';
 import { tournamentSchema } from '../../schemas/tournaments';
 import * as z from "zod";
 
@@ -20,7 +20,7 @@ const EMPTY_TOURNAMENT: TournamentInput = {
 
 function AddDialog({ visible, sendDataToParent, dungeonsOption, partiesOption}: Readonly<TDialogDetail>){
     const [data, setData] = useState<TournamentInput>(EMPTY_TOURNAMENT);
-    const [formErrors, setFormErrors] = useState(null);
+    const [formErrors, setFormErrors] = useState<TournamentErrors | null>(null);
 
     function closeModal(){
         setData(EMPTY_TOURNAMENT);

@@ -18,6 +18,14 @@ export interface CharacterInput{
     rio: number,
 }
 
+export interface CharacterErrors{
+    name?: Array<string>,
+    class_id?: Array<string>,
+    role_id?: Array<string>,
+    ilvl?: Array<string>,
+    rio?: Array<string>,
+}
+
 export interface CDetailDialog{
     id: number | null,
     visible: boolean,

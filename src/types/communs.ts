@@ -9,7 +9,7 @@ export interface InputsType {
     name: string,
     placeholder?: string,
     options?: Array<any>,
-    error?: string | null,
+    error?: Array<string> | null,
 }
 
 export interface CalendarType extends InputsType {

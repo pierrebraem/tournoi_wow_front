@@ -3,7 +3,7 @@ import Error from '../Error/Error';
 import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
 import { TextInput, MultiSelectInput } from '../Communs/Inputs';
-import { PDetail, PartyInput, ErrorType } from '../../types';
+import { PDetail, PartyInput, PartyErrors, ErrorType } from '../../types';
 import { partySchema } from '../../schemas/parties';
 import * as z from "zod";
 
@@ -17,7 +17,7 @@ const EMPTY_PARTY: PartyInput = {
 function PartyDialog({ visible, sendDataToParent, charactersOption, id }: Readonly<PDetail>) {
     const [data, setData] = useState<PartyInput>(EMPTY_PARTY)
     const [apiError, setApiError] = useState<ErrorType | null>(null)
-    const [formErrors, setFromErrors] = useState(null);
+    const [formErrors, setFromErrors] = useState<PartyErrors | null>(null);
     const [visibleError, setVisibleError] = useState<boolean>(false)
 
     function closeModal() {

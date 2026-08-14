@@ -3,7 +3,7 @@ import Error from "../Error/Error";
 import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
 import { NumberInput, TextInput, DropdownInput } from "../Communs/Inputs";
-import { Character, CharacterInput, CDialog, Role, ErrorType } from "../../types";
+import { Character, CharacterInput, CharacterErrors, CDialog, Role, ErrorType } from "../../types";
 import { characterSchema }from "../../schemas/characters";
 import * as z from "zod";
 
@@ -20,7 +20,7 @@ const EMPTY_CHARACTER: Character = {
 function CharacterDialog({ visible, sendDataToParent, classOption, id }: Readonly<CDialog>){
     const [data, setData] = useState<Character>(EMPTY_CHARACTER)
     const [apiError, setApiError] = useState<ErrorType | null>(null)
-    const [formErrors, setFormErrors] = useState(null);
+    const [formErrors, setFormErrors] = useState<CharacterErrors | null>(null);
     const [visibleError, setVisibleError] = useState<boolean>(false)
     const [roleOption, setRoleOption] = useState<Role[]>([])
 
