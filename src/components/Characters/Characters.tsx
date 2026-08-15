@@ -18,7 +18,6 @@ function Characters(){
     const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
 
     function dataFromDialog(){
-        console.log("coucou");
         setRefreshTrigger(prev => prev + 1);
         setVisibleDialog(false);
         setVisibleDetail(false);
