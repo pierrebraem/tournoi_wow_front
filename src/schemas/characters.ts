@@ -2,7 +2,7 @@ import * as z from "zod";
 
 const requiredField = "Ce champ est obligatoire.";
 const ilvlField = "Votre saisie doit être comprise entre 0 et 645.";
-const rioField = "Votre saisie doit être comprise entre 0 et 4500."
+const rioField = "Votre saisie doit être comprise entre 0 et 4500.";
 
 const characterSchema = z.object({
     name: z.string().min(1, { message: requiredField }),
@@ -12,4 +12,4 @@ const characterSchema = z.object({
     rio: z.number().min(0, { message: rioField }).max(4500, { message: rioField }),
 });
 
-export { characterSchema }
+export { characterSchema };

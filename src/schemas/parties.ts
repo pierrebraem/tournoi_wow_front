@@ -5,4 +5,4 @@ const partySchema = z.object({
     characters: z.array(z.object()).min(1, { message: "Vous devez saisir au moins un personnage." }),
 });
 
-export { partySchema }
+export { partySchema };

@@ -1,4 +1,4 @@
-import { Dialog } from "primereact/dialog"
+import { Dialog } from "primereact/dialog";
 import { useState } from "react";
 import { Button } from "primereact/button";
 import { DropdownInput } from "../Communs/Inputs";
@@ -17,16 +17,16 @@ function ViewDialog({ visible, sendDataToParent, id, partiesOption }: Readonly<T
 
     async function getData(){
         try{
-            const partiesResponse = await fetch(`${expressUrl}/registered/` + id)
-            const parties = await partiesResponse.json()
-            setDataParties(parties)
+            const partiesResponse = await fetch(`${expressUrl}/registered/` + id);
+            const parties = await partiesResponse.json();
+            setDataParties(parties);
 
-            const challengesResponse = await fetch(`${expressUrl}/challenge/` + id)
-            const challenges = await challengesResponse.json()
-            setDataChallenges(challenges)
+            const challengesResponse = await fetch(`${expressUrl}/challenge/` + id);
+            const challenges = await challengesResponse.json();
+            setDataChallenges(challenges);
         }
         catch(error){
-            console.error(error)
+            console.error(error);
         }
     }
 
@@ -50,7 +50,7 @@ function ViewDialog({ visible, sendDataToParent, id, partiesOption }: Readonly<T
             challenge_id: challenge_id,
             dungeos_id: dungeos_id,
             party_id: party_id
-        }
+        };
         await fetch(`${expressUrl}/registered/done`, {
             method: "put",
             headers: {"Content-Type": "application/json"},
@@ -84,7 +84,7 @@ function ViewDialog({ visible, sendDataToParent, id, partiesOption }: Readonly<T
                 </ul>
             </div>
         </Dialog>
-    )
+    );
 }
 
-export default ViewDialog
+export default ViewDialog;

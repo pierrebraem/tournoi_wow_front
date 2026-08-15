@@ -3,12 +3,13 @@ import type { FormEvent } from 'primereact/ts-helpers';
 import type { InputNumberChangeEvent } from 'primereact/inputnumber';
 import type { DropdownChangeEvent } from 'primereact/dropdown';
 import type { MultiSelectChangeEvent } from 'primereact/multiselect';
+import type { Class, Role, Character, Dungeon, Party } from '.';
 
-export interface InputsType {
+export interface InputsType<TOption = unknown> {
     id: string,
     name: string,
     placeholder?: string,
-    options?: Array<any>,
+    options?: TOption[],
     error?: Array<string> | null,
 }
 
@@ -29,13 +30,13 @@ export interface TextType extends InputsType {
     onChange: (e: ChangeEvent<HTMLInputElement, HTMLInputElement>) => void,
 }
 
-export interface DropdownType extends InputsType {
-    value: any,
+export interface DropdownType<TOption extends { id: number; label: string; } = Class | Role> extends InputsType<TOption> {
+    value: TOption | null,
     onChange: (e: DropdownChangeEvent) => void,
 }
 
-export interface MultiSelectType extends InputsType {
-    value: any,
+export interface MultiSelectType<TOption extends { id?: number; label?: string; name?: string } = Class | Role | Dungeon | Character | Party> extends InputsType<TOption> {
+    value: TOption[] | null,
     min?: number,
     onChange: (e: MultiSelectChangeEvent) => void,
 }

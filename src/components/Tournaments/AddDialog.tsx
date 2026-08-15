@@ -29,7 +29,7 @@ function AddDialog({ visible, sendDataToParent, dungeonsOption, partiesOption}: 
     }
 
     function checkErrors(tournament: TournamentInput){
-        const result = tournamentSchema.safeParse(tournament)
+        const result = tournamentSchema.safeParse(tournament);
 
         if(!result.success){
             const formatedErrors = z.flattenError(result.error);
@@ -103,7 +103,7 @@ function AddDialog({ visible, sendDataToParent, dungeonsOption, partiesOption}: 
                 <Button onClick={addTournament} label="Ajouter" />
             </div>
         </Dialog>
-    )
+    );
 }
 
 export default AddDialog;

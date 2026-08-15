@@ -21,7 +21,7 @@ function App() {
         </Routes>
       </BrowserRouter>
     </PrimeReactProvider>
-  )
+  );
 }
 
-export default App
+export default App;

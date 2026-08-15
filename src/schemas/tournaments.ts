@@ -16,8 +16,8 @@ const tournamentSchema = z.object({
             code: "custom",
             message: "La date de fin doit être supérieure à la date de début",
             path: ["end_date"],
-        })
+        });
     }
 });
 
-export { tournamentSchema }
+export { tournamentSchema };

@@ -22,11 +22,11 @@ function Header(){
             icon: 'pi pi-crown',
             url: '/tournaments'
         }
-    ]
+    ];
 
     return(
         <Menubar model={items} className="mb-4" />
-    )
+    );
 }
 
-export default Header
+export default Header;

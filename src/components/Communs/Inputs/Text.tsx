@@ -14,8 +14,8 @@ function TextInput({ id, value, onChange, name, error}: Readonly<TextType>) {
                 </span> : null
             }
         </div>
-    )
+    );
 
 }
 
-export default TextInput 
+export default TextInput; 

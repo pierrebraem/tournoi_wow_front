@@ -13,12 +13,12 @@ function DetailDialog({ id, visible, sendDataToParent }: Readonly<CDetailDialog>
 
     async function getData(){
         try{
-            const characterResponse = await fetch(`${expressUrl}/characters/` + id)
-            const character = await characterResponse.json()
-            setData(character)
+            const characterResponse = await fetch(`${expressUrl}/characters/` + id);
+            const character = await characterResponse.json();
+            setData(character);
         }
         catch(error){
-            console.error(error)
+            console.error(error);
         }
     }
 
@@ -32,7 +32,7 @@ function DetailDialog({ id, visible, sendDataToParent }: Readonly<CDetailDialog>
                 <p>rio : {data?.rio}</p>
             </div>
         </Dialog>
-    )
+    );
 }
 
-export default DetailDialog
+export default DetailDialog;

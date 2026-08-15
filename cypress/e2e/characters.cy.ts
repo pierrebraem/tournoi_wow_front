@@ -23,7 +23,7 @@ describe('Tests characters', () => {
     cy.get('button[name=Delete]').click();
 
     cy.contains("Suppression");
-    cy.contains("Etes-vous sur de supprimer le personnage Mystic")
+    cy.contains("Etes-vous sur de supprimer le personnage Mystic");
 
     cy.contains('Yes').click();
   });
@@ -67,7 +67,7 @@ describe('Tests characters', () => {
 
     cy.get('button[name=AddButtonDialog]').click();
     
-    cy.contains("The field 'ilvl' must be between 0 and 645")
+    cy.contains("The field 'ilvl' must be between 0 and 645");
   });
 
   it('Essayer d\'ajouter un personnage avec un ilvl inférieur à 0', () => {
@@ -89,7 +89,7 @@ describe('Tests characters', () => {
 
     cy.get('button[name=AddButtonDialog]').click();
     
-    cy.contains("The field 'ilvl' must be between 0 and 645")
+    cy.contains("The field 'ilvl' must be between 0 and 645");
   });
 
   it('Essayer d\'ajouter un personnage avec un rio supérieur à 4500', () => {
@@ -111,7 +111,7 @@ describe('Tests characters', () => {
 
     cy.get('button[name=AddButtonDialog]').click();
     
-    cy.contains("The field 'rio' must be between 0 and 4500")
+    cy.contains("The field 'rio' must be between 0 and 4500");
   });
 
   it('Essayer d\'ajouter un personnage avec un rio supérieur à 0', () => {
@@ -133,6 +133,6 @@ describe('Tests characters', () => {
 
     cy.get('button[name=AddButtonDialog]').click();
     
-    cy.contains("The field 'rio' must be between 0 and 4500")
+    cy.contains("The field 'rio' must be between 0 and 4500");
   });
-})
+});

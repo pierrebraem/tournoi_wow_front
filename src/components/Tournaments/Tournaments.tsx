@@ -16,28 +16,10 @@ function Tournaments(){
     const [globalId, setGlobalId] = useState<number | null>(null);
     const [dungeonsOption, setDungeonsOption] = useState<Dungeon[]>([]);
     const [partiesOption, setPartiesOption] = useState<Party[]>([]);
-
-    async function loadData(){
-        try{
-            const tournamentsResponse = await fetch(`${expressUrl}/tournaments`)
-            const tournaments = await tournamentsResponse.json()
-            setTournaments(tournaments)
-
-            const dungeosResponse = await fetch(`${expressUrl}/dungeos`)
-            const dungeos = await dungeosResponse.json()
-            setDungeonsOption(dungeos)
-
-            const partiesResponse = await fetch(`${expressUrl}/parties`)
-            const parties = await partiesResponse.json()
-            setPartiesOption(parties)
-        }
-        catch(error){
-            console.error(error)
-        }
-    }
+    const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
 
     function dataFromDialog(){
-        loadData();
+        setRefreshTrigger(prev => prev + 1);
         setVisibleAdd(false);
         setVisibleView(false);
     }
@@ -51,14 +33,14 @@ function Tournaments(){
                     method: "delete"
                 });
 
-                loadData();
+                setRefreshTrigger(prev => prev + 1);
             }
         });
     }
 
     function visibleViewIcon(id: number){
         setGlobalId(id);
-        setVisibleView(true)
+        setVisibleView(true);
     }
 
     function bodyIcons(rowData: Tournament){
@@ -68,12 +50,38 @@ function Tournaments(){
                 <Button icon="pi pi-pencil" severity="warning" />
                 <Button icon="pi pi-trash" severity="danger" onClick={() => confirmDelete(rowData.id, rowData.name)} />
             </div>
-        )
+        );
     }
 
     useEffect(() => {
+        let ignore = false;
+        async function loadData(){
+            try{
+                const [tournamentsResponse, dungeonsResponse, partiesResponse] = await Promise.all([
+                    fetch(`${expressUrl}/tournaments`),
+                    fetch(`${expressUrl}/dungeos`),
+                    fetch(`${expressUrl}/parties`)
+                ]);
+
+                const [tournaments, dungeons, parties] = await Promise.all([
+                    tournamentsResponse.json(),
+                    dungeonsResponse.json(),
+                    partiesResponse.json()
+                ]);
+
+                if(!ignore){
+                    setTournaments(tournaments);
+                    setDungeonsOption(dungeons);
+                    setPartiesOption(parties);
+                }
+            }
+            catch(error){
+                console.error(error);
+            }
+        }
         loadData();
-    }, [])
+        return () => { ignore = true; };
+    }, [refreshTrigger]);
     return(
         <>
             <DataTable value={tournaments} className="pb-4">
@@ -88,7 +96,7 @@ function Tournaments(){
             <ViewDialog visible={visibleView} sendDataToParent={dataFromDialog} id={globalId} partiesOption={partiesOption} />
             <Button label="Ajouter un tournoi" onClick={() => setVisibleAdd(true)} />
         </>
-    )
+    );
 }
 
 export default Tournaments;
