@@ -9,7 +9,6 @@ function DetailDialog({ id, visible, sendDataToParent }: Readonly<PDetailDialog>
     const [dataGroupe, setDataGroupe] = useState<Party | null>(null);
 
     function closeModal(){
-        console.log("coucou");
         sendDataToParent();
     }
 
