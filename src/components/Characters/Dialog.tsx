@@ -18,18 +18,18 @@ const EMPTY_CHARACTER: Character = {
 };
 
 function CharacterDialog({ visible, sendDataToParent, classOption, id }: Readonly<CDialog>){
-    const [data, setData] = useState<Character>(EMPTY_CHARACTER)
-    const [apiError, setApiError] = useState<ErrorType | null>(null)
+    const [data, setData] = useState<Character>(EMPTY_CHARACTER);
+    const [apiError, setApiError] = useState<ErrorType | null>(null);
     const [formErrors, setFormErrors] = useState<CharacterErrors | null>(null);
-    const [visibleError, setVisibleError] = useState<boolean>(false)
-    const [roleOption, setRoleOption] = useState<Role[]>([])
+    const [visibleError, setVisibleError] = useState<boolean>(false);
+    const [roleOption, setRoleOption] = useState<Role[]>([]);
 
     function closeModal(){
-        setRoleOption([])
-        setData(EMPTY_CHARACTER)
+        setRoleOption([]);
+        setData(EMPTY_CHARACTER);
         setFormErrors(null);
 
-        sendDataToParent()
+        sendDataToParent();
     }
 
     function checkErrors(character: CharacterInput){
@@ -45,13 +45,13 @@ function CharacterDialog({ visible, sendDataToParent, classOption, id }: Readonl
 
     async function getRoles(value: Role){
         try{
-            setData((prevData) => ({ ...prevData, class: { id: value.id, label: value.label } }))
-            const rolesResponse = await fetch(`${expressUrl}/canbe/class/` + value.id)
-            const roles = await rolesResponse.json()
-            setRoleOption(roles)
+            setData((prevData) => ({ ...prevData, class: { id: value.id, label: value.label } }));
+            const rolesResponse = await fetch(`${expressUrl}/canbe/class/` + value.id);
+            const roles = await rolesResponse.json();
+            setRoleOption(roles);
         }
         catch(error){
-            console.error(error)
+            console.error(error);
         }
     }
 
@@ -59,24 +59,24 @@ function CharacterDialog({ visible, sendDataToParent, classOption, id }: Readonl
         if (id == null) return;
 
         try{
-            const characterResponse = await fetch(`${expressUrl}/characters/` + id)
-            const character = await characterResponse.json()
-            setData(character)
+            const characterResponse = await fetch(`${expressUrl}/characters/` + id);
+            const character = await characterResponse.json();
+            setData(character);
 
-            const rolesResponse = await fetch(`${expressUrl}/canbe/class/` + character?.class?.id)
-            const roles = await rolesResponse.json()
-            setRoleOption(roles)
+            const rolesResponse = await fetch(`${expressUrl}/canbe/class/` + character?.class?.id);
+            const roles = await rolesResponse.json();
+            setRoleOption(roles);
         }
         catch(error){
-            console.error(error)
+            console.error(error);
         }
     }
 
     async function submit(){
-        const method = id == null ? 'post' : 'put'
-        const baseUrl = `${expressUrl}/characters/`
-        const url = id == null ? baseUrl : baseUrl + id
-        const successStatusCode = id == null ? 201 : 200
+        const method = id == null ? 'post' : 'put';
+        const baseUrl = `${expressUrl}/characters/`;
+        const url = id == null ? baseUrl : baseUrl + id;
+        const successStatusCode = id == null ? 201 : 200;
 
         const body = {
             name: data?.name,
@@ -84,7 +84,7 @@ function CharacterDialog({ visible, sendDataToParent, classOption, id }: Readonl
             role_id: data?.role.id,
             ilvl: data?.ilvl,
             rio: data?.rio
-        }
+        };
 
         const errorSuccess = checkErrors(body);
         if(!errorSuccess) return false;
@@ -93,19 +93,19 @@ function CharacterDialog({ visible, sendDataToParent, classOption, id }: Readonl
             method: method,
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(body)
-        })
+        });
 
         if(res.status != successStatusCode){
-            const json = await res.json()
+            const json = await res.json();
             setVisibleError(true);
             setApiError({
                 status: res.status,
                 message: json.message,
-            })
-            return
+            });
+            return;
         }
 
-        closeModal()
+        closeModal();
     }
 
     return(
@@ -142,7 +142,7 @@ function CharacterDialog({ visible, sendDataToParent, classOption, id }: Readonl
             </Dialog>
             <Error status={apiError?.status ?? null} message={apiError?.message ?? null} visible={visibleError} sendDataToParent={() => setVisibleError(false)}/>
         </>
-    )
+    );
 }
 
-export default CharacterDialog
+export default CharacterDialog;

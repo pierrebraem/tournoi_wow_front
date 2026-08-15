@@ -2,7 +2,7 @@ import { Calendar } from 'primereact/calendar';
 import type { CalendarType } from '../../../types';
 
 function CalendarInput({ id, value, onChange, name, error }: Readonly<CalendarType>){
-    const hasVisibleError = Boolean(error)
+    const hasVisibleError = Boolean(error);
 
     return(
         <div className="flex flex-col gap-1">
@@ -14,7 +14,7 @@ function CalendarInput({ id, value, onChange, name, error }: Readonly<CalendarTy
                 </span> : null
             }
         </div>
-    )
+    );
 }
 
-export default CalendarInput
+export default CalendarInput;

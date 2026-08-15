@@ -15,24 +15,10 @@ function Characters(){
     const [globalId, setGlobalId] = useState<number | null>(null);
     const [visibleDialog, setVisibleDialog] = useState<boolean>(false);
     const [visibleDetail, setVisibleDetail] = useState<boolean>(false);
-
-    async function loadData(){
-        try{
-            const charactersResponse = await fetch(`${expressUrl}/characters`)
-            const characters = await charactersResponse.json()
-            setCharacters(characters)
-
-            const classesResponse = await fetch(`${expressUrl}/class`)
-            const classes = await classesResponse.json()
-            setClassOption(classes)
-        }
-        catch(error){
-            console.error(error)
-        }
-    }
+    const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
 
     function dataFromDialog(){
-        loadData();
+        setRefreshTrigger(prev => prev + 1);
         setVisibleDialog(false);
         setVisibleDetail(false);
         setGlobalId(null);
@@ -49,7 +35,7 @@ function Characters(){
                     method: "delete"
                 });
 
-                loadData();
+                setRefreshTrigger(prev => prev + 1);
             }
         });
     }
@@ -60,8 +46,8 @@ function Characters(){
     }
 
     function visibleDialogIcon(id: number | null, type: 'add' | 'edit'){
-        if (type == 'edit') setGlobalId(id)
-        setVisibleDialog(true)
+        if (type == 'edit') setGlobalId(id);
+        setVisibleDialog(true);
     }
 
     function bodyIcons(rowData: Character){
@@ -71,12 +57,35 @@ function Characters(){
                 <Button icon="pi pi-pencil" severity="warning" onClick={() => visibleDialogIcon(rowData.id ?? null, 'edit')} name="Edit"/>
                 <Button icon="pi pi-trash" severity="danger" onClick={() => confirmDelete(rowData.id ?? null, rowData.name)} name="Delete"/>
             </div>
-        )
+        );
     }
 
     useEffect(() => {
+        let ignore = false;
+        async function loadData(){
+            try{
+                const [charactersResponse, classesResponse] = await Promise.all([
+                    fetch(`${expressUrl}/characters`),
+                    fetch(`${expressUrl}/class`)
+                ]);
+
+                const [characters, classes] = await Promise.all([
+                    charactersResponse.json(),
+                    classesResponse.json()
+                ]);
+
+                if(!ignore){
+                    setCharacters(characters);
+                    setClassOption(classes);
+                }
+            }
+            catch(error){
+                console.error(error);
+            }
+        }
         loadData();
-    }, []);
+        return () => { ignore = true; };
+    }, [refreshTrigger]);
 
     return(
         <>
@@ -93,7 +102,7 @@ function Characters(){
             <CharacterDialog visible={visibleDialog} sendDataToParent={dataFromDialog} classOption={classOption} id={globalId} />
             <DetailDialog visible={visibleDetail} sendDataToParent={dataFromDialog} id={globalId} />
         </>
-    )
+    );
 }
 
-export default Characters
+export default Characters;

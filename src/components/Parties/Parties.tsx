@@ -15,24 +15,10 @@ function Parties(){
     const [globalId, setGlobalId] = useState<number | null>(null);
     const [visibleDialog, setVisibleDialog] = useState<boolean>(false);
     const [visibleDetail, setVisibleDetail] = useState<boolean>(false);
-
-    async function loadData(){
-        try{
-            const partiesResponse = await fetch(`${expressUrl}/parties`)
-            const parties = await partiesResponse.json()
-            setParties(parties)
-
-            const charactersResponse = await fetch(`${expressUrl}/characters`)
-            const characters = await charactersResponse.json()
-            setCharactersOption(characters)
-        }
-        catch(error){
-            console.error(error)
-        }
-    }
+    const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
 
     function dataFromDialog(){
-        loadData();
+        setRefreshTrigger(prev => prev + 1);
         setGlobalId(null);
         setVisibleDialog(false);
         setVisibleDetail(false);
@@ -47,7 +33,7 @@ function Parties(){
                     method: "delete"
                 });
 
-                loadData();
+                setRefreshTrigger(prev => prev + 1);
             }
         });
     }
@@ -58,8 +44,8 @@ function Parties(){
     }
 
     function visibleDialogIcon(id: number | null, type: 'edit' | 'add'){
-        if (type == 'edit') setGlobalId(id)
-        setVisibleDialog(true)
+        if (type == 'edit') setGlobalId(id);
+        setVisibleDialog(true);
     }
 
     function bodyIcons(rowData: Party){
@@ -69,12 +55,35 @@ function Parties(){
                 <Button icon="pi pi-pencil" severity="warning" onClick={() => visibleDialogIcon(rowData.id, 'edit')} name="Edit"/>
                 <Button icon="pi pi-trash" severity="danger" onClick={() => confirmDelete(rowData.id, rowData.name)} name="Delete" />
             </div>
-        )
+        );
     }
 
     useEffect(() => {
+        let ignore = false;
+        async function loadData(){
+            try{
+                const [partiesResponse, charactersResponse] = await Promise.all([
+                    fetch(`${expressUrl}/parties`),
+                    fetch(`${expressUrl}/characters`)
+                ]);
+
+                const [parties, characters] = await Promise.all([
+                    partiesResponse.json(),
+                    charactersResponse.json()
+                ]);
+
+                if(!ignore){
+                    setParties(parties);
+                    setCharactersOption(characters);
+                }
+            }
+            catch(error){
+                console.error(error);
+            }
+        }
         loadData();
-    }, []);
+        return () => { ignore = true; };
+    }, [refreshTrigger]);
 
     return(
         <>
@@ -87,7 +96,7 @@ function Parties(){
             <PartyDialog visible={visibleDialog} sendDataToParent={dataFromDialog} charactersOption={charactersOption} id={globalId} />
             <DetailDialog visible={visibleDetail} sendDataToParent={dataFromDialog} id={globalId} />
         </>
-    )
+    );
 }
 
 export default Parties;

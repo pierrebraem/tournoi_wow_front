@@ -14,16 +14,16 @@ function DetailDialog({ id, visible, sendDataToParent }: Readonly<PDetailDialog>
 
     async function getData(){
         try{
-            const charactersResponse = await fetch(`${expressUrl}/compose/` + id)
-            const characters = await charactersResponse.json()
-            setDataCharacters(characters)
+            const charactersResponse = await fetch(`${expressUrl}/compose/` + id);
+            const characters = await charactersResponse.json();
+            setDataCharacters(characters);
 
-            const partyResponse = await fetch(`${expressUrl}/parties/` + id)
-            const party = await partyResponse.json()
-            setDataGroupe(party)
+            const partyResponse = await fetch(`${expressUrl}/parties/` + id);
+            const party = await partyResponse.json();
+            setDataGroupe(party);
         }
         catch(error){
-            console.error(error)
+            console.error(error);
         }
     }
 
@@ -42,7 +42,7 @@ function DetailDialog({ id, visible, sendDataToParent }: Readonly<PDetailDialog>
                 </ul>
             ))}
         </Dialog>
-    )
+    );
 }
 
 export default DetailDialog;

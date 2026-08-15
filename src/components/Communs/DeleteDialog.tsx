@@ -9,13 +9,13 @@ export function showConfirmDelete({message, header, accept}: DialogSupprType) {
         acceptLabel: 'Oui',
         rejectLabel: 'Non',
         accept: accept,
-    })
+    });
 }
 
 function DialogSuppr(){
     return(
         <ConfirmDialog />
-    )
+    );
 }
 
-export default DialogSuppr
+export default DialogSuppr;

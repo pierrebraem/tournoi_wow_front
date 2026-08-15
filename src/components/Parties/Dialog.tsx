@@ -12,18 +12,18 @@ const expressUrl = import.meta.env.VITE_EXPRESS_URL;
 const EMPTY_PARTY: PartyInput = {
     name: "",
     characters: []
-}
+};
 
 function PartyDialog({ visible, sendDataToParent, charactersOption, id }: Readonly<PDetail>) {
-    const [data, setData] = useState<PartyInput>(EMPTY_PARTY)
-    const [apiError, setApiError] = useState<ErrorType | null>(null)
+    const [data, setData] = useState<PartyInput>(EMPTY_PARTY);
+    const [apiError, setApiError] = useState<ErrorType | null>(null);
     const [formErrors, setFromErrors] = useState<PartyErrors | null>(null);
-    const [visibleError, setVisibleError] = useState<boolean>(false)
+    const [visibleError, setVisibleError] = useState<boolean>(false);
 
     function closeModal() {
-        setData(EMPTY_PARTY)
+        setData(EMPTY_PARTY);
         setFromErrors(null);
-        sendDataToParent()
+        sendDataToParent();
     }
 
     function checkErrors(party: PartyInput){
@@ -41,29 +41,29 @@ function PartyDialog({ visible, sendDataToParent, charactersOption, id }: Readon
         if(id == null) return;
 
         try{
-            const partyResponse = await fetch(`${expressUrl}/parties/` + id)
-            const party = await partyResponse.json()
-            setData((prevData) => ({ ...prevData, name: party.name } ))
+            const partyResponse = await fetch(`${expressUrl}/parties/` + id);
+            const party = await partyResponse.json();
+            setData((prevData) => ({ ...prevData, name: party.name } ));
 
-            const charactersResponse = await fetch(`${expressUrl}/compose/` + id)
-            const characters = await charactersResponse.json()
-            setData((prevData) => ({ ...prevData, characters: characters}))
+            const charactersResponse = await fetch(`${expressUrl}/compose/` + id);
+            const characters = await charactersResponse.json();
+            setData((prevData) => ({ ...prevData, characters: characters}));
         }
         catch(error){
-            console.error(error)
+            console.error(error);
         }
     }
 
     async function submit() {
-        const method = id == null ? 'post' : 'put'
-        const baseUrl = `${expressUrl}/parties/`
-        const url = id == null ? baseUrl : baseUrl + id
-        const successStatusCode = id == null ? 201 : 200
+        const method = id == null ? 'post' : 'put';
+        const baseUrl = `${expressUrl}/parties/`;
+        const url = id == null ? baseUrl : baseUrl + id;
+        const successStatusCode = id == null ? 201 : 200;
 
         const body = {
             name: data?.name,
             characters: data?.characters
-        }
+        };
 
         const errorSuccess = checkErrors(body);
         if(!errorSuccess) return false;
@@ -72,7 +72,7 @@ function PartyDialog({ visible, sendDataToParent, charactersOption, id }: Readon
             method: method,
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(body)
-        })
+        });
 
         if(res.status != successStatusCode) {
             const json = await res.json();
@@ -84,7 +84,7 @@ function PartyDialog({ visible, sendDataToParent, charactersOption, id }: Readon
             return;
         }
 
-        closeModal()
+        closeModal();
     }
 
     return (
@@ -106,7 +106,7 @@ function PartyDialog({ visible, sendDataToParent, charactersOption, id }: Readon
             </Dialog>
             <Error status={apiError?.status ?? null} message={apiError?.message ?? null} visible={visibleError} sendDataToParent={() => setVisibleError(false)}/>
         </>
-    )
+    );
 }
 
-export default PartyDialog
+export default PartyDialog;

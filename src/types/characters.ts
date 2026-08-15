@@ -1,5 +1,5 @@
-import { Class } from "./classes"
-import { Role } from "./roles"
+import { Class } from "./classes";
+import { Role } from "./roles";
 
 export interface Character{
     id?: number,

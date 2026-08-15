@@ -15,7 +15,7 @@ function NumberInput({ id, value, onChange, name, error, min, max }: Readonly<Nu
                 </span> : null
             }
         </div>
-    )
+    );
 }
 
-export default NumberInput
+export default NumberInput;

@@ -12,7 +12,7 @@ function Error({ status, message, visible, sendDataToParent }: Readonly<ErrorInt
             <p>Une erreur est survenu lors de l'exécution d'une ou de plusieurs requêtes</p>
             <p>{status} : {message}</p>
         </Dialog>
-    )
+    );
 }
 
 export default Error;
