@@ -2,6 +2,7 @@ import js from '@eslint/js'
 import globals from 'globals'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
+import pluginCypress from 'eslint-plugin-cypress'
 import tseslint from 'typescript-eslint'
 
 export default tseslint.config(
@@ -19,10 +20,27 @@ export default tseslint.config(
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
-      'react-refresh/only-export-components': [
-        'warn',
-        { allowConstantExport: true },
-      ],
+      "no-duplicate-imports": "error",
+      "no-self-compare": "error",
+      "no-console": ["error", { allow: ["warn", "error" ] }],
+      "no-else-return": "error",
+      "no-empty-function": "error",
+      "no-unassigned-vars": "error",
+      "no-var": "error",
+      "no-script-url": "error",
+      "no-eval": "error",
+      "no-alert": "error",
+      "func-names": "error",
+      "init-declarations": "error",
+      "no-implied-eval": "error",
+      "no-loop-func": "error",
+      "no-multi-assign": "error",
+      "prefer-const": "error",
+      "semi": "error",
     },
   },
+  {
+    files: ['cypress/**/*.cy.ts'],
+    extends: [pluginCypress.configs.recommended],
+  }
 )
