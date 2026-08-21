@@ -79,12 +79,12 @@ function Parties(){
 
     return(
         <>
-            <DataTable value={parties} className="pb-4">
+            <Button label="Ajouter un groupe" onClick={() => visibleDialogIcon(null, 'add')} />
+            <DataTable value={parties} className="pt-4">
                 <Column field="name" header="Nom" />
                 <Column header="Action" body={bodyIcons} />
             </DataTable>  
 
-            <Button label="Ajouter un groupe" onClick={() => visibleDialogIcon(null, 'add')} />
             <PartyDialog visible={visibleDialog} sendDataToParent={dataFromDialog} charactersOption={charactersOption} id={globalId} />
             <DetailDialog visible={visibleDetail} sendDataToParent={dataFromDialog} id={globalId} />
         </>
