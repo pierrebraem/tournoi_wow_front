@@ -81,7 +81,8 @@ function Characters(){
 
     return(
         <>
-            <DataTable value={characters} className="pb-4">
+            <Button label="Ajouter un personnage" onClick={() => visibleDialogIcon(null, 'add')} name="Add"/>
+            <DataTable value={characters} className="pt-4">
                 <Column field="name" header="Nom" />
                 <Column field="class" header="Classe" />
                 <Column field="role" header="Rôle" />
@@ -90,7 +91,6 @@ function Characters(){
                 <Column header="Action" body={bodyIcons} />
             </DataTable>
 
-            <Button label="Ajouter un personnage" onClick={() => visibleDialogIcon(null, 'add')} name="Add"/>
             <CharacterDialog visible={visibleDialog} sendDataToParent={dataFromDialog} classOption={classOption} id={globalId} />
             <DetailDialog visible={visibleDetail} sendDataToParent={dataFromDialog} id={globalId} />
         </>

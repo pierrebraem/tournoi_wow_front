@@ -75,7 +75,8 @@ function Tournaments(){
     }, [refreshTrigger]);
     return(
         <>
-            <DataTable value={tournaments} className="pb-4">
+            <Button label="Ajouter un tournoi" onClick={() => setVisibleAdd(true)} />
+            <DataTable value={tournaments} className="pt-4">
                 <Column field="name" header="Nom" />
                 <Column field="start_date" header="Date de début" />
                 <Column field="end_date" header="Date de fin" />
@@ -85,7 +86,6 @@ function Tournaments(){
 
             <AddDialog visible={visibleAdd} sendDataToParent={dataFromDialog} dungeonsOption={dungeonsOption} partiesOption={partiesOption} />
             <ViewDialog visible={visibleView} sendDataToParent={dataFromDialog} id={globalId} partiesOption={partiesOption} />
-            <Button label="Ajouter un tournoi" onClick={() => setVisibleAdd(true)} />
         </>
     );
 }
