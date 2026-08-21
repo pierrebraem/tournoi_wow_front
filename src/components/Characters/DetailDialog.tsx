@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { Dialog } from 'primereact/dialog';
 import { Character, CDetailDialog } from '../../types';
-
-const expressUrl = import.meta.env.VITE_EXPRESS_URL;
+import { getCharacter } from '../../utils/api';
 
 function DetailDialog({ id, visible, sendDataToParent }: Readonly<CDetailDialog>){
     const [data, setData] = useState<Character | null>(null);
@@ -13,9 +12,9 @@ function DetailDialog({ id, visible, sendDataToParent }: Readonly<CDetailDialog>
 
     async function getData(){
         try{
-            const characterResponse = await fetch(`${expressUrl}/characters/` + id);
-            const character = await characterResponse.json();
-            setData(character);
+            if (id == null) return;
+            const res = await getCharacter(id);
+            setData(res.data);
         }
         catch(error){
             console.error(error);

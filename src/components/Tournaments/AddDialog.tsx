@@ -3,10 +3,9 @@ import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
 import { CalendarInput, NumberInput, TextInput, MultiSelectInput } from '../Communs/Inputs';
 import { TournamentInput, TournamentErrors, TDialogDetail } from '../../types';
+import { postTournament } from '../../utils/api';
 import { tournamentSchema } from '../../schemas/tournaments';
 import * as z from "zod";
-
-const expressUrl = import.meta.env.VITE_EXPRESS_URL;
 
 const EMPTY_TOURNAMENT: TournamentInput = {
     name: "",
@@ -53,11 +52,7 @@ function AddDialog({ visible, sendDataToParent, dungeonsOption, partiesOption}: 
         const errorSuccess = checkErrors(body);
         if(!errorSuccess) return false;
 
-        await fetch(`${expressUrl}/tournaments`, {
-            method: "post",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(body)
-        });
+        await postTournament(body);
 
         closeModal();
     }

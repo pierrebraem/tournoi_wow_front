@@ -4,10 +4,9 @@ import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
 import { TextInput, MultiSelectInput } from '../Communs/Inputs';
 import { PDetail, PartyInput, PartyErrors, ErrorType } from '../../types';
+import { getLinkedCharacters, getParty, postParty, putParty } from '../../utils/api';
 import { partySchema } from '../../schemas/parties';
 import * as z from "zod";
-
-const expressUrl = import.meta.env.VITE_EXPRESS_URL;
 
 const EMPTY_PARTY: PartyInput = {
     name: "",
@@ -41,13 +40,15 @@ function PartyDialog({ visible, sendDataToParent, charactersOption, id }: Readon
         if(id == null) return;
 
         try{
-            const partyResponse = await fetch(`${expressUrl}/parties/` + id);
-            const party = await partyResponse.json();
-            setData((prevData) => ({ ...prevData, name: party.name } ));
+            const [resParty, resCharacters] = await Promise.all([
+                getParty(id),
+                getLinkedCharacters(id),
+            ]);
+            const party = resParty.data;
+            const characters = resCharacters.data;
 
-            const charactersResponse = await fetch(`${expressUrl}/compose/` + id);
-            const characters = await charactersResponse.json();
-            setData((prevData) => ({ ...prevData, characters: characters}));
+            setData((prevData) => ({ ...prevData, name: party.name } ));
+            setData((prevData) => ({ ...prevData, characters: characters } ));
         }
         catch(error){
             console.error(error);
@@ -55,9 +56,6 @@ function PartyDialog({ visible, sendDataToParent, charactersOption, id }: Readon
     }
 
     async function submit() {
-        const method = id == null ? 'post' : 'put';
-        const baseUrl = `${expressUrl}/parties/`;
-        const url = id == null ? baseUrl : baseUrl + id;
         const successStatusCode = id == null ? 201 : 200;
 
         const body = {
@@ -68,18 +66,13 @@ function PartyDialog({ visible, sendDataToParent, charactersOption, id }: Readon
         const errorSuccess = checkErrors(body);
         if(!errorSuccess) return false;
 
-        const res = await fetch(url, {
-            method: method,
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(body)
-        });
+        const res = id == null ? await postParty(body) : await putParty(id, body);
 
         if(res.status != successStatusCode) {
-            const json = await res.json();
             setVisibleError(true);
             setApiError({
                 status: res.status,
-                message: json.message
+                message: res.message
             });
             return;
         }

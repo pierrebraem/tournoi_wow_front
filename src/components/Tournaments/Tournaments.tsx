@@ -6,8 +6,7 @@ import { DataTable } from "primereact/datatable";
 import { showConfirmDelete } from "../Communs/DeleteDialog";
 import ViewDialog from "./ViewDialog";
 import { Tournament, Dungeon, Party } from "../../types";
-
-const expressUrl = import.meta.env.VITE_EXPRESS_URL;
+import { getTournaments, deleteTournament, getDungeos, getParties } from "../../utils/api";
 
 function Tournaments(){
     const [tournaments, setTournaments] = useState<Tournament[]>([]);
@@ -29,9 +28,7 @@ function Tournaments(){
             message: "Etes-vous sûr de supprimer le tournoi " + name + " ?",
             header: "Suppression du tournoi " + name,
             accept: async () => {
-                await fetch(`${expressUrl}/tournaments/` + id, {
-                    method: "delete"
-                });
+                await deleteTournament(id);
 
                 setRefreshTrigger(prev => prev + 1);
             }
@@ -57,22 +54,16 @@ function Tournaments(){
         let ignore = false;
         async function loadData(){
             try{
-                const [tournamentsResponse, dungeonsResponse, partiesResponse] = await Promise.all([
-                    fetch(`${expressUrl}/tournaments`),
-                    fetch(`${expressUrl}/dungeos`),
-                    fetch(`${expressUrl}/parties`)
-                ]);
-
-                const [tournaments, dungeons, parties] = await Promise.all([
-                    tournamentsResponse.json(),
-                    dungeonsResponse.json(),
-                    partiesResponse.json()
+                const [resTournaments, resDungeos, resParties] = await Promise.all([
+                    getTournaments(),
+                    getDungeos(),
+                    getParties(),
                 ]);
 
                 if(!ignore){
-                    setTournaments(tournaments);
-                    setDungeonsOption(dungeons);
-                    setPartiesOption(parties);
+                    setTournaments(resTournaments.data);
+                    setDungeonsOption(resDungeos.data);
+                    setPartiesOption(resParties.data);
                 }
             }
             catch(error){

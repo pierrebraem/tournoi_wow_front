@@ -4,10 +4,9 @@ import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
 import { NumberInput, TextInput, DropdownInput } from "../Communs/Inputs";
 import { Character, CharacterInput, CharacterErrors, CDialog, Role, ErrorType } from "../../types";
+import { getCharacter, getRoles, postCharacter, putCharacter } from "../../utils/api";
 import { characterSchema }from "../../schemas/characters";
 import * as z from "zod";
-
-const expressUrl = import.meta.env.VITE_EXPRESS_URL;
 
 const EMPTY_CHARACTER: Character = {
     name: "",
@@ -43,12 +42,11 @@ function CharacterDialog({ visible, sendDataToParent, classOption, id }: Readonl
         return result.success;
     }
 
-    async function getRoles(value: Role){
+    async function updateRoles(value: Role){
         try{
             setData((prevData) => ({ ...prevData, class: { id: value.id, label: value.label } }));
-            const rolesResponse = await fetch(`${expressUrl}/canbe/class/` + value.id);
-            const roles = await rolesResponse.json();
-            setRoleOption(roles);
+            const res = await getRoles(value.id);
+            setRoleOption(res.data);
         }
         catch(error){
             console.error(error);
@@ -59,13 +57,12 @@ function CharacterDialog({ visible, sendDataToParent, classOption, id }: Readonl
         if (id == null) return;
 
         try{
-            const characterResponse = await fetch(`${expressUrl}/characters/` + id);
-            const character = await characterResponse.json();
+            const resCharacter = await getCharacter(id);
+            const character = resCharacter.data;
             setData(character);
 
-            const rolesResponse = await fetch(`${expressUrl}/canbe/class/` + character?.class?.id);
-            const roles = await rolesResponse.json();
-            setRoleOption(roles);
+            const resRoles = await getRoles(character?.class?.id);
+            setRoleOption(resRoles.data);
         }
         catch(error){
             console.error(error);
@@ -73,9 +70,6 @@ function CharacterDialog({ visible, sendDataToParent, classOption, id }: Readonl
     }
 
     async function submit(){
-        const method = id == null ? 'post' : 'put';
-        const baseUrl = `${expressUrl}/characters/`;
-        const url = id == null ? baseUrl : baseUrl + id;
         const successStatusCode = id == null ? 201 : 200;
 
         const body = {
@@ -89,18 +83,13 @@ function CharacterDialog({ visible, sendDataToParent, classOption, id }: Readonl
         const errorSuccess = checkErrors(body);
         if(!errorSuccess) return false;
 
-        const res = await fetch(url, {
-            method: method,
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(body)
-        });
+        const res = id == null ? await postCharacter(body) : await putCharacter(id, body);
 
         if(res.status != successStatusCode){
-            const json = await res.json();
             setVisibleError(true);
             setApiError({
                 status: res.status,
-                message: json.message,
+                message: res.message,
             });
             return;
         }
@@ -119,7 +108,7 @@ function CharacterDialog({ visible, sendDataToParent, classOption, id }: Readonl
                     
                     <div className="form-line-style">
                         <label htmlFor="character-class">Classe :</label>
-                        <DropdownInput id="character-class" value={data?.class} error={formErrors?.class_id} onChange={(e) => getRoles(e.value)} options={classOption} placeholder="Sélectionner une classe" name="Classe" />
+                        <DropdownInput id="character-class" value={data?.class} error={formErrors?.class_id} onChange={(e) => updateRoles(e.value)} options={classOption} placeholder="Sélectionner une classe" name="Classe" />
                     </div>
 
                     <div className="form-line-style">
