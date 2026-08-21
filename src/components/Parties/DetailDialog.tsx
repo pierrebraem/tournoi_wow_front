@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { Dialog } from 'primereact/dialog';
 import { Character, Party, PDetailDialog } from '../../types';
-
-const expressUrl = import.meta.env.VITE_EXPRESS_URL;
+import { getLinkedCharacters, getParty } from '../../utils/api';
 
 function DetailDialog({ id, visible, sendDataToParent }: Readonly<PDetailDialog>){
     const [dataCharacters, setDataCharacters] = useState<Character[]>([]);
@@ -14,13 +13,15 @@ function DetailDialog({ id, visible, sendDataToParent }: Readonly<PDetailDialog>
 
     async function getData(){
         try{
-            const charactersResponse = await fetch(`${expressUrl}/compose/` + id);
-            const characters = await charactersResponse.json();
-            setDataCharacters(characters);
+            if (id == null) return;
 
-            const partyResponse = await fetch(`${expressUrl}/parties/` + id);
-            const party = await partyResponse.json();
-            setDataGroupe(party);
+            const [resCharacters, resParty] = await Promise.all([
+                getLinkedCharacters(id),
+                getParty(id),
+            ]);
+
+            setDataCharacters(resCharacters.data);
+            setDataGroupe(resParty.data);
         }
         catch(error){
             console.error(error);

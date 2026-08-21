@@ -6,8 +6,7 @@ import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { showConfirmDelete } from "../Communs/DeleteDialog";
 import { Character, Class } from "../../types";
-
-const expressUrl = import.meta.env.VITE_EXPRESS_URL;
+import { getCharacters, deleteCharacter, getClasses } from "../../utils/api";
 
 function Characters(){
     const [characters, setCharacters] = useState<Character[]>([]);
@@ -31,9 +30,7 @@ function Characters(){
             message: "Etes-vous sûr de supprimer le personnage " + name + " ?",
             header: "Suppression du personnage " + name,
             accept: async () => {
-                await fetch(`${expressUrl}/characters/` + id, {
-                    method: "delete"
-                });
+                await deleteCharacter(id);
 
                 setRefreshTrigger(prev => prev + 1);
             }
@@ -64,19 +61,14 @@ function Characters(){
         let ignore = false;
         async function loadData(){
             try{
-                const [charactersResponse, classesResponse] = await Promise.all([
-                    fetch(`${expressUrl}/characters`),
-                    fetch(`${expressUrl}/class`)
-                ]);
-
-                const [characters, classes] = await Promise.all([
-                    charactersResponse.json(),
-                    classesResponse.json()
+                const [resCharacters, resClasses] = await Promise.all([
+                    getCharacters(),
+                    getClasses(),
                 ]);
 
                 if(!ignore){
-                    setCharacters(characters);
-                    setClassOption(classes);
+                    setCharacters(resCharacters.data);
+                    setClassOption(resClasses.data);
                 }
             }
             catch(error){

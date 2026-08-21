@@ -5,9 +5,8 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { showConfirmDelete } from "../Communs/DeleteDialog";
+import { getCharacters, getParties, deleteParty } from "../../utils/api";
 import { Character, Party } from "../../types";
-
-const expressUrl = import.meta.env.VITE_EXPRESS_URL;
 
 function Parties(){
     const [parties, setParties] = useState<Party[]>([]);
@@ -29,9 +28,7 @@ function Parties(){
             message: "Etes-vous sûr de supprimer le groupe " + name + " ?",
             header: "Suppression de l'équipe " + name,
             accept: async () => {
-                await fetch(`${expressUrl}/parties/` + id, {
-                    method: "delete"
-                });
+                await deleteParty(id);
 
                 setRefreshTrigger(prev => prev + 1);
             }
@@ -62,19 +59,14 @@ function Parties(){
         let ignore = false;
         async function loadData(){
             try{
-                const [partiesResponse, charactersResponse] = await Promise.all([
-                    fetch(`${expressUrl}/parties`),
-                    fetch(`${expressUrl}/characters`)
-                ]);
-
-                const [parties, characters] = await Promise.all([
-                    partiesResponse.json(),
-                    charactersResponse.json()
+                const [resParties, resCharacters] = await Promise.all([
+                    getParties(),
+                    getCharacters(),
                 ]);
 
                 if(!ignore){
-                    setParties(parties);
-                    setCharactersOption(characters);
+                    setParties(resParties.data);
+                    setCharactersOption(resCharacters.data);
                 }
             }
             catch(error){
