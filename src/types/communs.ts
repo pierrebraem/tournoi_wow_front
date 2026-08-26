@@ -38,6 +38,7 @@ export interface DropdownType<TOption extends { id: number; label: string; } = C
 export interface MultiSelectType<TOption extends { id?: number; label?: string; name?: string } = Class | Role | Dungeon | Character | Party> extends InputsType<TOption> {
     value: TOption[] | null,
     min?: number,
+    max?: number,
     onChange: (e: MultiSelectChangeEvent) => void,
 }
 

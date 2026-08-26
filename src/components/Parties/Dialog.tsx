@@ -100,7 +100,7 @@ function PartyDialog({ visible, sendDataToParent, charactersOption, id }: Readon
 
                     <div className="form-line-style">
                         <label htmlFor="party-characters">Selection des personnages :</label>
-                        <MultiSelectInput id="party-characters" value={data?.characters} error={formErrors?.characters} onChange={(e) => setData((prevData) => ({ ...prevData, characters: e.value}))} options={charactersOption} name="Personnages" />
+                        <MultiSelectInput id="party-characters" value={data?.characters} error={formErrors?.characters} max={5} onChange={(e) => setData((prevData) => ({ ...prevData, characters: e.value}))} options={charactersOption} name="Personnages" />
                     </div>
 
                     <Button onClick={submit} label={id == null ? "Ajouter" : "Modifier"} name="ButtonDialog" />
