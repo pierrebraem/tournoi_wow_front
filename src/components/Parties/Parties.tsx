@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import PartyDialog from "./Dialog";
 import DetailDialog from "./DetailDialog";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
+import { Toast } from "primereact/toast";
 import { showConfirmDelete } from "../Communs/DeleteDialog";
 import { getCharacters, getParties, deleteParty } from "../../utils/api";
 import { Character, Party } from "../../types";
@@ -15,6 +16,7 @@ function Parties(){
     const [visibleDialog, setVisibleDialog] = useState<boolean>(false);
     const [visibleDetail, setVisibleDetail] = useState<boolean>(false);
     const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
+    const toast = useRef<Toast>(null);
 
     function dataFromDialog(){
         setRefreshTrigger(prev => prev + 1);
@@ -29,6 +31,13 @@ function Parties(){
             header: "Suppression de l'équipe " + name,
             accept: async () => {
                 await deleteParty(id);
+
+                toast.current?.show({
+                    severity: 'success',
+                    summary: 'Groupe supprimé',
+                    detail: `Le groupe ${name} a été supprimé avec succès`,
+                    life: 5000,
+                });
 
                 setRefreshTrigger(prev => prev + 1);
             }
@@ -87,6 +96,7 @@ function Parties(){
 
             <PartyDialog visible={visibleDialog} sendDataToParent={dataFromDialog} charactersOption={charactersOption} id={globalId} />
             <DetailDialog visible={visibleDetail} sendDataToParent={dataFromDialog} id={globalId} />
+            <Toast ref={toast} />
         </>
     );
 }

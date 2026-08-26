@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import CharacterDialog from "./Dialog";
 import DetailDialog from "./DetailDialog";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
+import { Toast } from "primereact/toast";
 import { showConfirmDelete } from "../Communs/DeleteDialog";
 import { Character, Class } from "../../types";
 import { getCharacters, deleteCharacter, getClasses } from "../../utils/api";
@@ -15,6 +16,7 @@ function Characters(){
     const [visibleDialog, setVisibleDialog] = useState<boolean>(false);
     const [visibleDetail, setVisibleDetail] = useState<boolean>(false);
     const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
+    const toast = useRef<Toast>(null);
 
     function dataFromDialog(){
         setRefreshTrigger(prev => prev + 1);
@@ -31,6 +33,13 @@ function Characters(){
             header: "Suppression du personnage " + name,
             accept: async () => {
                 await deleteCharacter(id);
+
+                toast.current?.show({
+                    severity: 'success',
+                    summary: 'Personnage supprimé',
+                    detail: `Le personnage ${name} a été supprimé avec succès`,
+                    life: 5000,
+                });
 
                 setRefreshTrigger(prev => prev + 1);
             }
@@ -93,6 +102,7 @@ function Characters(){
 
             <CharacterDialog visible={visibleDialog} sendDataToParent={dataFromDialog} classOption={classOption} id={globalId} />
             <DetailDialog visible={visibleDetail} sendDataToParent={dataFromDialog} id={globalId} />
+            <Toast ref={toast} />
         </>
     );
 }
