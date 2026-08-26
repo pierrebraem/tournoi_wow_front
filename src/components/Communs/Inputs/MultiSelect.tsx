@@ -1,8 +1,8 @@
 import { MultiSelect } from "primereact/multiselect";
 import type { MultiSelectType } from "../../../types";
 
-function MultiSelectInput({ id, value, onChange, options, name, error, min }: Readonly<MultiSelectType>) {
-    const hasVisibleError = Boolean(error && (!value || value.length < (min ?? 1)));
+function MultiSelectInput({ id, value, onChange, options, name, error, min, max }: Readonly<MultiSelectType>) {
+    const hasVisibleError = Boolean(error && (!value || value.length < (min ?? 1) || (max !== undefined && value.length > max)));
 
     return(
         <div className="flex flex-col gap-1">
