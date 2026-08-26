@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
+import { Toast } from 'primereact/toast';
 import { CalendarInput, NumberInput, TextInput, MultiSelectInput } from '../Communs/Inputs';
 import { TournamentInput, TournamentErrors, TDialogDetail } from '../../types';
 import { postTournament } from '../../utils/api';
@@ -20,6 +21,7 @@ const EMPTY_TOURNAMENT: TournamentInput = {
 function AddDialog({ visible, sendDataToParent, dungeonsOption, partiesOption}: Readonly<TDialogDetail>){
     const [data, setData] = useState<TournamentInput>(EMPTY_TOURNAMENT);
     const [formErrors, setFormErrors] = useState<TournamentErrors | null>(null);
+    const toast = useRef<Toast>(null);
 
     function closeModal(){
         setData(EMPTY_TOURNAMENT);
@@ -54,50 +56,60 @@ function AddDialog({ visible, sendDataToParent, dungeonsOption, partiesOption}: 
 
         await postTournament(body);
 
+        toast.current?.show({
+            severity: 'success',
+            summary: 'Tournoi ajouté',
+            detail: `Le tournoi ${body.name} a été ajouté avec succès`,
+            life: 5000,
+        });
+
         closeModal();
     }
 
     return(
-        <Dialog header="Ajouter un tournoi" visible={visible} onHide={() => closeModal()}>
-            <div className="form-style">
-                <div className="form-line-style">
-                    <label htmlFor="tournament-name">Nom :</label>
-                    <TextInput id="tournament-name" value={data?.name} error={formErrors?.name} onChange={(e) => setData((prevData) => ({ ...prevData, name: e.target.value}))} name="Nom" />
-                </div>
+        <>
+            <Dialog header="Ajouter un tournoi" visible={visible} onHide={() => closeModal()}>
+                <div className="form-style">
+                    <div className="form-line-style">
+                        <label htmlFor="tournament-name">Nom :</label>
+                        <TextInput id="tournament-name" value={data?.name} error={formErrors?.name} onChange={(e) => setData((prevData) => ({ ...prevData, name: e.target.value}))} name="Nom" />
+                    </div>
 
-                <div className="form-line-style">
-                    <label htmlFor="tournament-start-date">Date de début :</label>
-                    <CalendarInput id="tournament-start-date" value={data?.start_date ?? null} error={formErrors?.start_date} onChange={(e) => setData((prevData) => ({ ...prevData, start_date: e.value ?? null }))} name="DateDebut" />
-                </div>
+                    <div className="form-line-style">
+                        <label htmlFor="tournament-start-date">Date de début :</label>
+                        <CalendarInput id="tournament-start-date" value={data?.start_date ?? null} error={formErrors?.start_date} onChange={(e) => setData((prevData) => ({ ...prevData, start_date: e.value ?? null }))} name="DateDebut" />
+                    </div>
 
-                <div className="form-line-style">
-                    <label htmlFor="tournament-end-date">Date de fin :</label>
-                    <CalendarInput id="tournament-end-date" value={data?.end_date ?? null} error={formErrors?.end_date} onChange={(e) => setData((prevData) => ({ ...prevData, end_date: e.value ?? null }))} name="DateFin" />
-                </div>
+                    <div className="form-line-style">
+                        <label htmlFor="tournament-end-date">Date de fin :</label>
+                        <CalendarInput id="tournament-end-date" value={data?.end_date ?? null} error={formErrors?.end_date} onChange={(e) => setData((prevData) => ({ ...prevData, end_date: e.value ?? null }))} name="DateFin" />
+                    </div>
 
-                <div className="form-line-style">
-                    <label htmlFor="tournament-participation-right">Droit de participation :</label>
-                    <NumberInput id="tournament-participation-right" value={data?.participation_right} error={formErrors?.participation_right} onChange={(e) => setData((prevData) => ({ ...prevData, participation_right: e.value}))} name="DroitParticipation" />
-                </div>
+                    <div className="form-line-style">
+                        <label htmlFor="tournament-participation-right">Droit de participation :</label>
+                        <NumberInput id="tournament-participation-right" value={data?.participation_right} error={formErrors?.participation_right} onChange={(e) => setData((prevData) => ({ ...prevData, participation_right: e.value}))} name="DroitParticipation" />
+                    </div>
 
-                <div className="form-line-style">
-                    <label htmlFor="tournament-description">Description :</label>
-                    <TextInput id="tournament-description" value={data?.description} error={formErrors?.description} onChange={(e) => setData((prevData) => ({ ...prevData, description: e.target.value}))} name="Description" />
-                </div>
+                    <div className="form-line-style">
+                        <label htmlFor="tournament-description">Description :</label>
+                        <TextInput id="tournament-description" value={data?.description} error={formErrors?.description} onChange={(e) => setData((prevData) => ({ ...prevData, description: e.target.value}))} name="Description" />
+                    </div>
 
-                <div className="form-line-style">
-                    <label htmlFor="tournament-dungeons">Sélection des donjons :</label>
-                    <MultiSelectInput id="tournament-dungeons" value={data?.dungeons} error={formErrors?.dungeons} onChange={(e) => setData((prevData) => ({ ...prevData, dungeons: e.value}))} options={dungeonsOption} name="Donjons" />
-                </div>
+                    <div className="form-line-style">
+                        <label htmlFor="tournament-dungeons">Sélection des donjons :</label>
+                        <MultiSelectInput id="tournament-dungeons" value={data?.dungeons} error={formErrors?.dungeons} onChange={(e) => setData((prevData) => ({ ...prevData, dungeons: e.value}))} options={dungeonsOption} name="Donjons" />
+                    </div>
 
-                <div className="form-line-style">
-                    <label htmlFor="tournament-parties">Sélection des équipes :</label>
-                    <MultiSelectInput id="tournament-parties" value={data?.parties} error={formErrors?.parties} min={2} onChange={(e) => setData((prevData) => ({ ...prevData, parties: e.value}))} options={partiesOption} name="Equipes" />
-                </div>
+                    <div className="form-line-style">
+                        <label htmlFor="tournament-parties">Sélection des équipes :</label>
+                        <MultiSelectInput id="tournament-parties" value={data?.parties} error={formErrors?.parties} min={2} onChange={(e) => setData((prevData) => ({ ...prevData, parties: e.value}))} options={partiesOption} name="Equipes" />
+                    </div>
 
-                <Button onClick={addTournament} label="Ajouter" />
-            </div>
-        </Dialog>
+                    <Button onClick={addTournament} label="Ajouter" />
+                </div>
+            </Dialog>
+            <Toast ref={toast} />
+        </>
     );
 }
 

@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Error from "../Error/Error";
 import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
+import { Toast } from 'primereact/toast';
 import { NumberInput, TextInput, DropdownInput } from "../Communs/Inputs";
 import { Character, CharacterInput, CharacterErrors, CDialog, Role, ErrorType } from "../../types";
 import { getCharacter, getRoles, postCharacter, putCharacter } from "../../utils/api";
@@ -22,6 +23,7 @@ function CharacterDialog({ visible, sendDataToParent, classOption, id }: Readonl
     const [formErrors, setFormErrors] = useState<CharacterErrors | null>(null);
     const [visibleError, setVisibleError] = useState<boolean>(false);
     const [roleOption, setRoleOption] = useState<Role[]>([]);
+    const toast = useRef<Toast>(null);
 
     function closeModal(){
         setRoleOption([]);
@@ -94,6 +96,13 @@ function CharacterDialog({ visible, sendDataToParent, classOption, id }: Readonl
             return;
         }
 
+        toast.current?.show({
+            severity: 'success',
+            summary: id == null ? 'Personnage ajouté' : 'Personnage mis à jour',
+            detail: `Le personnage ${body.name} a été ${id == null ? 'ajouté' : 'mis à jour'} avec succès`,
+            life: 5000,
+        });
+
         closeModal();
     }
 
@@ -130,6 +139,7 @@ function CharacterDialog({ visible, sendDataToParent, classOption, id }: Readonl
                 </div>
             </Dialog>
             <Error status={apiError?.status ?? null} message={apiError?.message ?? null} visible={visibleError} sendDataToParent={() => setVisibleError(false)}/>
+            <Toast ref={toast} />
         </>
     );
 }

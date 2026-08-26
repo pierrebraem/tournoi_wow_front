@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Error from '../Error/Error';
 import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
+import { Toast } from 'primereact/toast';
 import { TextInput, MultiSelectInput } from '../Communs/Inputs';
 import { PDetail, PartyInput, PartyErrors, ErrorType } from '../../types';
 import { getLinkedCharacters, getParty, postParty, putParty } from '../../utils/api';
@@ -18,6 +19,7 @@ function PartyDialog({ visible, sendDataToParent, charactersOption, id }: Readon
     const [apiError, setApiError] = useState<ErrorType | null>(null);
     const [formErrors, setFromErrors] = useState<PartyErrors | null>(null);
     const [visibleError, setVisibleError] = useState<boolean>(false);
+    const toast = useRef<Toast>(null);
 
     function closeModal() {
         setData(EMPTY_PARTY);
@@ -77,6 +79,13 @@ function PartyDialog({ visible, sendDataToParent, charactersOption, id }: Readon
             return;
         }
 
+        toast.current?.show({
+            severity: 'success',
+            summary: id == null ? 'Groupe ajouté' : 'Groupe mis à jour',
+            detail: `Le groupe ${body.name} a été ${id == null ? 'ajouté' : 'mis à jour'} avec succès`,
+            life: 5000,
+        });
+
         closeModal();
     }
 
@@ -98,6 +107,7 @@ function PartyDialog({ visible, sendDataToParent, charactersOption, id }: Readon
                 </div>
             </Dialog>
             <Error status={apiError?.status ?? null} message={apiError?.message ?? null} visible={visibleError} sendDataToParent={() => setVisibleError(false)}/>
+            <Toast ref={toast} />
         </>
     );
 }

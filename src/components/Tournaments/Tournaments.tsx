@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Button } from "primereact/button";
 import AddDialog from "./AddDialog";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
+import { Toast } from "primereact/toast";
 import { showConfirmDelete } from "../Communs/DeleteDialog";
 import ViewDialog from "./ViewDialog";
 import { Tournament, Dungeon, Party } from "../../types";
@@ -16,6 +17,7 @@ function Tournaments(){
     const [dungeonsOption, setDungeonsOption] = useState<Dungeon[]>([]);
     const [partiesOption, setPartiesOption] = useState<Party[]>([]);
     const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
+    const toast = useRef<Toast>(null);
 
     function dataFromDialog(){
         setRefreshTrigger(prev => prev + 1);
@@ -29,6 +31,13 @@ function Tournaments(){
             header: "Suppression du tournoi " + name,
             accept: async () => {
                 await deleteTournament(id);
+
+                toast.current?.show({
+                    severity: 'success',
+                    summary: 'Tournoi supprimé',
+                    detail: `Le tournoi ${name} a été supprimé avec succès`,
+                    life: 5000,
+                });
 
                 setRefreshTrigger(prev => prev + 1);
             }
@@ -86,6 +95,7 @@ function Tournaments(){
 
             <AddDialog visible={visibleAdd} sendDataToParent={dataFromDialog} dungeonsOption={dungeonsOption} partiesOption={partiesOption} />
             <ViewDialog visible={visibleView} sendDataToParent={dataFromDialog} id={globalId} partiesOption={partiesOption} />
+            <Toast ref={toast} />
         </>
     );
 }
