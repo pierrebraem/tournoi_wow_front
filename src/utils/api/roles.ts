@@ -2,7 +2,12 @@ const expressUrl = import.meta.env.VITE_EXPRESS_URL;
 
 export async function getRoles(idClass: number){
     const res = await fetch(`${expressUrl}/canbe/class/${idClass}`);
-    const roles = await res.json();
+    const json = await res.json();
     const status = res.status;
-    return { status, data: roles };
+
+    if (status != 200){
+        return { status, message: json.message };
+    }
+
+    return { status, data: json };
 }

@@ -4,16 +4,26 @@ const expressUrl = import.meta.env.VITE_EXPRESS_URL;
 
 export async function getCharacters(){
     const res = await fetch(`${expressUrl}/characters`);
-    const characters = await res.json();
+    const json = await res.json();
     const status = res.status;
-    return { status, data: characters };
+
+    if (status != 200){
+        return { status, message: json.message };
+    }
+
+    return { status, data: json };
 }
 
 export async function getCharacter(id: number){
     const res = await fetch(`${expressUrl}/characters/${id}`);
-    const character = await res.json();
+    const json = await res.json();
     const status = res.status;
-    return { status, data: character };
+
+    if (status != 200){
+        return { status, message: json.message };
+    }
+    
+    return { status, data: json };
 }
 
 export async function postCharacter(body: CharacterInput){
@@ -44,6 +54,8 @@ export async function deleteCharacter(id: number){
     const res = await fetch(`${expressUrl}/characters/${id}`, {
         method: "delete"
     });
+    const json = await res.json();
+    const message = json.message;
     const status = res.status;
-    return status;
+    return { status, message };
 }

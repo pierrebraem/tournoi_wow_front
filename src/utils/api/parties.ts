@@ -4,23 +4,38 @@ const expressUrl = import.meta.env.VITE_EXPRESS_URL;
 
 export async function getParties(){
     const res = await fetch(`${expressUrl}/parties/`);
-    const parties = await res.json();
+    const json = await res.json();
     const status = res.status;
-    return { status, data: parties };
+
+    if (status != 200){
+        return { status, message: json.message };
+    }
+
+    return { status, data: json };
 }
 
 export async function getParty(id: number){
     const res = await fetch(`${expressUrl}/parties/${id}`);
-    const party = await res.json();
+    const json = await res.json();
     const status = res.status;
-    return { status, data: party };
+
+    if (status != 200){
+        return { status, message: json.message };
+    }
+
+    return { status, data: json };
 }
 
 export async function getLinkedCharacters(id: number){
     const res = await fetch(`${expressUrl}/compose/${id}`);
-    const characters = await res.json();
+    const json = await res.json();
     const status = res.status;
-    return { status, data: characters };
+
+    if (status != 200){
+        return { status, message: json.message };
+    }
+
+    return { status, data: json };
 }
 
 export async function postParty(body: PartyInput){
@@ -51,6 +66,8 @@ export async function deleteParty(id: number){
     const res = await fetch(`${expressUrl}/parties/${id}`, {
         method: "delete",
     });
+    const json = await res.json();
+    const message = json.message;
     const status = res.status;
-    return status;
+    return { status, message };
 }

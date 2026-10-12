@@ -1,18 +1,21 @@
 import { useState, useEffect, useRef } from "react";
 import PartyDialog from "./Dialog";
 import DetailDialog from "./DetailDialog";
+import Error from "../Error/Error";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { Toast } from "primereact/toast";
 import { showConfirmDelete } from "../Communs/DeleteDialog";
 import { getCharacters, getParties, deleteParty } from "../../utils/api";
-import { Character, Party } from "../../types";
+import { Character, ErrorType, Party } from "../../types";
 
 function Parties(){
     const [parties, setParties] = useState<Party[]>([]);
     const [charactersOption, setCharactersOption] = useState<Character[]>([]);
     const [globalId, setGlobalId] = useState<number | null>(null);
+    const [apiError, setApiError] = useState<ErrorType | null>(null);
+    const [visibleError, setVisibleError] = useState<boolean>(false);
     const [visibleDialog, setVisibleDialog] = useState<boolean>(false);
     const [visibleDetail, setVisibleDetail] = useState<boolean>(false);
     const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
@@ -30,7 +33,16 @@ function Parties(){
             message: "Etes-vous sûr de supprimer le groupe " + name + " ?",
             header: "Suppression de l'équipe " + name,
             accept: async () => {
-                await deleteParty(id);
+                const res = await deleteParty(id);
+
+                if(res.status != 200){
+                    setVisibleError(true);
+                    setApiError({
+                        status: res.status,
+                        message: res.message,
+                    });
+                    return;
+                }
 
                 toast.current?.show({
                     severity: 'success',
@@ -74,7 +86,24 @@ function Parties(){
                 ]);
 
                 if(!ignore){
+                    if(resParties.status != 200){
+                        setVisibleError(true);
+                        setApiError({
+                            status: resParties.status,
+                            message: resParties.message,
+                        });
+                        return;
+                    }
                     setParties(resParties.data);
+
+                    if(resCharacters.status != 200){
+                        setVisibleError(true);
+                        setApiError({
+                            status: resCharacters.status,
+                            message: resCharacters.message,
+                        });
+                        return;
+                    }
                     setCharactersOption(resCharacters.data);
                 }
             }
@@ -96,6 +125,7 @@ function Parties(){
 
             <PartyDialog visible={visibleDialog} sendDataToParent={dataFromDialog} charactersOption={charactersOption} id={globalId} />
             <DetailDialog visible={visibleDetail} sendDataToParent={dataFromDialog} id={globalId} />
+            <Error status={apiError?.status ?? null} message={apiError?.message ?? null} visible={visibleError} sendDataToParent={() => setVisibleError(false)} />
             <Toast ref={toast} />
         </>
     );
