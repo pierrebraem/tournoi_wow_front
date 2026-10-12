@@ -46,7 +46,25 @@ function PartyDialog({ visible, sendDataToParent, charactersOption, id }: Readon
                 getParty(id),
                 getLinkedCharacters(id),
             ]);
+
+            if(resParty.status != 200){
+                setVisibleError(true);
+                setApiError({
+                    status: resParty.status,
+                    message: resParty.message
+                });
+                return;
+            }
             const party = resParty.data;
+
+            if(resCharacters.status != 200){
+                setVisibleError(true);
+                setApiError({
+                    status: resCharacters.data,
+                    message: resCharacters.message,
+                });
+                return;
+            }
             const characters = resCharacters.data;
 
             setData((prevData) => ({ ...prevData, name: party.name } ));

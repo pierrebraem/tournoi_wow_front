@@ -1,18 +1,21 @@
 import { useEffect, useState, useRef } from "react";
 import CharacterDialog from "./Dialog";
 import DetailDialog from "./DetailDialog";
+import Error from "../Error/Error";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { Toast } from "primereact/toast";
 import { showConfirmDelete } from "../Communs/DeleteDialog";
-import { Character, Class } from "../../types";
+import { Character, Class, ErrorType } from "../../types";
 import { getCharacters, deleteCharacter, getClasses } from "../../utils/api";
 
 function Characters(){
     const [characters, setCharacters] = useState<Character[]>([]);
     const [classOption, setClassOption] = useState<Class[]>([]);
     const [globalId, setGlobalId] = useState<number | null>(null);
+    const [apiError, setApiError] = useState<ErrorType | null>(null);
+    const [visibleError, setVisibleError] = useState<boolean>(false);
     const [visibleDialog, setVisibleDialog] = useState<boolean>(false);
     const [visibleDetail, setVisibleDetail] = useState<boolean>(false);
     const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
@@ -32,7 +35,16 @@ function Characters(){
             message: "Etes-vous sûr de supprimer le personnage " + name + " ?",
             header: "Suppression du personnage " + name,
             accept: async () => {
-                await deleteCharacter(id);
+                const res = await deleteCharacter(id);
+                
+                if(res.status != 200){
+                    setVisibleError(true);
+                    setApiError({
+                        status: res.status,
+                        message: res.message,
+                    });
+                    return;
+                }
 
                 toast.current?.show({
                     severity: 'success',
@@ -76,7 +88,24 @@ function Characters(){
                 ]);
 
                 if(!ignore){
+                    if(resCharacters.status != 200){
+                        setVisibleError(true);
+                        setApiError({
+                            status: resCharacters.status,
+                            message: resCharacters.message,
+                        });
+                        return;
+                    }
                     setCharacters(resCharacters.data);
+
+                    if(resClasses.status != 200){
+                        setVisibleError(true);
+                        setApiError({
+                            status: resClasses.status,
+                            message: resClasses.message
+                        });
+                        return;
+                    }
                     setClassOption(resClasses.data);
                 }
             }
@@ -102,6 +131,7 @@ function Characters(){
 
             <CharacterDialog visible={visibleDialog} sendDataToParent={dataFromDialog} classOption={classOption} id={globalId} />
             <DetailDialog visible={visibleDetail} sendDataToParent={dataFromDialog} id={globalId} />
+            <Error status={apiError?.status ?? null} message={apiError?.message ?? null} visible={visibleError} sendDataToParent={() => setVisibleError(false)} /> 
             <Toast ref={toast} />
         </>
     );

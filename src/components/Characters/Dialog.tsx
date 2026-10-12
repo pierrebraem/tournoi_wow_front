@@ -48,6 +48,16 @@ function CharacterDialog({ visible, sendDataToParent, classOption, id }: Readonl
         try{
             setData((prevData) => ({ ...prevData, class: { id: value.id, label: value.label } }));
             const res = await getRoles(value.id);
+
+            if(res.status != 200){
+                setVisibleError(true);
+                setApiError({
+                    status: res.status,
+                    message: res.message,
+                });
+                return;
+            }
+
             setRoleOption(res.data);
         }
         catch(error){
@@ -60,10 +70,30 @@ function CharacterDialog({ visible, sendDataToParent, classOption, id }: Readonl
 
         try{
             const resCharacter = await getCharacter(id);
+
+            if(resCharacter.status != 200){
+                setVisibleError(true);
+                setApiError({
+                    status: resCharacter.status,
+                    message: resCharacter.message,
+                });
+                return;
+            }
+
             const character = resCharacter.data;
             setData(character);
 
             const resRoles = await getRoles(character?.class?.id);
+
+            if(resRoles.status != 200){
+                setVisibleError(true);
+                setApiError({
+                    status: resRoles.status,
+                    message: resRoles.message,
+                });
+                return;
+            }
+
             setRoleOption(resRoles.data);
         }
         catch(error){
