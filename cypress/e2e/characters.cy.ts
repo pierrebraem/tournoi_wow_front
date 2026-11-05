@@ -1,138 +1,550 @@
-describe('Tests characters', () => {
-  beforeEach(() => {
-    cy.intercept('GET', 'http://localhost:3000/characters', { fixture: 'characters' });
-    cy.intercept('GET', 'http://localhost:3000/characters/1', { fixture: 'characters' });
-    cy.intercept('GET', 'http://localhost:3000/class', { fixture: 'classes' });
-    cy.intercept('GET', 'http://localhost:3000/role', { fixture: 'roles' });
+describe('Liste des personnages', () => {
+    it("Vérifie que la liste fonctionne bien et affiche les bonnes informations", () => {
+        cy.intercept('GET', 'http://localhost:3000/class', { fixture: 'classes/classes'}).as("getClasses");
+        cy.intercept('GET', 'http://localhost:3000/characters', { fixture: 'characters/characters'}).as("getCharacters");
+        cy.visit('http://localhost:5173/characters');
 
-    cy.visit('http://localhost:5173/characters');
-  });
-  
-  it("Voir les détails d'un personnage", () => {
-    cy.get('button[name=Detail]').click();
+        cy.wait("@getCharacters");
+        cy.wait("@getClasses");
 
-    cy.contains("Détail du personnage Mystic Raven");
-    cy.contains("Nom : Mystic Raven");
-    cy.contains("Classe : Druide");
-    cy.contains("Rôle : Soigneur");
-    cy.contains("ilvl : 100");
-    cy.contains("rio : 1450");
-  });
+        cy.fixture("characters/characters").then((characters) => {
+            cy.get(".p-datatable-tbody > tr")
+                .should("have.length", characters.length)
+                .each(($row, index) => {
+                    const character = characters[index];
 
-  it("Supprimer un personnage", () => {
-    cy.get('button[name=Delete]').click();
+                    cy.wrap($row).find("td").eq(0).should("contain.text", character.name);
+                    cy.wrap($row).find("td").eq(1).should("contain.text", character.class);
+                    cy.wrap($row).find("td").eq(2).should("contain.text", character.role);
+                    cy.wrap($row).find("td").eq(3).should("contain.text", String(character.ilvl));
+                    cy.wrap($row).find("td").eq(4).should("contain.text", String(character.rio));
+                });
+        });
+    });
 
-    cy.contains("Suppression");
-    cy.contains("Etes-vous sur de supprimer le personnage Mystic");
+    it("Vérifie que la modal d'erreur s'affiche en cas d'erreur 500 côté characters", () => {
+        cy.intercept('GET', 'http://localhost:3000/class', { fixture: 'classes/classes'}).as("getClasses");
+        cy.intercept('GET', 'http://localhost:3000/characters', { statusCode: 500, fixture: '500'}).as("getCharacters");
+        cy.visit('http://localhost:5173/characters');
 
-    cy.contains('Yes').click();
-  });
+        cy.wait("@getCharacters");
+        cy.wait("@getClasses");
 
-  it('Ajouter un personnage', () => { 
-    cy.contains('Ajouter un personnage').click();
+        cy.contains("Une erreur est survenu lors de l'exécution d'une ou de plusieurs requêtes");
+        cy.contains("500 : Internal Server Error");
+    });
 
-    cy.get('input[name=Nom]').type('Valiant Mystic');
+    it("Vérifie que la modal d'erreur s'affiche en cas d'erreur 500 côté classes", () => {
+        cy.intercept('GET', 'http://localhost:3000/class', { statusCode: 500, fixture: '500'}).as("getClasses");
+        cy.intercept('GET', 'http://localhost:3000/characters', { fixture: 'characters/characters'}).as("getCharacters");
+        cy.visit('http://localhost:5173/characters');
 
-    cy.get(':nth-child(2) > .p-dropdown > .p-dropdown-trigger').click();
-    cy.get('#dropdownItem_1').click();
+        cy.wait("@getCharacters");
+        cy.wait("@getClasses");
 
-    cy.get(':nth-child(3) > .p-dropdown > .p-dropdown-trigger').click();
-    cy.get('#dropdownItem_0 > .p-dropdown-item-label').contains('Tank');
-    cy.get('#dropdownItem_1 > .p-dropdown-item-label').contains('Soigneur');
-    cy.get('#dropdownItem_0').click();
+        cy.contains("Une erreur est survenu lors de l'exécution d'une ou de plusieurs requêtes");
+        cy.contains("500 : Internal Server Error");
+    });
+});
 
-    cy.get('input[name=ilvl]').type('500');
+describe("Détail d'un personnage", () => {
+    beforeEach(() => {
+        cy.intercept('GET', 'http://localhost:3000/class', { fixture: 'classes/classes'}).as("getClasses");
+        cy.intercept('GET', 'http://localhost:3000/characters', { fixture: 'characters/characters'}).as("getCharacters");
+    });
 
-    cy.get('input[name=rio]').type('1500');
+    it("Vérifie que l'affichage des détails d'un personnage fonctionne bien et affiche les bonnes informations", () => {
+        cy.intercept('GET', 'http://localhost:3000/characters/1', { fixture: 'characters/character' }).as("getCharacter");
+        cy.visit('http://localhost:5173/characters');
 
-    cy.get('button[name=AddButtonDialog]').click();
-  });
+        cy.wait("@getCharacters");
+        cy.wait("@getClasses");
 
-  it('Essayer d\'ajouter un personnage avec un ilvl supérieur à 645', () => {
-    cy.contains('Ajouter un personnage').click();
+        cy.get('button[name=Detail]:first').click();
 
-    cy.get('input[name=Nom]').type('Valiant Mystic');
+        cy.wait("@getCharacter");
 
-    cy.get(':nth-child(2) > .p-dropdown > .p-dropdown-trigger').click();
-    cy.get('#dropdownItem_1').click();
+        cy.contains("Détail du personnage ");
+        cy.contains("Nom : Mystic Cosmos");
+        cy.contains("Classe : Prêtre");
+        cy.contains("Rôle : Soigneur");
+        cy.contains("ilvl : 10");
+        cy.contains("rio : 1000");
+    });
 
-    cy.get(':nth-child(3) > .p-dropdown > .p-dropdown-trigger').click();
-    cy.get('#dropdownItem_0 > .p-dropdown-item-label').contains('Tank');
-    cy.get('#dropdownItem_1 > .p-dropdown-item-label').contains('Soigneur');
-    cy.get('#dropdownItem_0').click();
+    it("Vérifie que la modal d'erreur s'affiche en cas d'erreur 404", () => {
+        cy.intercept('GET', 'http://localhost:3000/characters/1', { statusCode: 404, fixture: 'characters/404'}).as("getCharacter");
+        cy.visit('http://localhost:5173/characters');
 
-    cy.get('input[name=ilvl]').type('1000');
+        cy.wait("@getCharacters");
+        cy.wait("@getClasses");
 
-    cy.get('input[name=rio]').type('1500');
+        cy.get('button[name=Detail]:first').click();
 
-    cy.get('button[name=AddButtonDialog]').click();
+        cy.wait("@getCharacter");
+
+        cy.contains("Une erreur est survenu lors de l'exécution d'une ou de plusieurs requêtes");
+        cy.contains("404 : Character not found");
+    });
+
+    it("Vérifie que la modal d'erreur s'affiche en cas d'erreur 500", () => {
+        cy.intercept('GET', 'http://localhost:3000/characters/1', { statusCode: 500, fixture: '500'}).as("getCharacter");
+        cy.visit('http://localhost:5173/characters');
+
+        cy.wait("@getCharacters");
+        cy.wait("@getClasses");
+
+        cy.get('button[name=Detail]:first').click();
+
+        cy.wait("@getCharacter");
+
+        cy.contains("Une erreur est survenu lors de l'exécution d'une ou de plusieurs requêtes");
+        cy.contains("500 : Internal Server Error");
+    });
+});
+
+describe("Ajouter un personnage", () => {
+    beforeEach(() => {
+        cy.intercept('GET', 'http://localhost:3000/class', { fixture: 'classes/classes'}).as("getClasses");
+        cy.intercept('GET', 'http://localhost:3000/characters', { fixture: 'characters/characters'}).as("getCharacters");
+        cy.intercept('GET', 'http://localhost:3000/canbe/class/9', { fixture: 'canbe/class9'}).as("getRoles");
+        cy.visit('http://localhost:5173/characters');
+
+        cy.wait("@getCharacters");
+        cy.wait("@getClasses");
+    });
+
+    it("Ajouter un personnage en saisissant les bonnes informations", () => {
+        cy.intercept('POST', 'http://localhost:3000/characters/', { statusCode: 201, fixture: '201'}).as("postCharacter");
+
+        cy.get('button[name=Add]').click();
+
+        cy.get('input[name=Nom]').type("Mighty Eagle");
+
+        cy.get('#character-class > .p-dropdown-trigger').click();
+        cy.get('#dropdownItem_8').click();
+
+        cy.wait("@getRoles");
+
+        cy.get('#character-role > .p-dropdown-trigger').click();
+        cy.get('#dropdownItem_1').click();
+
+        cy.get('input[name=ilvl]').type('15');
+        cy.get('input[name=rio]').type('100');
+
+        cy.get('button[name=ButtonDialog]').click();
+
+        cy.wait('@postCharacter').then(({ request, response }) => {
+            expect(request.body).to.include({
+                name: "Mighty Eagle",
+                class_id: 9,
+                role_id: 2,
+                ilvl: 15,
+                rio: 100,
+            });
+            expect(response?.statusCode).to.equal(201);
+        });
+    });
+
+    it("Essayer d'ajouter un personnage sans saisir le nom", () => {
+        cy.intercept('POST', 'http://localhost:3000/characters/', { statusCode: 201, fixture: '201'}).as("postCharacter");
+
+        cy.get('button[name=Add]').click();
+
+        cy.get('#character-class > .p-dropdown-trigger').click();
+        cy.get('#dropdownItem_8').click();
+
+        cy.wait("@getRoles");
+
+        cy.get('#character-role > .p-dropdown-trigger').click();
+        cy.get('#dropdownItem_1').click();
+
+        cy.get('input[name=ilvl]').type('15');
+        cy.get('input[name=rio]').type('100');
+
+        cy.get('button[name=ButtonDialog]').click();
+
+        cy.contains("Ce champ est obligatoire.");
+    });
+
+    it("Essayer d'ajouter un personnage sans saisir la classe", () => {
+        cy.intercept('POST', 'http://localhost:3000/characters/', { statusCode: 201, fixture: '201'}).as("postCharacter");
+
+        cy.get('button[name=Add]').click();
+
+        cy.get('input[name=Nom]').type("Mighty Eagle");
+
+        cy.get('input[name=ilvl]').type('15');
+        cy.get('input[name=rio]').type('100');
+
+        cy.get('button[name=ButtonDialog]').click();
+
+        cy.contains("Ce champ est obligatoire.");
+    });
+
+    it("Essayer d'ajouter un personnage sans saisir le rôle", () => {
+        cy.intercept('POST', 'http://localhost:3000/characters/', { statusCode: 201, fixture: '201'}).as("postCharacter");
+
+        cy.get('button[name=Add]').click();
+
+        cy.get('input[name=Nom]').type("Mighty Eagle");
+
+        cy.get('#character-class > .p-dropdown-trigger').click();
+        cy.get('#dropdownItem_8').click();
+
+        cy.wait("@getRoles");
+
+        cy.get('input[name=ilvl]').type('15');
+        cy.get('input[name=rio]').type('100');
+
+        cy.get('button[name=ButtonDialog]').click();
+
+        cy.contains("Ce champ est obligatoire.");
+    });
+
+    it("Essayer d'ajouter un personnage en saissant un ilvl supérieur à 645", () => {
+        cy.intercept('POST', 'http://localhost:3000/characters/', { statusCode: 201, fixture: '201'}).as("postCharacter");
+
+        cy.get('button[name=Add]').click();
+
+        cy.get('input[name=Nom]').type("Mighty Eagle");
+
+        cy.get('#character-class > .p-dropdown-trigger').click();
+        cy.get('#dropdownItem_8').click();
+
+        cy.wait("@getRoles");
+
+        cy.get('#character-role > .p-dropdown-trigger').click();
+        cy.get('#dropdownItem_1').click();
+
+        cy.get('input[name=ilvl]').type('650');
+        cy.get('input[name=rio]').type('100');
+
+        cy.get('button[name=ButtonDialog]').click();
+
+        cy.contains("Votre saisie doit être comprise entre 0 et 645.");
+    });
+
+    it("Essayer d'ajouter un personnage en saissant un rio supérieur à 4500", () => {
+        cy.intercept('POST', 'http://localhost:3000/characters/', { statusCode: 201, fixture: '201'}).as("postCharacter");
+
+        cy.get('button[name=Add]').click();
+
+        cy.get('input[name=Nom]').type("Mighty Eagle");
+
+        cy.get('#character-class > .p-dropdown-trigger').click();
+        cy.get('#dropdownItem_8').click();
+
+        cy.wait("@getRoles");
+
+        cy.get('#character-role > .p-dropdown-trigger').click();
+        cy.get('#dropdownItem_1').click();
+
+        cy.get('input[name=ilvl]').type('15');
+        cy.get('input[name=rio]').type('5000');
+
+        cy.get('button[name=ButtonDialog]').click();
+
+        cy.contains("Votre saisie doit être comprise entre 0 et 4500.");
+    });
+
+    it("Vérifie que la modal d'erreur s'affiche en cas d'erreur 400", () => {
+        cy.intercept('POST', 'http://localhost:3000/characters/', { statusCode: 400, fixture: 'characters/400'}).as("postCharacter");
+        
+        cy.get('button[name=Add]').click();
+
+        cy.get('input[name=Nom]').type("Mighty Eagle");
+
+        cy.get('#character-class > .p-dropdown-trigger').click();
+        cy.get('#dropdownItem_8').click();
+
+        cy.wait("@getRoles");
+
+        cy.get('#character-role > .p-dropdown-trigger').click();
+        cy.get('#dropdownItem_1').click();
+
+        cy.get('input[name=ilvl]').type('15');
+        cy.get('input[name=rio]').type('100');
+
+        cy.get('button[name=ButtonDialog]').click();
+
+        cy.wait('@postCharacter');
+
+        cy.contains("Une erreur est survenu lors de l'exécution d'une ou de plusieurs requêtes");
+        cy.contains("400 : The field 'name' is required");
+    });
+
+    it("Vérifie que la modal d'erreur s'affiche en cas d'erreur 500", () => {
+        cy.intercept('POST', 'http://localhost:3000/characters', { statusCode: 500, fixture: '500'}).as("postCharacter");
+                
+        cy.get('button[name=Add]').click();
+
+        cy.get('input[name=Nom]').type("Mighty Eagle");
+
+        cy.get('#character-class > .p-dropdown-trigger').click();
+        cy.get('#dropdownItem_8').click();
+
+        cy.wait("@getRoles");
+
+        cy.get('#character-role > .p-dropdown-trigger').click();
+        cy.get('#dropdownItem_1').click();
+
+        cy.get('input[name=ilvl]').type('15');
+        cy.get('input[name=rio]').type('100');
+
+        cy.get('button[name=ButtonDialog]').click();
+
+        cy.wait('@postCharacter');
+
+        cy.contains("Une erreur est survenu lors de l'exécution d'une ou de plusieurs requêtes");
+        cy.contains("500 : Internal Server Error");
+    });
+});
+
+describe("Modifier un personnage", () => {
+    beforeEach(() => {
+        cy.intercept('GET', 'http://localhost:3000/class', { fixture: 'classes/classes'}).as("getClasses");
+        cy.intercept('GET', 'http://localhost:3000/characters', { fixture: 'characters/characters'}).as("getCharacters");
+        cy.intercept('GET', 'http://localhost:3000/characters/1', { fixture: 'characters/character' }).as("getCharacter");
+        cy.intercept('GET', 'http://localhost:3000/canbe/class/9', { fixture: 'canbe/class9'}).as("getRoles");
+        cy.intercept('GET', 'http://localhost:3000/canbe/class/5', { fixture: 'canbe/class5'}).as("getRoles");
+        cy.visit('http://localhost:5173/characters');
+
+        cy.wait("@getCharacters");
+        cy.wait("@getClasses");
+    });
+
+    it("Vérifie que les informations du personnage sont bons", () => {
+        cy.get(':nth-child(1) > :nth-child(6) > .spacing-between-buttons > [name="Edit"]').click();
+
+        cy.wait("@getCharacter");
+
+        cy.get('input[name=Nom]').should('have.value', 'Mystic Cosmos');
+
+        cy.get('#character-class > .p-dropdown-label').should('have.text', 'Prêtre');
+
+        cy.get('#character-role > .p-dropdown-label').should('have.text', 'Soigneur');
+
+        cy.get('input[name=ilvl]').should('have.value', '10');
+
+        cy.get('input[name=rio]').should('have.value', '1 000');
+    });
+
+    it("Modifier un personnage en saisissant les bonnes informations", () => {
+        cy.intercept('PUT', 'http://localhost:3000/characters/1', { statusCode: 200, fixture: '200update'}).as("putcharacter");
+
+        cy.get(':nth-child(1) > :nth-child(6) > .spacing-between-buttons > [name="Edit"]').click();
+
+        cy.wait("@getCharacter");
+
+        cy.get('input[name=Nom]').clear();
+        cy.get('input[name=Nom]').type("Mighty Eagle");
+
+        cy.get('#character-class > .p-dropdown-trigger').click();
+        cy.get('#dropdownItem_8').click();
+
+        cy.wait("@getRoles");
+
+        cy.get('#character-role > .p-dropdown-trigger').click();
+        cy.get('#dropdownItem_1').click();
+
+        cy.get('input[name=ilvl]').clear();
+        cy.get('input[name=ilvl]').type('15');
+        cy.get('input[name=rio]').clear();
+        cy.get('input[name=rio]').type('100');
+
+        cy.get('button[name=ButtonDialog]').click();
+
+        cy.wait('@putcharacter').then(({ request, response }) => {
+            expect(request.body).to.include({
+                name: "Mighty Eagle",
+                class_id: 9,
+                role_id: 2,
+                ilvl: 15,
+                rio: 100,
+            });
+            expect(response?.statusCode).to.equal(200);
+        });
+    });
+
+    it("Essayer de modifier un personnage sans saisir le nom", () => {
+        cy.intercept('PUT', 'http://localhost:3000/characters/1', { statusCode: 200, fixture: '200update'}).as("putcharacter");
+
+        cy.get(':nth-child(1) > :nth-child(6) > .spacing-between-buttons > [name="Edit"]').click();
+
+        cy.wait("@getCharacter");
+
+        cy.get('input[name=Nom]').clear();
+
+        cy.get('#character-class > .p-dropdown-trigger').click();
+        cy.get('#dropdownItem_8').click();
+
+        cy.wait("@getRoles");
+
+        cy.get('#character-role > .p-dropdown-trigger').click();
+        cy.get('#dropdownItem_1').click();
+
+        cy.get('input[name=ilvl]').clear();
+        cy.get('input[name=ilvl]').type('15');
+        cy.get('input[name=rio]').clear();
+        cy.get('input[name=rio]').type('100');
+
+        cy.get('button[name=ButtonDialog]').click();
+
+        cy.contains("Ce champ est obligatoire.");
+    });
+
+    it("Essayer de modifier un personnage en saissant un ilvl supérieur à 645", () => {
+        cy.intercept('PUT', 'http://localhost:3000/characters/1', { statusCode: 200, fixture: '200update'}).as("putcharacter");
+
+        cy.get(':nth-child(1) > :nth-child(6) > .spacing-between-buttons > [name="Edit"]').click();
+
+        cy.wait("@getCharacter");
+
+        cy.get('input[name=Nom]').clear();
+        cy.get('input[name=Nom]').type("Mighty Eagle");
+
+        cy.get('#character-class > .p-dropdown-trigger').click();
+        cy.get('#dropdownItem_8').click();
+
+        cy.wait("@getRoles");
+
+        cy.get('#character-role > .p-dropdown-trigger').click();
+        cy.get('#dropdownItem_1').click();
+
+        cy.get('input[name=ilvl]').clear();
+        cy.get('input[name=ilvl]').type('650');
+        cy.get('input[name=rio]').clear();
+        cy.get('input[name=rio]').type('100');
+
+        cy.get('button[name=ButtonDialog]').click();
+
+        cy.contains("Votre saisie doit être comprise entre 0 et 645.");
+    });
+
+    it("Essayer de modifier un personnage en saissant un rio supérieur à 4500", () => {
+        cy.intercept('PUT', 'http://localhost:3000/characters/1', { statusCode: 200, fixture: '200update'}).as("putcharacter");
+
+        cy.get(':nth-child(1) > :nth-child(6) > .spacing-between-buttons > [name="Edit"]').click();
+
+        cy.wait("@getCharacter");
+
+        cy.get('input[name=Nom]').clear();
+        cy.get('input[name=Nom]').type("Mighty Eagle");
+
+        cy.get('#character-class > .p-dropdown-trigger').click();
+        cy.get('#dropdownItem_8').click();
+
+        cy.wait("@getRoles");
+
+        cy.get('#character-role > .p-dropdown-trigger').click();
+        cy.get('#dropdownItem_1').click();
+
+        cy.get('input[name=ilvl]').clear();
+        cy.get('input[name=ilvl]').type('15');
+        cy.get('input[name=rio]').clear();
+        cy.get('input[name=rio]').type('5000');
+
+        cy.get('button[name=ButtonDialog]').click();
+
+        cy.contains("Votre saisie doit être comprise entre 0 et 4500.");
+    });
+
+    it("Vérifie que la modal d'erreur s'affiche en cas d'erreur 400", () => {
+        cy.intercept('PUT', 'http://localhost:3000/characters/1', { statusCode: 400, fixture: 'characters/400'}).as("putCharacter");
+        
+        cy.get(':nth-child(1) > :nth-child(6) > .spacing-between-buttons > [name="Edit"]').click();
+
+        cy.wait("@getCharacter");
+
+        cy.get('input[name=Nom]').clear();
+        cy.get('input[name=Nom]').type("Mighty Eagle");
+
+        cy.get('#character-class > .p-dropdown-trigger').click();
+        cy.get('#dropdownItem_8').click();
+
+        cy.wait("@getRoles");
+
+        cy.get('#character-role > .p-dropdown-trigger').click();
+        cy.get('#dropdownItem_1').click();
+
+        cy.get('input[name=ilvl]').clear();
+        cy.get('input[name=ilvl]').type('15');
+        cy.get('input[name=rio]').clear();
+        cy.get('input[name=rio]').type('100');
+
+        cy.get('button[name=ButtonDialog]').click();
+
+        cy.wait('@putCharacter');
+
+        cy.contains("Une erreur est survenu lors de l'exécution d'une ou de plusieurs requêtes");
+        cy.contains("400 : The field 'name' is required");
+    });
+
+    it("Vérifie que la modal d'erreur s'affiche en cas d'erreur 500", () => {
+        cy.intercept('PUT', 'http://localhost:3000/characters/1', { statusCode: 500, fixture: '500'}).as("putCharacter");
+        
+        cy.get(':nth-child(1) > :nth-child(6) > .spacing-between-buttons > [name="Edit"]').click();
+
+        cy.wait("@getCharacter");
+
+        cy.get('input[name=Nom]').clear();
+        cy.get('input[name=Nom]').type("Mighty Eagle");
+
+        cy.get('#character-class > .p-dropdown-trigger').click();
+        cy.get('#dropdownItem_8').click();
+
+        cy.wait("@getRoles");
+
+        cy.get('#character-role > .p-dropdown-trigger').click();
+        cy.get('#dropdownItem_1').click();
+
+        cy.get('input[name=ilvl]').clear();
+        cy.get('input[name=ilvl]').type('15');
+        cy.get('input[name=rio]').clear();
+        cy.get('input[name=rio]').type('100');
+
+        cy.get('button[name=ButtonDialog]').click();
+
+        cy.wait('@putCharacter');
+
+        cy.contains("Une erreur est survenu lors de l'exécution d'une ou de plusieurs requêtes");
+        cy.contains("500 : Internal Server Error");
+    });
+});
+
+describe("Supprimer un personnage", () => {
+    beforeEach(() => {
+        cy.intercept('GET', 'http://localhost:3000/class', { fixture: 'classes/classes'}).as("getClasses");
+        cy.intercept('GET', 'http://localhost:3000/characters', { fixture: 'characters/characters'}).as("getCharacters");
+        cy.visit('http://localhost:5173/characters');
+
+        cy.wait("@getCharacters");
+        cy.wait("@getClasses");
+    });
+
+    it("Vérifie que le personnage se supprime normalement", () => {
+        cy.intercept('DELETE', 'http://localhost:3000/characters/1', { statusCode: 200, fixture: '200delete'}).as("deleteCharacter");
+
+        cy.get(':nth-child(1) > :nth-child(6) > .spacing-between-buttons > [name="Delete"]').click();
+
+        cy.get('.p-confirm-dialog-accept').click();
+
+        cy.wait('@deleteCharacter').then(({ response }) => {
+            expect(response?.statusCode).to.equal(200);
+        });
+    });
+
+        it("Vérifie que la modal d'erreur s'affiche en cas d'erreur 500", () => {
+        cy.intercept('DELETE', 'http://localhost:3000/characters/1', { statusCode: 500, fixture: '500'}).as("deleteCharacter");
     
-    cy.contains("The field 'ilvl' must be between 0 and 645");
-  });
+        cy.get(':nth-child(1) > :nth-child(6) > .spacing-between-buttons > [name="Delete"]').click();
 
-  it('Essayer d\'ajouter un personnage avec un ilvl inférieur à 0', () => {
-    cy.contains('Ajouter un personnage').click();
+        cy.get('.p-confirm-dialog-accept').click();
 
-    cy.get('input[name=Nom]').type('Valiant Mystic');
+        cy.wait('@deleteCharacter');
 
-    cy.get(':nth-child(2) > .p-dropdown > .p-dropdown-trigger').click();
-    cy.get('#dropdownItem_1').click();
-
-    cy.get(':nth-child(3) > .p-dropdown > .p-dropdown-trigger').click();
-    cy.get('#dropdownItem_0 > .p-dropdown-item-label').contains('Tank');
-    cy.get('#dropdownItem_1 > .p-dropdown-item-label').contains('Soigneur');
-    cy.get('#dropdownItem_0').click();
-
-    cy.get('input[name=ilvl]').type('-5');
-
-    cy.get('input[name=rio]').type('1500');
-
-    cy.get('button[name=AddButtonDialog]').click();
-    
-    cy.contains("The field 'ilvl' must be between 0 and 645");
-  });
-
-  it('Essayer d\'ajouter un personnage avec un rio supérieur à 4500', () => {
-    cy.contains('Ajouter un personnage').click();
-
-    cy.get('input[name=Nom]').type('Valiant Mystic');
-
-    cy.get(':nth-child(2) > .p-dropdown > .p-dropdown-trigger').click();
-    cy.get('#dropdownItem_1').click();
-
-    cy.get(':nth-child(3) > .p-dropdown > .p-dropdown-trigger').click();
-    cy.get('#dropdownItem_0 > .p-dropdown-item-label').contains('Tank');
-    cy.get('#dropdownItem_1 > .p-dropdown-item-label').contains('Soigneur');
-    cy.get('#dropdownItem_0').click();
-
-    cy.get('input[name=ilvl]').type('500');
-
-    cy.get('input[name=rio]').type('5000');
-
-    cy.get('button[name=AddButtonDialog]').click();
-    
-    cy.contains("The field 'rio' must be between 0 and 4500");
-  });
-
-  it('Essayer d\'ajouter un personnage avec un rio supérieur à 0', () => {
-    cy.contains('Ajouter un personnage').click();
-
-    cy.get('input[name=Nom]').type('Valiant Mystic');
-
-    cy.get(':nth-child(2) > .p-dropdown > .p-dropdown-trigger').click();
-    cy.get('#dropdownItem_1').click();
-
-    cy.get(':nth-child(3) > .p-dropdown > .p-dropdown-trigger').click();
-    cy.get('#dropdownItem_0 > .p-dropdown-item-label').contains('Tank');
-    cy.get('#dropdownItem_1 > .p-dropdown-item-label').contains('Soigneur');
-    cy.get('#dropdownItem_0').click();
-
-    cy.get('input[name=ilvl]').type('500');
-
-    cy.get('input[name=rio]').type('-10');
-
-    cy.get('button[name=AddButtonDialog]').click();
-    
-    cy.contains("The field 'rio' must be between 0 and 4500");
-  });
+        cy.contains("Une erreur est survenu lors de l'exécution d'une ou de plusieurs requêtes");
+        cy.contains("500 : Internal Server Error");
+    });
 });

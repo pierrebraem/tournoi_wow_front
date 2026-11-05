@@ -1,0 +1,26 @@
+[
+    {
+        "id": 1,
+        "name": "Mystic Cosmos",
+        "class": "Prêtre",
+        "role": "Soigneur",
+        "ilvl": 10,
+        "rio": 1000
+    },
+    {
+        "id": 2,
+        "name": "Savage Fire",
+        "class": "Guerrier",
+        "role": "Spécialiste des dégâts",
+        "ilvl": 250,
+        "rio": 4000
+    },
+    {
+        "id": 3,
+        "name": "Gallant Shield",
+        "class": "Evocateur",
+        "role": "Soins",
+        "ilvl": 500,
+        "rio": 1250
+    }
+]
