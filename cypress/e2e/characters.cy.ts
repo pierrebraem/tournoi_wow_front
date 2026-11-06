@@ -1,8 +1,8 @@
 describe('Liste des personnages', () => {
     it("Vérifie que la liste fonctionne bien et affiche les bonnes informations", () => {
-        cy.intercept('GET', 'http://localhost:3000/class', { fixture: 'classes/classes'}).as("getClasses");
-        cy.intercept('GET', 'http://localhost:3000/characters', { fixture: 'characters/characters'}).as("getCharacters");
-        cy.visit('http://localhost:5173/characters');
+        cy.intercept({ method: 'GET', port: 3000, pathname: '/class' }, { fixture: 'classes/classes'}).as("getClasses");
+        cy.intercept({ method: 'GET', port: 3000, pathname: '/characters' }, { fixture: 'characters/characters'}).as("getCharacters");
+        cy.visit('/characters');
 
         cy.wait("@getCharacters");
         cy.wait("@getClasses");
@@ -23,9 +23,9 @@ describe('Liste des personnages', () => {
     });
 
     it("Vérifie que la modal d'erreur s'affiche en cas d'erreur 500 côté characters", () => {
-        cy.intercept('GET', 'http://localhost:3000/class', { fixture: 'classes/classes'}).as("getClasses");
-        cy.intercept('GET', 'http://localhost:3000/characters', { statusCode: 500, fixture: '500'}).as("getCharacters");
-        cy.visit('http://localhost:5173/characters');
+        cy.intercept({ method: 'GET', port: 3000, pathname: '/class' }, { fixture: 'classes/classes'}).as("getClasses");
+        cy.intercept({ method: 'GET', port: 3000, pathname: '/characters' }, { statusCode: 500, fixture: '500'}).as("getCharacters");
+        cy.visit('/characters');
 
         cy.wait("@getCharacters");
         cy.wait("@getClasses");
@@ -35,9 +35,9 @@ describe('Liste des personnages', () => {
     });
 
     it("Vérifie que la modal d'erreur s'affiche en cas d'erreur 500 côté classes", () => {
-        cy.intercept('GET', 'http://localhost:3000/class', { statusCode: 500, fixture: '500'}).as("getClasses");
-        cy.intercept('GET', 'http://localhost:3000/characters', { fixture: 'characters/characters'}).as("getCharacters");
-        cy.visit('http://localhost:5173/characters');
+        cy.intercept({ method: 'GET', port: 3000, pathname: '/class' }, { statusCode: 500, fixture: '500'}).as("getClasses");
+        cy.intercept({ method: 'GET', port: 3000, pathname: '/characters' }, { fixture: 'characters/characters'}).as("getCharacters");
+        cy.visit('/characters');
 
         cy.wait("@getCharacters");
         cy.wait("@getClasses");
@@ -49,13 +49,13 @@ describe('Liste des personnages', () => {
 
 describe("Détail d'un personnage", () => {
     beforeEach(() => {
-        cy.intercept('GET', 'http://localhost:3000/class', { fixture: 'classes/classes'}).as("getClasses");
-        cy.intercept('GET', 'http://localhost:3000/characters', { fixture: 'characters/characters'}).as("getCharacters");
+        cy.intercept({ method: 'GET', port: 3000, pathname: '/class' }, { fixture: 'classes/classes'}).as("getClasses");
+        cy.intercept({ method: 'GET', port: 3000, pathname: '/characters' }, { fixture: 'characters/characters'}).as("getCharacters");
     });
 
     it("Vérifie que l'affichage des détails d'un personnage fonctionne bien et affiche les bonnes informations", () => {
-        cy.intercept('GET', 'http://localhost:3000/characters/1', { fixture: 'characters/character' }).as("getCharacter");
-        cy.visit('http://localhost:5173/characters');
+        cy.intercept({ method: 'GET', port: 3000, pathname: '/characters/1' }, { fixture: 'characters/character' }).as("getCharacter");
+        cy.visit('/characters');
 
         cy.wait("@getCharacters");
         cy.wait("@getClasses");
@@ -73,8 +73,8 @@ describe("Détail d'un personnage", () => {
     });
 
     it("Vérifie que la modal d'erreur s'affiche en cas d'erreur 404", () => {
-        cy.intercept('GET', 'http://localhost:3000/characters/1', { statusCode: 404, fixture: 'characters/404'}).as("getCharacter");
-        cy.visit('http://localhost:5173/characters');
+        cy.intercept({ method: 'GET', port: 3000, pathname: '/characters/1' }, { statusCode: 404, fixture: 'characters/404'}).as("getCharacter");
+        cy.visit('/characters');
 
         cy.wait("@getCharacters");
         cy.wait("@getClasses");
@@ -88,8 +88,8 @@ describe("Détail d'un personnage", () => {
     });
 
     it("Vérifie que la modal d'erreur s'affiche en cas d'erreur 500", () => {
-        cy.intercept('GET', 'http://localhost:3000/characters/1', { statusCode: 500, fixture: '500'}).as("getCharacter");
-        cy.visit('http://localhost:5173/characters');
+        cy.intercept({ method: 'GET', port: 3000, pathname: '/characters/1' }, { statusCode: 500, fixture: '500'}).as("getCharacter");
+        cy.visit('/characters');
 
         cy.wait("@getCharacters");
         cy.wait("@getClasses");
@@ -105,17 +105,17 @@ describe("Détail d'un personnage", () => {
 
 describe("Ajouter un personnage", () => {
     beforeEach(() => {
-        cy.intercept('GET', 'http://localhost:3000/class', { fixture: 'classes/classes'}).as("getClasses");
-        cy.intercept('GET', 'http://localhost:3000/characters', { fixture: 'characters/characters'}).as("getCharacters");
-        cy.intercept('GET', 'http://localhost:3000/canbe/class/9', { fixture: 'canbe/class9'}).as("getRoles");
-        cy.visit('http://localhost:5173/characters');
+        cy.intercept({ method: 'GET', port: 3000, pathname: '/class' }, { fixture: 'classes/classes'}).as("getClasses");
+        cy.intercept({ method: 'GET', port: 3000, pathname: '/characters' }, { fixture: 'characters/characters'}).as("getCharacters");
+        cy.intercept({ method: 'GET', port: 3000, pathname: '/canbe/class/9' }, { fixture: 'canbe/class9'}).as("getRoles");
+        cy.visit('/characters');
 
         cy.wait("@getCharacters");
         cy.wait("@getClasses");
     });
 
     it("Ajouter un personnage en saisissant les bonnes informations", () => {
-        cy.intercept('POST', 'http://localhost:3000/characters/', { statusCode: 201, fixture: '201'}).as("postCharacter");
+        cy.intercept({ method: 'POST', port: 3000, pathname: '/characters/' }, { statusCode: 201, fixture: '201'}).as("postCharacter");
 
         cy.get('button[name=Add]').click();
 
@@ -147,7 +147,7 @@ describe("Ajouter un personnage", () => {
     });
 
     it("Essayer d'ajouter un personnage sans saisir le nom", () => {
-        cy.intercept('POST', 'http://localhost:3000/characters/', { statusCode: 201, fixture: '201'}).as("postCharacter");
+        cy.intercept({ method: 'POST', port: 3000, pathname: '/characters/' }, { statusCode: 201, fixture: '201'}).as("postCharacter");
 
         cy.get('button[name=Add]').click();
 
@@ -168,7 +168,7 @@ describe("Ajouter un personnage", () => {
     });
 
     it("Essayer d'ajouter un personnage sans saisir la classe", () => {
-        cy.intercept('POST', 'http://localhost:3000/characters/', { statusCode: 201, fixture: '201'}).as("postCharacter");
+        cy.intercept({ method: 'POST', port: 3000, pathname: '/characters/' }, { statusCode: 201, fixture: '201'}).as("postCharacter");
 
         cy.get('button[name=Add]').click();
 
@@ -183,7 +183,7 @@ describe("Ajouter un personnage", () => {
     });
 
     it("Essayer d'ajouter un personnage sans saisir le rôle", () => {
-        cy.intercept('POST', 'http://localhost:3000/characters/', { statusCode: 201, fixture: '201'}).as("postCharacter");
+        cy.intercept({ method: 'POST', port: 3000, pathname: '/characters/' }, { statusCode: 201, fixture: '201'}).as("postCharacter");
 
         cy.get('button[name=Add]').click();
 
@@ -203,7 +203,7 @@ describe("Ajouter un personnage", () => {
     });
 
     it("Essayer d'ajouter un personnage en saissant un ilvl supérieur à 645", () => {
-        cy.intercept('POST', 'http://localhost:3000/characters/', { statusCode: 201, fixture: '201'}).as("postCharacter");
+        cy.intercept({ method: 'POST', port: 3000, pathname: '/characters/' }, { statusCode: 201, fixture: '201'}).as("postCharacter");
 
         cy.get('button[name=Add]').click();
 
@@ -226,7 +226,7 @@ describe("Ajouter un personnage", () => {
     });
 
     it("Essayer d'ajouter un personnage en saissant un rio supérieur à 4500", () => {
-        cy.intercept('POST', 'http://localhost:3000/characters/', { statusCode: 201, fixture: '201'}).as("postCharacter");
+        cy.intercept({ method: 'POST', port: 3000, pathname: '/characters/' }, { statusCode: 201, fixture: '201'}).as("postCharacter");
 
         cy.get('button[name=Add]').click();
 
@@ -249,7 +249,7 @@ describe("Ajouter un personnage", () => {
     });
 
     it("Vérifie que la modal d'erreur s'affiche en cas d'erreur 400", () => {
-        cy.intercept('POST', 'http://localhost:3000/characters/', { statusCode: 400, fixture: 'characters/400'}).as("postCharacter");
+        cy.intercept({ method: 'POST', port: 3000, pathname: '/characters/' }, { statusCode: 400, fixture: 'characters/400'}).as("postCharacter");
         
         cy.get('button[name=Add]').click();
 
@@ -275,7 +275,7 @@ describe("Ajouter un personnage", () => {
     });
 
     it("Vérifie que la modal d'erreur s'affiche en cas d'erreur 500", () => {
-        cy.intercept('POST', 'http://localhost:3000/characters', { statusCode: 500, fixture: '500'}).as("postCharacter");
+        cy.intercept({ method: 'POST', port: 3000, pathname: '/characters' }, { statusCode: 500, fixture: '500'}).as("postCharacter");
                 
         cy.get('button[name=Add]').click();
 
@@ -303,12 +303,12 @@ describe("Ajouter un personnage", () => {
 
 describe("Modifier un personnage", () => {
     beforeEach(() => {
-        cy.intercept('GET', 'http://localhost:3000/class', { fixture: 'classes/classes'}).as("getClasses");
-        cy.intercept('GET', 'http://localhost:3000/characters', { fixture: 'characters/characters'}).as("getCharacters");
-        cy.intercept('GET', 'http://localhost:3000/characters/1', { fixture: 'characters/character' }).as("getCharacter");
-        cy.intercept('GET', 'http://localhost:3000/canbe/class/9', { fixture: 'canbe/class9'}).as("getRoles");
-        cy.intercept('GET', 'http://localhost:3000/canbe/class/5', { fixture: 'canbe/class5'}).as("getRoles");
-        cy.visit('http://localhost:5173/characters');
+        cy.intercept({ method: 'GET', port: 3000, pathname: '/class' }, { fixture: 'classes/classes'}).as("getClasses");
+        cy.intercept({ method: 'GET', port: 3000, pathname: '/characters' }, { fixture: 'characters/characters'}).as("getCharacters");
+        cy.intercept({ method: 'GET', port: 3000, pathname: '/characters/1' }, { fixture: 'characters/character' }).as("getCharacter");
+        cy.intercept({ method: 'GET', port: 3000, pathname: '/canbe/class/9' }, { fixture: 'canbe/class9'}).as("getRoles");
+        cy.intercept({ method: 'GET', port: 3000, pathname: '/canbe/class/5' }, { fixture: 'canbe/class5'}).as("getRoles");
+        cy.visit('/characters');
 
         cy.wait("@getCharacters");
         cy.wait("@getClasses");
@@ -331,7 +331,7 @@ describe("Modifier un personnage", () => {
     });
 
     it("Modifier un personnage en saisissant les bonnes informations", () => {
-        cy.intercept('PUT', 'http://localhost:3000/characters/1', { statusCode: 200, fixture: '200update'}).as("putcharacter");
+        cy.intercept({ method: 'PUT', port: 3000, pathname: '/characters/1' }, { statusCode: 200, fixture: '200update'}).as("putcharacter");
 
         cy.get(':nth-child(1) > :nth-child(6) > .spacing-between-buttons > [name="Edit"]').click();
 
@@ -368,7 +368,7 @@ describe("Modifier un personnage", () => {
     });
 
     it("Essayer de modifier un personnage sans saisir le nom", () => {
-        cy.intercept('PUT', 'http://localhost:3000/characters/1', { statusCode: 200, fixture: '200update'}).as("putcharacter");
+        cy.intercept({ method: 'PUT', port: 3000, pathname: '/characters/1' }, { statusCode: 200, fixture: '200update'}).as("putcharacter");
 
         cy.get(':nth-child(1) > :nth-child(6) > .spacing-between-buttons > [name="Edit"]').click();
 
@@ -395,7 +395,7 @@ describe("Modifier un personnage", () => {
     });
 
     it("Essayer de modifier un personnage en saissant un ilvl supérieur à 645", () => {
-        cy.intercept('PUT', 'http://localhost:3000/characters/1', { statusCode: 200, fixture: '200update'}).as("putcharacter");
+        cy.intercept({ method: 'PUT', port: 3000, pathname: '/characters/1' }, { statusCode: 200, fixture: '200update'}).as("putcharacter");
 
         cy.get(':nth-child(1) > :nth-child(6) > .spacing-between-buttons > [name="Edit"]').click();
 
@@ -423,7 +423,7 @@ describe("Modifier un personnage", () => {
     });
 
     it("Essayer de modifier un personnage en saissant un rio supérieur à 4500", () => {
-        cy.intercept('PUT', 'http://localhost:3000/characters/1', { statusCode: 200, fixture: '200update'}).as("putcharacter");
+        cy.intercept({ method: 'PUT', port: 3000, pathname: '/characters/1' }, { statusCode: 200, fixture: '200update'}).as("putcharacter");
 
         cy.get(':nth-child(1) > :nth-child(6) > .spacing-between-buttons > [name="Edit"]').click();
 
@@ -451,7 +451,7 @@ describe("Modifier un personnage", () => {
     });
 
     it("Vérifie que la modal d'erreur s'affiche en cas d'erreur 400", () => {
-        cy.intercept('PUT', 'http://localhost:3000/characters/1', { statusCode: 400, fixture: 'characters/400'}).as("putCharacter");
+        cy.intercept({ method: 'PUT', port: 3000, pathname: '/characters/1' }, { statusCode: 400, fixture: 'characters/400'}).as("putCharacter");
         
         cy.get(':nth-child(1) > :nth-child(6) > .spacing-between-buttons > [name="Edit"]').click();
 
@@ -482,7 +482,7 @@ describe("Modifier un personnage", () => {
     });
 
     it("Vérifie que la modal d'erreur s'affiche en cas d'erreur 500", () => {
-        cy.intercept('PUT', 'http://localhost:3000/characters/1', { statusCode: 500, fixture: '500'}).as("putCharacter");
+        cy.intercept({ method: 'PUT', port: 3000, pathname: '/characters/1' }, { statusCode: 500, fixture: '500'}).as("putCharacter");
         
         cy.get(':nth-child(1) > :nth-child(6) > .spacing-between-buttons > [name="Edit"]').click();
 
@@ -515,16 +515,16 @@ describe("Modifier un personnage", () => {
 
 describe("Supprimer un personnage", () => {
     beforeEach(() => {
-        cy.intercept('GET', 'http://localhost:3000/class', { fixture: 'classes/classes'}).as("getClasses");
-        cy.intercept('GET', 'http://localhost:3000/characters', { fixture: 'characters/characters'}).as("getCharacters");
-        cy.visit('http://localhost:5173/characters');
+        cy.intercept({ method: 'GET', port: 3000, pathname: '/class' }, { fixture: 'classes/classes'}).as("getClasses");
+        cy.intercept({ method: 'GET', port: 3000, pathname: '/characters' }, { fixture: 'characters/characters'}).as("getCharacters");
+        cy.visit('/characters');
 
         cy.wait("@getCharacters");
         cy.wait("@getClasses");
     });
 
     it("Vérifie que le personnage se supprime normalement", () => {
-        cy.intercept('DELETE', 'http://localhost:3000/characters/1', { statusCode: 200, fixture: '200delete'}).as("deleteCharacter");
+        cy.intercept({ method: 'DELETE', port: 3000, pathname: '/characters/1' }, { statusCode: 200, fixture: '200delete'}).as("deleteCharacter");
 
         cy.get(':nth-child(1) > :nth-child(6) > .spacing-between-buttons > [name="Delete"]').click();
 
@@ -536,7 +536,7 @@ describe("Supprimer un personnage", () => {
     });
 
         it("Vérifie que la modal d'erreur s'affiche en cas d'erreur 500", () => {
-        cy.intercept('DELETE', 'http://localhost:3000/characters/1', { statusCode: 500, fixture: '500'}).as("deleteCharacter");
+        cy.intercept({ method: 'DELETE', port: 3000, pathname: '/characters/1' }, { statusCode: 500, fixture: '500'}).as("deleteCharacter");
     
         cy.get(':nth-child(1) > :nth-child(6) > .spacing-between-buttons > [name="Delete"]').click();
 
