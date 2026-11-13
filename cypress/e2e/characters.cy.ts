@@ -147,8 +147,6 @@ describe("Ajouter un personnage", () => {
     });
 
     it("Essayer d'ajouter un personnage sans saisir le nom", () => {
-        cy.intercept({ method: 'POST', port: 3000, pathname: '/characters/' }, { statusCode: 201, fixture: '201'}).as("postCharacter");
-
         cy.get('button[name=Add]').click();
 
         cy.get('#character-class > .p-dropdown-trigger').click();
@@ -168,8 +166,6 @@ describe("Ajouter un personnage", () => {
     });
 
     it("Essayer d'ajouter un personnage sans saisir la classe", () => {
-        cy.intercept({ method: 'POST', port: 3000, pathname: '/characters/' }, { statusCode: 201, fixture: '201'}).as("postCharacter");
-
         cy.get('button[name=Add]').click();
 
         cy.get('input[name=Nom]').type("Mighty Eagle");
@@ -183,8 +179,6 @@ describe("Ajouter un personnage", () => {
     });
 
     it("Essayer d'ajouter un personnage sans saisir le rôle", () => {
-        cy.intercept({ method: 'POST', port: 3000, pathname: '/characters/' }, { statusCode: 201, fixture: '201'}).as("postCharacter");
-
         cy.get('button[name=Add]').click();
 
         cy.get('input[name=Nom]').type("Mighty Eagle");
@@ -203,8 +197,6 @@ describe("Ajouter un personnage", () => {
     });
 
     it("Essayer d'ajouter un personnage en saissant un ilvl supérieur à 645", () => {
-        cy.intercept({ method: 'POST', port: 3000, pathname: '/characters/' }, { statusCode: 201, fixture: '201'}).as("postCharacter");
-
         cy.get('button[name=Add]').click();
 
         cy.get('input[name=Nom]').type("Mighty Eagle");
@@ -226,8 +218,6 @@ describe("Ajouter un personnage", () => {
     });
 
     it("Essayer d'ajouter un personnage en saissant un rio supérieur à 4500", () => {
-        cy.intercept({ method: 'POST', port: 3000, pathname: '/characters/' }, { statusCode: 201, fixture: '201'}).as("postCharacter");
-
         cy.get('button[name=Add]').click();
 
         cy.get('input[name=Nom]').type("Mighty Eagle");
@@ -368,8 +358,6 @@ describe("Modifier un personnage", () => {
     });
 
     it("Essayer de modifier un personnage sans saisir le nom", () => {
-        cy.intercept({ method: 'PUT', port: 3000, pathname: '/characters/1' }, { statusCode: 200, fixture: '200update'}).as("putcharacter");
-
         cy.get(':nth-child(1) > :nth-child(6) > .spacing-between-buttons > [name="Edit"]').click();
 
         cy.wait("@getCharacter");
@@ -395,8 +383,6 @@ describe("Modifier un personnage", () => {
     });
 
     it("Essayer de modifier un personnage en saissant un ilvl supérieur à 645", () => {
-        cy.intercept({ method: 'PUT', port: 3000, pathname: '/characters/1' }, { statusCode: 200, fixture: '200update'}).as("putcharacter");
-
         cy.get(':nth-child(1) > :nth-child(6) > .spacing-between-buttons > [name="Edit"]').click();
 
         cy.wait("@getCharacter");
@@ -423,8 +409,6 @@ describe("Modifier un personnage", () => {
     });
 
     it("Essayer de modifier un personnage en saissant un rio supérieur à 4500", () => {
-        cy.intercept({ method: 'PUT', port: 3000, pathname: '/characters/1' }, { statusCode: 200, fixture: '200update'}).as("putcharacter");
-
         cy.get(':nth-child(1) > :nth-child(6) > .spacing-between-buttons > [name="Edit"]').click();
 
         cy.wait("@getCharacter");
@@ -535,7 +519,7 @@ describe("Supprimer un personnage", () => {
         });
     });
 
-        it("Vérifie que la modal d'erreur s'affiche en cas d'erreur 500", () => {
+    it("Vérifie que la modal d'erreur s'affiche en cas d'erreur 500", () => {
         cy.intercept({ method: 'DELETE', port: 3000, pathname: '/characters/1' }, { statusCode: 500, fixture: '500'}).as("deleteCharacter");
     
         cy.get(':nth-child(1) > :nth-child(6) > .spacing-between-buttons > [name="Delete"]').click();
