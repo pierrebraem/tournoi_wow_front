@@ -1,5 +1,5 @@
 services:
-  app:
+  frontend:
     build: .
     restart: always
     ports:
@@ -9,3 +9,25 @@ services:
       - /app/node_modules
     stdin_open: true
     tty: true
+
+  cypress-firefox:
+    image: cypress/included:16.2.1
+    depends_on:
+      - frontend
+    environment:
+      - CYPRESS_baseUrl=http://frontend:5173
+    working_dir: /e2e
+    volumes:
+      - ./:/e2e
+    command: --browser firefox
+
+  cypress-chrome:
+    image: cypress/included:16.2.1
+    depends_on:
+      - frontend
+    environment:
+      - CYPRESS_baseUrl=http://frontend:5173
+    working_dir: /e2e
+    volumes:
+      - ./:/e2e
+    command: --browser chrome

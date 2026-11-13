@@ -1,0 +1,14 @@
+{
+    "id": 1,
+    "name": "Mystic Cosmos",
+    "class": {
+        "id": 5,
+        "label": "Prêtre"
+    },
+    "role": {
+        "id": 2,
+        "label": "Soigneur"
+    },
+    "ilvl": 10,
+    "rio": 1000
+}

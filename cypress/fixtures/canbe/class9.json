@@ -1,0 +1,14 @@
+[
+    {
+        "id": 1,
+        "label": "Tank"
+    },
+    {
+        "id": 2,
+        "label": "Soigneur"
+    },
+    {
+        "id": 3,
+        "label": "Spécialiste des dégâts"
+    }
+]

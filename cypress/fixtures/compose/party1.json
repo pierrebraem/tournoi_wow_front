@@ -1,0 +1,26 @@
+[
+    {
+        "id": 5,
+        "name": "Savage Fire",
+        "class": {
+            "id": 1,
+            "label": "Guerrier"
+        },
+        "role": {
+            "id": 3,
+            "label": "Spécialiste des dégâts"
+        }
+    },
+    {
+        "id": 7,
+        "name": "Resolute Oracle",
+        "class": {
+            "id": 7,
+            "label": "Mage"
+        },
+        "role": {
+            "id": 4,
+            "label": "Dégâts"
+        }
+    }
+]
