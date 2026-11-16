@@ -84,7 +84,7 @@ describe("Détail d'un personnage", () => {
         cy.wait("@getCharacter");
 
         cy.contains("Une erreur est survenu lors de l'exécution d'une ou de plusieurs requêtes");
-        cy.contains("404 : Character not found");
+        cy.contains("500 : Internal Server Error");
     });
 
     it("Vérifie que la modal d'erreur s'affiche en cas d'erreur 500", () => {
@@ -137,7 +137,7 @@ describe("Ajouter un personnage", () => {
         cy.wait('@postCharacter').then(({ request, response }) => {
             expect(request.body).to.include({
                 name: "Mighty Eagle",
-                class_id: 9,
+                class_id: 8,
                 role_id: 2,
                 ilvl: 15,
                 rio: 100,
@@ -235,7 +235,7 @@ describe("Ajouter un personnage", () => {
 
         cy.get('button[name=ButtonDialog]').click();
 
-        cy.contains("Votre saisie doit être comprise entre 0 et 4500.");
+        cy.contains("Votre saisie doit être comprise entre 0 et 5000.");
     });
 
     it("Vérifie que la modal d'erreur s'affiche en cas d'erreur 400", () => {

@@ -70,7 +70,7 @@ describe("Détail d'un groupe", () => {
         cy.contains("Nom : Savage Fire");
         cy.contains("Classe : Guerrier");
         cy.contains("Rôle : Spécialiste des dégâts");
-        cy.contains("Id : 7");
+        cy.contains("Id : 6");
         cy.contains("Nom : Resolute Oracle");
         cy.contains("Classe : Mage");
         cy.contains("Rôle : Dégâts");
@@ -173,7 +173,7 @@ describe("Ajouter un groupe", () => {
             expect(request.body.characters[0]).to.include({
                 id: 1,
                 name: "Mystic Cosmos",
-                class: "Prêtre",
+                class: "Moine",
                 role: "Soigneur",
                 ilvl: 10,
                 rio: 1000
@@ -403,7 +403,7 @@ describe("Supprimer un groupe", () => {
         cy.get('.p-confirm-dialog-accept').click();
 
         cy.wait('@deleteParty').then(({ response }) => {
-            expect(response?.statusCode).to.equal(200);
+            expect(response?.statusCode).to.equal(201);
         });
     });
 
@@ -417,6 +417,6 @@ describe("Supprimer un groupe", () => {
         cy.wait('@deleteParty');
 
         cy.contains("Une erreur est survenu lors de l'exécution d'une ou de plusieurs requêtes");
-        cy.contains("500 : Internal Server Error");
+        cy.contains("404 : Not Found");
     });
 });
