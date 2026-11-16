@@ -4,9 +4,10 @@ on:
     pull_request:
         branches:
             - dev
+    workflow_dispatch:
 
 jobs:
-    eslint:
+    lint:
         runs-on: ubuntu-24.04
         steps:
             - name: Checkout
@@ -26,3 +27,27 @@ jobs:
                 token: ${{ secrets.GITHUB_TOKEN }}
                 extensions: ts,tsx
                 package-manager: npm
+    tests-e2e:
+        runs-on: ubuntu-24.04
+        strategy:
+            fail-fast: false
+            matrix:
+                browser: [firefox, chrome]
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v7
+
+            - name: Run Cypress in Docker
+              run: docker compose up --build --abort-on-container-exit --exit-code-from cypress-${{ matrix.browser }} frontend cypress-${{ matrix.browser }}
+
+            - name: Stop Docker services
+              if: always()
+              run: docker compose down --remove-orphans
+
+            - name: Upload Cypress screenshots
+              if: failure()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: cypress-screenshots-${{ matrix.browser }}
+                  path: cypress/screenshots/
+                  if-no-files-found: ignore
