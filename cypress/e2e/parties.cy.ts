@@ -158,7 +158,7 @@ describe("Ajouter un groupe", () => {
     it("Ajouter un groupe en saisissant les bonnes informations", () => {
         cy.intercept({ method: 'POST', port: 3000, pathname: '/parties'}, { statusCode: 201, fixture: '201'}).as("postParty");
 
-        cy.get('button[aria-label="Ajouter un groupe"]').click();
+        cy.get('button[name=Add]').click();
 
         cy.get('input[name=Nom]').type("Groupe 4");
 
@@ -183,7 +183,7 @@ describe("Ajouter un groupe", () => {
     });
 
     it("Essayer d'ajouter un groupe sans saisir le nom", () => {
-        cy.get('button[aria-label="Ajouter un groupe"]').click();
+        cy.get('button[name=Add]').click();
 
         cy.get('.p-multiselect-trigger').click();
         cy.get('.p-multiselect-checkbox > .p-checkbox > .p-checkbox-input').first().click();
@@ -194,7 +194,7 @@ describe("Ajouter un groupe", () => {
     });
 
     it("Essayer d'ajouter un groupe sans saisir de personnages", () => {
-        cy.get('button[aria-label="Ajouter un groupe"]').click();
+        cy.get('button[name=Add]').click();
 
         cy.get('input[name=Nom]').type("Groupe 4");
 
@@ -206,7 +206,7 @@ describe("Ajouter un groupe", () => {
     it("Vérifie que la modal d'erreur s'affiche en cas d'erreur 400", () => {
         cy.intercept({ method: 'POST', port: 3000, pathname: '/parties/'}, { statusCode: 400, fixture: 'parties/400'}).as("postParty");
 
-        cy.get('button[aria-label="Ajouter un groupe"]').click();
+        cy.get('button[name=Add]').click();
 
         cy.get('input[name=Nom]').type("Groupe 4");
 
@@ -224,7 +224,7 @@ describe("Ajouter un groupe", () => {
     it("Vérifie que la modal d'erreur s'affiche en cas d'erreur 500", () => {
         cy.intercept({ method: 'POST', port: 3000, pathname: '/parties/'}, { statusCode: 500, fixture: '500'}).as("postParty");
 
-        cy.get('button[aria-label="Ajouter un groupe"]').click();
+        cy.get('button[name=Add]').click();
 
         cy.get('input[name=Nom]').type("Groupe 4");
 

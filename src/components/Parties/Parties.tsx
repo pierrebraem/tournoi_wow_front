@@ -117,7 +117,7 @@ function Parties(){
 
     return(
         <>
-            <Button label="Ajouter un groupe" onClick={() => visibleDialogIcon(null, 'add')} />
+            <Button label="Ajouter un groupe" onClick={() => visibleDialogIcon(null, 'add')} name="Add"/>
             <DataTable value={parties} className="pt-4">
                 <Column field="name" header="Nom" />
                 <Column header="Action" body={bodyIcons} />
