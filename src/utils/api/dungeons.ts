@@ -1,7 +1,7 @@
 const expressUrl = import.meta.env.VITE_EXPRESS_URL;
 
-export async function getDungeos(){
-    const res = await fetch(`${expressUrl}/dungeos`);
+export async function getDungeons(){
+    const res = await fetch(`${expressUrl}/dungeons`);
     const json = await res.json();
     const status = res.status;
 
