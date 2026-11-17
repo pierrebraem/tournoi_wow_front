@@ -7,7 +7,7 @@ import { Toast } from "primereact/toast";
 import { showConfirmDelete } from "../Communs/DeleteDialog";
 import ViewDialog from "./ViewDialog";
 import { Tournament, Dungeon, Party } from "../../types";
-import { getTournaments, deleteTournament, getDungeos, getParties } from "../../utils/api";
+import { getTournaments, deleteTournament, getDungeons, getParties } from "../../utils/api";
 
 function Tournaments(){
     const [tournaments, setTournaments] = useState<Tournament[]>([]);
@@ -63,15 +63,15 @@ function Tournaments(){
         let ignore = false;
         async function loadData(){
             try{
-                const [resTournaments, resDungeos, resParties] = await Promise.all([
+                const [resTournaments, resDungeons, resParties] = await Promise.all([
                     getTournaments(),
-                    getDungeos(),
+                    getDungeons(),
                     getParties(),
                 ]);
 
                 if(!ignore){
                     setTournaments(resTournaments.data);
-                    setDungeonsOption(resDungeos.data);
+                    setDungeonsOption(resDungeons.data);
                     setPartiesOption(resParties.data);
                 }
             }
