@@ -13,7 +13,7 @@ services:
     tty: true
 
   cypress-firefox:
-    image: cypress/included:16.2.1
+    image: cypress/included:16.3.0
     depends_on:
       - frontend
     environment:
@@ -24,7 +24,7 @@ services:
     command: --browser firefox
 
   cypress-chrome:
-    image: cypress/included:16.2.1
+    image: cypress/included:16.3.0
     depends_on:
       - frontend
     environment:
